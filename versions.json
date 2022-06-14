@@ -1,1 +1,6 @@
-start
+[
+  {
+    "repo": "OpenGeode",
+    "version": "v10.4.2"
+  }
+]

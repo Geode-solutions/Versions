@@ -1,7 +1,6 @@
 name: version
 
-on: 
-  push:
+on:
   schedule:
     - cron: 0 2 * * *
 

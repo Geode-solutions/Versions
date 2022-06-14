@@ -2,5 +2,9 @@
   {
     "repo": "OpenGeode",
     "version": "v10.4.2"
+  },
+  {
+    "repo": "Geode-Common_private",
+    "version": "v21.1.0"
   }
 ]

@@ -16,6 +16,10 @@
     "version": "v3.8.1"
   },
   {
+    "repo": "OpenGeode-Inspector",
+    "version": "v2.0.0"
+  },
+  {
     "repo": "Geode-Common_private",
     "version": "v21.1.0"
   },

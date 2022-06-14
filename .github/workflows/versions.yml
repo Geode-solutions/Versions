@@ -14,5 +14,5 @@ jobs:
         token: ${{ secrets.TOKEN }}
     - uses: Geode-solutions/actions/versions@master
       with:
-        repository: OpenGeode
+        repository: OpenGeode;Geode-Common_private
         token: ${{ secrets.TOKEN }}

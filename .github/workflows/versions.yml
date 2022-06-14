@@ -15,5 +15,5 @@ jobs:
         token: ${{ secrets.TOKEN }}
     - uses: Geode-solutions/actions/versions@master
       with:
-        repository: OpenGeode;Geode-Common_private
+        repository: OpenGeode;OpenGeode-IO;OpenGeode-Geosciences;OpenGeode-GeosciencesIO;Geode-Common_private;Geode-Conversion_private;Geode-Parameterization_private;Geode-BackgroundMesh_private;Geode-ExplicitModeling_private;Geode-ImplicitModeling_private;Geode-SimplexRemesh_private;Geode-SimplexRemeshGeosciences_private
         token: ${{ secrets.TOKEN }}

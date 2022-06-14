@@ -13,6 +13,6 @@ jobs:
       with:
         token: ${{ secrets.TOKEN }}
     - uses: Geode-solutions/actions/versions@master
-      env:
+      with:
         repository: OpenGeode
         token: ${{ secrets.TOKEN }}

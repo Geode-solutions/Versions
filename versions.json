@@ -21,7 +21,7 @@
   },
   {
     "repo": "Geode-Common_private",
-    "version": "v21.1.0"
+    "version": "v21.1.1"
   },
   {
     "repo": "Geode-Conversion_private",
@@ -45,7 +45,7 @@
   },
   {
     "repo": "Geode-SimplexRemesh_private",
-    "version": "v4.1.12"
+    "version": "v4.1.14"
   },
   {
     "repo": "Geode-SimplexRemeshGeosciences_private",

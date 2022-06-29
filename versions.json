@@ -1,54 +1,54 @@
 [
   {
     "repo": "OpenGeode",
-    "version": "v10.5.1"
+    "version": "v10.6.2"
   },
   {
     "repo": "OpenGeode-IO",
-    "version": "v5.18.3"
+    "version": "v5.18.7"
   },
   {
     "repo": "OpenGeode-Geosciences",
-    "version": "v5.4.5"
+    "version": "v5.4.6"
   },
   {
     "repo": "OpenGeode-GeosciencesIO",
-    "version": "v3.8.1"
+    "version": "v3.8.2"
   },
   {
     "repo": "OpenGeode-Inspector",
-    "version": "v2.0.0"
+    "version": "v2.0.1"
   },
   {
     "repo": "Geode-Common_private",
-    "version": "v21.1.2"
+    "version": "v21.2.2"
   },
   {
     "repo": "Geode-Conversion_private",
-    "version": "v2.17.10"
+    "version": "v2.17.12"
   },
   {
     "repo": "Geode-Parameterization_private",
-    "version": "v1.11.0"
+    "version": "v1.11.2"
   },
   {
     "repo": "Geode-BackgroundMesh_private",
-    "version": "v3.4.3"
+    "version": "v4.0.7"
   },
   {
     "repo": "Geode-ExplicitModeling_private",
-    "version": "v1.2.7"
+    "version": "v1.3.1"
   },
   {
     "repo": "Geode-ImplicitModeling_private",
-    "version": "v1.6.0"
+    "version": "v1.7.0"
   },
   {
     "repo": "Geode-SimplexRemesh_private",
-    "version": "v4.1.15"
+    "version": "v4.1.18"
   },
   {
     "repo": "Geode-SimplexRemeshGeosciences_private",
-    "version": "v1.6.0"
+    "version": "v1.6.1"
   }
 ]

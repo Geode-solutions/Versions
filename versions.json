@@ -17,7 +17,7 @@
   },
   {
     "repo": "OpenGeode-Inspector",
-    "version": "v2.0.1"
+    "version": "v2.1.0"
   },
   {
     "repo": "Geode-Common_private",
@@ -25,7 +25,7 @@
   },
   {
     "repo": "Geode-Conversion_private",
-    "version": "v2.17.13"
+    "version": "v2.18.0"
   },
   {
     "repo": "Geode-Parameterization_private",

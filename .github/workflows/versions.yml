@@ -16,3 +16,10 @@ jobs:
       with:
         repository: OpenGeode;OpenGeode-IO;OpenGeode-Geosciences;OpenGeode-GeosciencesIO;OpenGeode-Inspector;Geode-Common_private;Geode-Conversion_private;Geode-Parameterization_private;Geode-BackgroundMesh_private;Geode-ExplicitModeling_private;Geode-ImplicitModeling_private;Geode-SimplexRemesh_private;Geode-SimplexRemeshGeosciences_private
         token: ${{ secrets.TOKEN }}
+    - uses: stefanzweifel/git-auto-commit-action@v4
+      id: commit
+      with:
+        commit_message: Apply version changes
+    - name: "Run if changes have been detected"
+      if: steps.commit.outputs.changes_detected != 'true'
+      run: exit 1

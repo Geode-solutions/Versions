@@ -1,11 +1,11 @@
 [
   {
     "repo": "OpenGeode",
-    "version": "v11.0.6"
+    "version": "v11.0.7"
   },
   {
     "repo": "OpenGeode-IO",
-    "version": "v5.19.0"
+    "version": "v5.20.0"
   },
   {
     "repo": "OpenGeode-Geosciences",
@@ -13,7 +13,7 @@
   },
   {
     "repo": "OpenGeode-GeosciencesIO",
-    "version": "v3.9.0"
+    "version": "v3.9.1"
   },
   {
     "repo": "OpenGeode-Inspector",

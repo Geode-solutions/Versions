@@ -1,7 +1,7 @@
 [
   {
     "repo": "OpenGeode",
-    "version": "v11.0.7"
+    "version": "v11.0.8"
   },
   {
     "repo": "OpenGeode-IO",
@@ -21,7 +21,7 @@
   },
   {
     "repo": "Geode-Common_private",
-    "version": "v22.0.0"
+    "version": "v22.1.1"
   },
   {
     "repo": "Geode-Conversion_private",
@@ -45,7 +45,7 @@
   },
   {
     "repo": "Geode-SimplexRemesh_private",
-    "version": "v4.2.0"
+    "version": "v4.2.1"
   },
   {
     "repo": "Geode-SimplexRemeshGeosciences_private",

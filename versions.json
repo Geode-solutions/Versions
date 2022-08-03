@@ -21,7 +21,7 @@
   },
   {
     "repo": "Geode-Common_private",
-    "version": "v22.1.5"
+    "version": "v22.1.6"
   },
   {
     "repo": "Geode-Conversion_private",
@@ -33,7 +33,7 @@
   },
   {
     "repo": "Geode-BackgroundMesh_private",
-    "version": "v4.1.6"
+    "version": "v4.1.7"
   },
   {
     "repo": "Geode-ExplicitModeling_private",

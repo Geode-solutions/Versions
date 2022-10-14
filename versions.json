@@ -1,7 +1,7 @@
 [
   {
     "repo": "OpenGeode",
-    "version": "v12.1.22"
+    "version": "v12.1.23"
   },
   {
     "repo": "OpenGeode-IO",
@@ -9,7 +9,7 @@
   },
   {
     "repo": "OpenGeode-Geosciences",
-    "version": "v5.7.4"
+    "version": "v5.7.5"
   },
   {
     "repo": "OpenGeode-GeosciencesIO",
@@ -41,7 +41,7 @@
   },
   {
     "repo": "Geode-ImplicitModeling_private",
-    "version": "v1.11.3"
+    "version": "v1.11.4"
   },
   {
     "repo": "Geode-SimplexRemesh_private",

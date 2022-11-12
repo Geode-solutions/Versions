@@ -1,7 +1,7 @@
 [
   {
     "repo": "OpenGeode",
-    "version": "v12.3.7"
+    "version": "v12.4.0"
   },
   {
     "repo": "OpenGeode-IO",
@@ -13,7 +13,7 @@
   },
   {
     "repo": "OpenGeode-GeosciencesIO",
-    "version": "v3.12.1"
+    "version": "v3.12.2"
   },
   {
     "repo": "OpenGeode-Inspector",

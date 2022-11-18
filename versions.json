@@ -21,11 +21,11 @@
   },
   {
     "repo": "Geode-Common_private",
-    "version": "v23.1.27"
+    "version": "v23.1.28"
   },
   {
     "repo": "Geode-Conversion_private",
-    "version": "v4.3.0"
+    "version": "v4.3.2"
   },
   {
     "repo": "Geode-Parameterization_private",
@@ -33,19 +33,19 @@
   },
   {
     "repo": "Geode-BackgroundMesh_private",
-    "version": "v4.4.9"
+    "version": "v5.0.0"
   },
   {
     "repo": "Geode-ExplicitModeling_private",
-    "version": "v2.1.18"
+    "version": "v2.1.19"
   },
   {
     "repo": "Geode-ImplicitModeling_private",
-    "version": "v1.12.1"
+    "version": "v1.12.2"
   },
   {
     "repo": "Geode-SimplexRemesh_private",
-    "version": "v4.6.9"
+    "version": "v4.6.11"
   },
   {
     "repo": "Geode-SimplexRemeshGeosciences_private",

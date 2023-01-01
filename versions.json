@@ -1,7 +1,7 @@
 [
   {
     "repo": "OpenGeode",
-    "version": "v12.5.15"
+    "version": "v12.5.16"
   },
   {
     "repo": "OpenGeode-IO",
@@ -37,7 +37,7 @@
   },
   {
     "repo": "Geode-ExplicitModeling_private",
-    "version": "v2.1.21"
+    "version": "v2.1.22"
   },
   {
     "repo": "Geode-ImplicitModeling_private",

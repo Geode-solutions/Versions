@@ -1,7 +1,7 @@
 [
   {
     "repo": "OpenGeode",
-    "version": "v12.6.0"
+    "version": "v12.6.5"
   },
   {
     "repo": "OpenGeode-IO",
@@ -17,27 +17,27 @@
   },
   {
     "repo": "OpenGeode-Inspector",
-    "version": "v2.7.1"
+    "version": "v2.8.0"
   },
   {
     "repo": "Geode-Common_private",
-    "version": "v23.1.50"
+    "version": "v23.1.55"
   },
   {
     "repo": "Geode-Conversion_private",
-    "version": "v4.3.8"
+    "version": "v4.3.11"
   },
   {
     "repo": "Geode-Parameterization_private",
-    "version": "v1.15.0"
+    "version": "v1.15.2"
   },
   {
     "repo": "Geode-BackgroundMesh_private",
-    "version": "v5.0.21"
+    "version": "v5.0.27"
   },
   {
     "repo": "Geode-ExplicitModeling_private",
-    "version": "v2.1.23"
+    "version": "v2.1.24"
   },
   {
     "repo": "Geode-ImplicitModeling_private",
@@ -45,7 +45,7 @@
   },
   {
     "repo": "Geode-SimplexRemesh_private",
-    "version": "v5.1.1"
+    "version": "v5.1.2"
   },
   {
     "repo": "Geode-SimplexRemeshGeosciences_private",

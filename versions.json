@@ -1,7 +1,7 @@
 [
   {
     "repo": "OpenGeode",
-    "version": "v12.6.5"
+    "version": "v12.6.7"
   },
   {
     "repo": "OpenGeode-IO",
@@ -17,7 +17,7 @@
   },
   {
     "repo": "OpenGeode-Inspector",
-    "version": "v2.8.0"
+    "version": "v2.9.0"
   },
   {
     "repo": "Geode-Common_private",
@@ -33,7 +33,7 @@
   },
   {
     "repo": "Geode-BackgroundMesh_private",
-    "version": "v5.0.27"
+    "version": "v5.0.28"
   },
   {
     "repo": "Geode-ExplicitModeling_private",

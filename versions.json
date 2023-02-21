@@ -37,11 +37,11 @@
   },
   {
     "repo": "Geode-ExplicitModeling_private",
-    "version": "v2.1.25"
+    "version": "v2.2.0"
   },
   {
     "repo": "Geode-ImplicitModeling_private",
-    "version": "v1.13.3"
+    "version": "v1.13.4"
   },
   {
     "repo": "Geode-SimplexRemesh_private",

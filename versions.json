@@ -17,7 +17,7 @@
   },
   {
     "repo": "OpenGeode-Inspector",
-    "version": "v2.10.0"
+    "version": "v2.10.1"
   },
   {
     "repo": "Geode-Common_private",
@@ -37,7 +37,7 @@
   },
   {
     "repo": "Geode-ExplicitModeling_private",
-    "version": "v2.2.0"
+    "version": "v2.2.2"
   },
   {
     "repo": "Geode-ImplicitModeling_private",

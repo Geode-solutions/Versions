@@ -1,7 +1,7 @@
 [
   {
     "repo": "OpenGeode",
-    "version": "v12.7.3"
+    "version": "v12.7.4"
   },
   {
     "repo": "OpenGeode-IO",
@@ -50,5 +50,9 @@
   {
     "repo": "Geode-SimplexRemeshGeosciences_private",
     "version": "v1.10.0"
+  },
+  {
+    "repo": "Geode-ViewableObjects_private",
+    "version": "v1.3.3"
   }
 ]

@@ -32,7 +32,7 @@ jobs:
               return;
             }
             const release = await github.rest.repos.getLatestRelease({owner: context.repo.owner, repo});
-            const version = release.data.tag_name;
+            const version = release.data.tag_name.substring(1);
             console.log(release.data.tag_name);
             results.push({repo, pip, version});
           }
@@ -58,7 +58,11 @@ jobs:
           const data = require('./versions.json')
           console.log(data)
           for (const info of data) {
-            const {repo, pip, version} = info
-            const response = await fetch("https://pypi.org/pypi/"+pip+"/json")
+            const {pip, version} = info
+            const response = await fetch("https://pypi.org/pypi/"+pip+"/json").json()
             console.log(response)
+            const versions = Object.keys(response.releases)
+            console.log(versions)
+            console.log(version)
+            console.log(versions.includes(version))
           }

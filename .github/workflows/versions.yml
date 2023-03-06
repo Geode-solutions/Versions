@@ -1,6 +1,7 @@
 name: version
 
 on:
+  push:
   schedule:
     - cron: 0 2 * * *
 
@@ -12,6 +13,35 @@ jobs:
       with:
         fetch-depth: 0
         token: ${{ secrets.TOKEN }}
+    - uses: actions/github-script@v6
+      with:
+        github-token: ${{ secrets.TOKEN }}
+        script: |
+          const data = require('./versions.json')
+          console.log(data)
+          let results = [];
+          for (const repo of data.map(info => info.repo)) {
+            console.log('Looking for repository:', repo);
+            const wf = await github.rest.actions.listWorkflowRunsForRepo({owner: context.repo.owner, repo, per_page: '1', event: 'schedule'})
+            console.log(wf);
+            const conclusion = wf.data.workflow_runs[0].conclusion;
+            console.log(conclusion);
+            if (conclusion != 'success') {
+              core.setFailed('Last schedule does not work:' + repo);
+            }
+            const release = await github.rest.repos.getLatestRelease({owner: context.repo.owner, repo});
+            const version = release.data.tag_name;
+            console.log(release.data.tag_name);
+            results.push({repo, version});
+          }
+          console.log("results",results)
+          const json = JSON.stringify(results.sort(), null, 2)
+          console.log(json);
+          const fs = require('fs')
+          fs.writeFile('versions.json', json, (err) => {
+            if (err) throw err;
+            console.log('The file has been saved!');
+          })
     - uses: Geode-solutions/actions/versions@master
       with:
         repository: OpenGeode;OpenGeode-IO;OpenGeode-Geosciences;OpenGeode-GeosciencesIO;OpenGeode-Inspector;Geode-Common_private;Geode-Conversion_private;Geode-Parameterization_private;Geode-BackgroundMesh_private;Geode-ExplicitModeling_private;Geode-ImplicitModeling_private;Geode-SimplexRemesh_private;Geode-SimplexRemeshGeosciences_private;Geode-ViewableObjects_private

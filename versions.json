@@ -65,6 +65,11 @@
     "version": "v1.10.0"
   },
   {
+    "repo": "Geode-HybridRemesh_private",
+    "pip": "Geode-HybridRemesh",
+    "version": "v1.0.0"
+  },
+  {
     "repo": "Geode-ViewableObjects_private",
     "pip": "Geode-ViewableObjects",
     "version": "v1.3.3"

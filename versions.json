@@ -2,76 +2,76 @@
   {
     "repo": "OpenGeode",
     "pip": "OpenGeode-core",
-    "version": "v12.8.0"
+    "version": "13.0.8"
   },
   {
     "repo": "OpenGeode-IO",
     "pip": "OpenGeode-IO",
-    "version": "v5.23.4"
+    "version": "5.24.3"
   },
   {
     "repo": "OpenGeode-Geosciences",
     "pip": "OpenGeode-Geosciences",
-    "version": "v5.7.9"
+    "version": "6.0.0"
   },
   {
     "repo": "OpenGeode-GeosciencesIO",
     "pip": "OpenGeode-GeosciencesIO",
-    "version": "v3.12.4"
+    "version": "3.13.0"
   },
   {
     "repo": "OpenGeode-Inspector",
     "pip": "OpenGeode-Inspector",
-    "version": "v2.10.1"
+    "version": "2.11.0"
   },
   {
     "repo": "Geode-Common_private",
     "pip": "Geode-Common",
-    "version": "v23.1.58"
+    "version": "23.2.1"
   },
   {
     "repo": "Geode-Conversion_private",
     "pip": "Geode-Conversion",
-    "version": "v4.3.15"
+    "version": "4.4.0"
   },
   {
     "repo": "Geode-Parameterization_private",
     "pip": "Geode-Parameterization",
-    "version": "v1.15.2"
+    "version": "1.16.1"
   },
   {
     "repo": "Geode-BackgroundMesh_private",
     "pip": "Geode-BackgroundMesh",
-    "version": "v5.0.30"
+    "version": "5.1.1"
   },
   {
     "repo": "Geode-ExplicitModeling_private",
     "pip": "Geode-ExplicitModeling",
-    "version": "v2.2.2"
+    "version": "2.3.1"
   },
   {
     "repo": "Geode-ImplicitModeling_private",
     "pip": "Geode-ImplicitModeling",
-    "version": "v1.13.4"
+    "version": "1.14.1"
   },
   {
     "repo": "Geode-SimplexRemesh_private",
     "pip": "Geode-SimplexRemesh",
-    "version": "v5.1.10"
+    "version": "5.2.2"
   },
   {
     "repo": "Geode-SimplexRemeshGeosciences_private",
     "pip": "Geode-SimplexRemeshGeosciences",
-    "version": "v1.10.0"
+    "version": "1.11.0"
   },
   {
     "repo": "Geode-HybridRemesh_private",
     "pip": "Geode-HybridRemesh",
-    "version": "v1.0.0"
+    "version": "1.1.1"
   },
   {
     "repo": "Geode-ViewableObjects_private",
     "pip": "Geode-ViewableObjects",
-    "version": "v1.3.3"
+    "version": "1.4.0"
   }
 ]

@@ -1,7 +1,6 @@
 name: version
 
 on:
-  push:
   schedule:
     - cron: 0 2 * * *
 
@@ -59,9 +58,13 @@ jobs:
           console.log(data)
           for (const info of data) {
             const {pip, version} = info
-            const response = await fetch("https://pypi.org/pypi/"+pip+"/json").json()
+            const response = await fetch("https://pypi.org/pypi/"+pip+"/json")
             console.log(response)
-            const versions = Object.keys(response.releases)
+            if (!response.ok) {
+                throw new Error(`Error! status: ${response.status}`);
+           }
+            const result = await response.json(); 
+            const versions = Object.keys(result.releases)
             console.log(versions)
             console.log(version)
             console.log(versions.includes(version))

@@ -2,7 +2,7 @@
   {
     "repo": "OpenGeode",
     "pypi": "OpenGeode-core",
-    "version": "13.3.1"
+    "version": "13.3.3"
   },
   {
     "repo": "OpenGeode-IO",
@@ -17,7 +17,7 @@
   {
     "repo": "OpenGeode-GeosciencesIO",
     "pypi": "OpenGeode-GeosciencesIO",
-    "version": "3.13.1"
+    "version": "3.14.0"
   },
   {
     "repo": "OpenGeode-Inspector",

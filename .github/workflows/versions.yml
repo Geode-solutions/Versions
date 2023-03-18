@@ -59,6 +59,10 @@ jobs:
         python: ["3.7", "3.8", "3.9","3.10"]
         os: ["manylinux2014_x86_64", "win_amd64"]
     steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.TOKEN }}
     - uses: actions/github-script@v6
       with:
         github-token: ${{ secrets.TOKEN }}

@@ -7,12 +7,15 @@ on:
 jobs:
   run:
     runs-on: ubuntu-latest
+    outputs:
+      data: ${{ steps.data.outputs.json }}
     steps:
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
         token: ${{ secrets.TOKEN }}
     - uses: actions/github-script@v6
+      id: data
       with:
         github-token: ${{ secrets.TOKEN }}
         script: |
@@ -38,6 +41,7 @@ jobs:
           console.log("results",results)
           const json = JSON.stringify(results.sort(), null, 2)
           console.log(json);
+          core.setOutput("json", json);
           const fs = require('fs')
           fs.writeFile('versions.json', json, (err) => {
             if (err) throw err;
@@ -64,11 +68,15 @@ jobs:
         fetch-depth: 0
         token: ${{ secrets.TOKEN }}
     - uses: actions/github-script@v6
+      env:
+        data: ${{needs.run.outputs.data}}
       with:
         github-token: ${{ secrets.TOKEN }}
         script: |
           const { execSync } = require("child_process");
-          const data = require('./versions.json')
+          console.log(process.env)
+          console.log(process.env.data)
+          const data = JSON.parse(process.env.data)
           console.log(data)
           for (const info of data) {
             const {pypi, version} = info

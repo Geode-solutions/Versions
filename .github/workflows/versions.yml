@@ -91,6 +91,6 @@ jobs:
             console.log(versions.includes(version))
             let commandOne = "pip download --no-deps --platform ${{ matrix.os }} --python-version ${{ matrix.python }} " + pypi + "==" + version
             let commandTwo = "mkdir " + pypi + " && cd " + pypi
-            let commandThree = "unzip ../" + pypi + "*.whl && ls"
+            let commandThree = "unzip '../" + pypi + "*.whl' && ls"
             execSync(`${commandOne} && ${commandTwo} && ${commandThree}`, {stdio: 'inherit'})
           }

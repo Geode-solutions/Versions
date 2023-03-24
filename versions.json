@@ -2,7 +2,7 @@
   {
     "repo": "OpenGeode",
     "pypi": "OpenGeode-core",
-    "version": "13.3.9"
+    "version": "13.3.10"
   },
   {
     "repo": "OpenGeode-IO",
@@ -12,27 +12,27 @@
   {
     "repo": "OpenGeode-Geosciences",
     "pypi": "OpenGeode-Geosciences",
-    "version": "6.0.0"
+    "version": "6.0.1"
   },
   {
     "repo": "OpenGeode-GeosciencesIO",
     "pypi": "OpenGeode-GeosciencesIO",
-    "version": "3.14.1"
+    "version": "3.14.2"
   },
   {
     "repo": "OpenGeode-Inspector",
     "pypi": "OpenGeode-Inspector",
-    "version": "2.11.1"
+    "version": "2.11.2"
   },
   {
     "repo": "Geode-Common_private",
     "pypi": "Geode-Common",
-    "version": "23.2.3"
+    "version": "23.2.4"
   },
   {
     "repo": "Geode-Conversion_private",
     "pypi": "Geode-Conversion",
-    "version": "4.4.2"
+    "version": "4.4.3"
   },
   {
     "repo": "Geode-Parameterization_private",
@@ -42,17 +42,17 @@
   {
     "repo": "Geode-BackgroundMesh_private",
     "pypi": "Geode-BackgroundMesh",
-    "version": "6.0.2"
+    "version": "6.0.3"
   },
   {
     "repo": "Geode-ExplicitModeling_private",
     "pypi": "Geode-ExplicitModeling",
-    "version": "2.3.4"
+    "version": "2.3.6"
   },
   {
     "repo": "Geode-ImplicitModeling_private",
     "pypi": "Geode-ImplicitModeling",
-    "version": "1.15.2"
+    "version": "1.15.3"
   },
   {
     "repo": "Geode-SimplexRemesh_private",
@@ -62,7 +62,7 @@
   {
     "repo": "Geode-SimplexRemeshGeosciences_private",
     "pypi": "Geode-SimplexRemeshGeosciences",
-    "version": "1.11.0"
+    "version": "1.11.1"
   },
   {
     "repo": "Geode-HybridRemesh_private",

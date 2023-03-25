@@ -2,7 +2,7 @@
   {
     "repo": "OpenGeode",
     "pypi": "OpenGeode-core",
-    "version": "13.3.10"
+    "version": "13.3.11"
   },
   {
     "repo": "OpenGeode-IO",
@@ -27,7 +27,7 @@
   {
     "repo": "Geode-Common_private",
     "pypi": "Geode-Common",
-    "version": "23.2.4"
+    "version": "23.2.5"
   },
   {
     "repo": "Geode-Conversion_private",

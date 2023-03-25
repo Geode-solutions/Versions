@@ -60,7 +60,7 @@ jobs:
     needs: run
     strategy:
       matrix:
-        python: ["3.7", "3.8", "3.9","3.10"]
+        python: [{version: "3.7", tag: "cp37-cp37m"}, {version: "3.8", tag: "cp38-cp38"}, {version: "3.9", tag: "cp39-cp39"}, {version: "3.10", tag: "cp310-cp310"}]
         os: ["manylinux2014_x86_64", "win_amd64"]
     steps:
     - uses: actions/checkout@v3
@@ -89,8 +89,8 @@ jobs:
             console.log(versions)
             console.log(version)
             console.log(versions.includes(version))
-            let commandOne = "pip download --no-deps --platform ${{ matrix.os }} --python-version ${{ matrix.python }} " + pypi + "==" + version
+            let commandOne = "pip download --no-deps --platform ${{ matrix.os }} --python-version ${{ matrix.python.version }} " + pypi + "==" + version
             let commandTwo = "mkdir " + pypi + " && cd " + pypi
-            let commandThree = "unzip '../" + pypi + "*.whl' && ls"
+            let commandThree = "unzip '../" + pypi + "-${{ matrix.python.tag }}-${{ matrix.os }}.whl' && ls"
             execSync(`${commandOne} && ${commandTwo} && ${commandThree}`, {stdio: 'inherit'})
           }

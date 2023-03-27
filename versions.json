@@ -1,77 +1,77 @@
 [
   {
     "repo": "OpenGeode",
-    "pypi": "OpenGeode-core",
+    "pypi": "OpenGeode_core",
     "version": "13.3.12"
   },
   {
     "repo": "OpenGeode-IO",
-    "pypi": "OpenGeode-IO",
+    "pypi": "OpenGeode_IO",
     "version": "5.25.3"
   },
   {
     "repo": "OpenGeode-Geosciences",
-    "pypi": "OpenGeode-Geosciences",
+    "pypi": "OpenGeode_Geosciences",
     "version": "6.0.1"
   },
   {
     "repo": "OpenGeode-GeosciencesIO",
-    "pypi": "OpenGeode-GeosciencesIO",
+    "pypi": "OpenGeode_GeosciencesIO",
     "version": "3.14.2"
   },
   {
     "repo": "OpenGeode-Inspector",
-    "pypi": "OpenGeode-Inspector",
+    "pypi": "OpenGeode_Inspector",
     "version": "2.11.2"
   },
   {
     "repo": "Geode-Common_private",
-    "pypi": "Geode-Common",
+    "pypi": "Geode_Common",
     "version": "23.2.5"
   },
   {
     "repo": "Geode-Conversion_private",
-    "pypi": "Geode-Conversion",
+    "pypi": "Geode_Conversion",
     "version": "4.4.3"
   },
   {
     "repo": "Geode-Parameterization_private",
-    "pypi": "Geode-Parameterization",
+    "pypi": "Geode_Parameterization",
     "version": "1.16.5"
   },
   {
     "repo": "Geode-BackgroundMesh_private",
-    "pypi": "Geode-BackgroundMesh",
+    "pypi": "Geode_BackgroundMesh",
     "version": "6.0.3"
   },
   {
     "repo": "Geode-ExplicitModeling_private",
-    "pypi": "Geode-ExplicitModeling",
+    "pypi": "Geode_ExplicitModeling",
     "version": "2.3.6"
   },
   {
     "repo": "Geode-ImplicitModeling_private",
-    "pypi": "Geode-ImplicitModeling",
+    "pypi": "Geode_ImplicitModeling",
     "version": "1.15.3"
   },
   {
     "repo": "Geode-SimplexRemesh_private",
-    "pypi": "Geode-SimplexRemesh",
+    "pypi": "Geode_SimplexRemesh",
     "version": "5.2.4"
   },
   {
     "repo": "Geode-SimplexRemeshGeosciences_private",
-    "pypi": "Geode-SimplexRemeshGeosciences",
+    "pypi": "Geode_SimplexRemeshGeosciences",
     "version": "1.11.1"
   },
   {
     "repo": "Geode-HybridRemesh_private",
-    "pypi": "Geode-HybridRemesh",
+    "pypi": "Geode_HybridRemesh",
     "version": "1.1.2"
   },
   {
     "repo": "Geode-ViewableObjects_private",
-    "pypi": "Geode-ViewableObjects",
+    "pypi": "Geode_ViewableObjects",
     "version": "1.4.1"
   }
 ]

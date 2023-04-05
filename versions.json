@@ -2,7 +2,7 @@
   {
     "repo": "OpenGeode",
     "pypi": "OpenGeode_core",
-    "version": "13.4.1"
+    "version": "13.4.3"
   },
   {
     "repo": "OpenGeode-IO",
@@ -12,7 +12,7 @@
   {
     "repo": "OpenGeode-Geosciences",
     "pypi": "OpenGeode_Geosciences",
-    "version": "6.0.2"
+    "version": "6.0.3"
   },
   {
     "repo": "OpenGeode-GeosciencesIO",
@@ -52,7 +52,7 @@
   {
     "repo": "Geode-ImplicitModeling_private",
     "pypi": "Geode_ImplicitModeling",
-    "version": "1.15.5"
+    "version": "1.15.6"
   },
   {
     "repo": "Geode-SimplexRemesh_private",

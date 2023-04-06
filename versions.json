@@ -35,8 +35,8 @@
     "version": "4.4.6"
   },
   {
-    "repo": "Geode-Parameterization_private",
-    "pypi": "Geode_Parameterization",
+    "repo": "Geode-Numerics_private",
+    "pypi": "Geode_Numerics",
     "version": "1.16.8"
   },
   {

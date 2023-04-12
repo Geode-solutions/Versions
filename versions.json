@@ -55,8 +55,8 @@
     "version": "1.16.1"
   },
   {
-    "repo": "Geode-SimplexRemesh_private",
-    "pypi": "Geode_SimplexRemesh",
+    "repo": "Geode-Simplex_private",
+    "pypi": "Geode_Simplex",
     "version": "5.2.11"
   },
   {

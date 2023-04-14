@@ -45,13 +45,13 @@
     "version": "6.0.6"
   },
   {
-    "repo": "Geode-ExplicitModeling_private",
-    "pypi": "Geode_ExplicitModeling",
+    "repo": "Geode-Explicit_private",
+    "pypi": "Geode_Explicit",
     "version": "2.3.10"
   },
   {
-    "repo": "Geode-ImplicitModeling_private",
-    "pypi": "Geode_ImplicitModeling",
+    "repo": "Geode-Implicit_private",
+    "pypi": "Geode_Implicit",
     "version": "1.16.1"
   },
   {
@@ -60,18 +60,18 @@
     "version": "5.2.11"
   },
   {
-    "repo": "Geode-SimplexRemeshGeosciences_private",
-    "pypi": "Geode_SimplexRemeshGeosciences",
+    "repo": "Geode-SimplexGeosciences_private",
+    "pypi": "Geode_SimplexGeosciences",
     "version": "1.11.2"
   },
   {
-    "repo": "Geode-HybridRemesh_private",
-    "pypi": "Geode_HybridRemesh",
+    "repo": "Geode-Hybrid_private",
+    "pypi": "Geode_Hybrid",
     "version": "1.1.4"
   },
   {
-    "repo": "Geode-ViewableObjects_private",
-    "pypi": "Geode_ViewableObjects",
+    "repo": "Geode-Viewables_private",
+    "pypi": "Geode_Viewables",
     "version": "1.4.3"
   }
 ]

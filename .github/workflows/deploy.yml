@@ -14,7 +14,7 @@ jobs:
   deploy-ecosystem:
     runs-on: ubuntu-latest
     steps:
-      - uses: Geode-solutions/actions/deploy-ecosystem@master
+      - uses: Geode-solutions/Versions/deploy-ecosystem@master
         with:
           version: ${{ inputs.branch }}
           token: ${{ secrets.TOKEN }}

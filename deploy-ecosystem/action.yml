@@ -1,0 +1,13 @@
+name: 'Deploy Geode-solutions ecosytem'
+description: 'Deploy Geode-solutions ecosytem'
+inputs:
+  version:
+    description: 'Release version'
+    default: 'master'
+  token:
+    description: 'Github token'
+    required: true
+runs:
+  using: 'node16'
+  main: 'index.js'
+

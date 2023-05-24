@@ -52,12 +52,13 @@ const main = async () => {
     async function deploy_repository(repo) {
       const prepare_id = await launch_workflow(repo, 'prepare.yml')
       await wait_for_run_completed(repo, prepare_id, 40)
-      console.log("wait")
       const deploy_id = await launch_workflow(repo, 'deploy.yml')
+      await wait_for_run_completed(repo, deploy_id, 120)
     }
 
 
-    deploy_repository('Geode-Common_private')
+    const og = deploy_repository('OpenGeode')
+    og.then(deploy_repository('Geode-Common_private'))
 
     // repos.split('').forEach(owner_repo => {
     //   if (!owner_repo.length) {

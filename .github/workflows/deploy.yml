@@ -1,0 +1,20 @@
+name: Deploy ecosystem
+
+on:
+  workflow_call:
+    inputs:
+      branch:
+        type: string
+        required: true
+    secrets:
+      TOKEN:
+        required: true
+
+jobs:
+  deploy-ecosystem:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: Geode-solutions/actions/deploy-ecosystem@master
+        with:
+          version: ${{ inputs.branch }}
+          token: ${{ secrets.TOKEN }}

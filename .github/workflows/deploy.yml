@@ -1,13 +1,10 @@
 name: Deploy ecosystem
 
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
       branch:
         type: string
-        required: true
-    secrets:
-      TOKEN:
         required: true
 
 jobs:

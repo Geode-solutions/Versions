@@ -8,13 +8,10 @@ on:
 jobs:
   run:
     runs-on: ubuntu-latest
-    outputs:
-      data: ${{ steps.data.outputs.json }}
     steps:
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
-        token: ${{ secrets.TOKEN }}
     - uses: actions/github-script@v6
       id: data
       with:
@@ -28,7 +25,8 @@ jobs:
             console.log('Looking for repository:', repo);
             const wf = await github.rest.actions.listWorkflowRunsForRepo({
               owner: context.repo.owner, 
-              repo, 
+              repo,
+              branch: 'master',
               per_page: '1', 
               event: 'schedule'
             })
@@ -53,10 +51,10 @@ jobs:
             if (err) throw err;
             console.log('The file has been saved!');
           })
-    # - uses: stefanzweifel/git-auto-commit-action@v4
-    #   id: commit
-    #   with:
-    #     commit_message: Apply version changes
-    # - name: "Run if changes have been detected"
-    #   if: steps.commit.outputs.changes_detected != 'true'
-    #   run: exit 1
+    - uses: stefanzweifel/git-auto-commit-action@v4
+      id: commit
+      with:
+        commit_message: Apply version changes
+    - name: "Run if changes have been detected"
+      if: steps.commit.outputs.changes_detected != 'true'
+      run: exit 1

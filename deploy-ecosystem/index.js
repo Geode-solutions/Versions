@@ -10,7 +10,9 @@ const main = async () => {
 
     async function wait_for_run_completed(repo, run_id, timeout) {
       let status = ''
+      let conclusion = ''
       while (status !== 'completed') {
+        console.log(`Retrying ${run_id} in ${timeout}s`)
         await new Promise(resolve => setTimeout(resolve, timeout * 1000))
         const response = await octokit.actions.getWorkflowRun({
           owner,
@@ -18,132 +20,70 @@ const main = async () => {
           run_id
         })
         const data = response.data
-        console.log(`Status ${data.status} - ${data.conclusion}`)
         status = data.status
+        conclusion = data.conclusion
+        console.log(`Status ${run_id}: ${status} - ${conclusion}`)
       }
+      return conclusion
     }
 
     async function launch_workflow(repo, workflow_id) {
-      let trigger_time = Date.now()
-      console.log(`Dispatch ${repo}::${workflow_id}`)
-      await octokit.actions.createWorkflowDispatch({
-        owner,
-        repo,
-        workflow_id,
-        ref
-      })
-      await new Promise(resolve => setTimeout(resolve, 5 * 1000))
-      const response = await octokit.actions.listWorkflowRuns({
-        owner,
-        repo,
-        workflow_id,
-        event: 'workflow_dispatch'
-      })
-      const runs = response.data.workflow_runs
-        .filter((run) => new Date(run.created_at) >= trigger_time)
-      if (runs.length == 0) {
-        throw new Error(`${repo}::${workflow_id} run not found`)
+      try {
+        let trigger_time = Date.now()
+        console.log(`Dispatch ${repo}::${workflow_id}`)
+        await octokit.actions.createWorkflowDispatch({
+          owner,
+          repo,
+          workflow_id,
+          ref
+        })
+        await new Promise(resolve => setTimeout(resolve, 5 * 1000))
+        const response = await octokit.actions.listWorkflowRuns({
+          owner,
+          repo,
+          workflow_id,
+          event: 'workflow_dispatch'
+        })
+        const runs = response.data.workflow_runs
+          .filter((run) => new Date(run.created_at) >= trigger_time)
+        if (runs.length == 0) {
+          throw new Error(`${repo}::${workflow_id} run not found`)
+        }
+        const run_id = runs[0].id
+        console.log(`Run ${repo}::${workflow_id} id: ${run_id}`)
+        return run_id
+      } catch (error) {
+        core.setFailed(error.message)
       }
-      const run_id = runs[0].id
-      console.log(`Run ${repo}::${workflow_id} id: ${run_id}`)
-      return run_id
     }
 
     async function deploy_repository(repo) {
       const prepare_id = await launch_workflow(repo, 'prepare.yml')
       await wait_for_run_completed(repo, prepare_id, 40)
       const deploy_id = await launch_workflow(repo, 'deploy.yml')
-      await wait_for_run_completed(repo, deploy_id, 120)
+      const conclusion = await wait_for_run_completed(repo, deploy_id, 60)
+      if (conclusion !== 'success') {
+        throw new Error(`${repo} failed to deploy`)
+      }
     }
 
 
     const og = deploy_repository('OpenGeode')
-    og.then(deploy_repository('Geode-Common_private'))
-
-    // repos.split('').forEach(owner_repo => {
-    //   if (!owner_repo.length) {
-    //     return
-    //   }
-    //   const owner_repo_array = owner_repo.split('/')
-    //   let owner = 'Geode-solutions'
-    //   let repo = owner_repo_array[0]
-    //   if (owner_repo_array.length == 2) {
-    //     owner = owner_repo_array[0]
-    //     repo = owner_repo_array[1]
-    //   }
-    //   let promise = new Promise(function (resolve) {
-    //     console.log('Looking for repository:', repo)
-    //     const outputFile = repo.concat(file)
-
-    //     const query = version === 'master' ?
-    //       octokit.repos.getLatestRelease({ owner, repo }).then(release => release.data.id) :
-    //       octokit.repos.listReleases({ owner, repo }).then(releases => releases.data[0].id)
-    //     query.then(release_id => {
-    //       octokit.repos.listReleaseAssets({ owner, repo, release_id })
-    //         .then(assets => {
-    //           console.log(assets)
-    //           const asset =
-    //             assets.data.find(asset => asset.name.includes(file))
-    //           console.log('Asset name:', asset.name)
-    //           request({
-    //             url: asset.url,
-    //             method: 'GET',
-    //             headers: {
-    //               accept: 'application/octet-stream',
-    //               Authorization: 'Bearer ' + token,
-    //               'User-Agent': ''
-    //             }
-    //           })
-    //             .pipe(fs.createWriteStream(outputFile))
-    //             .on('finish', function () {
-    //               const extension = outputFile.split('.').pop()
-    //               console.log('Extension:', extension)
-    //               if (extension == 'zip') {
-    //                 console.log('Unzipping', asset.name)
-    //                 fs.createReadStream(outputFile)
-    //                   .pipe(unzipper.Extract(
-    //                     { path: process.env.GITHUB_WORKSPACE }))
-    //                   .on('close', function () {
-    //                     let extract_name = asset.name.slice(0, -4)
-    //                     if (extract_name.endsWith('-private')) {
-    //                       extract_name = extract_name.slice(0, -8)
-    //                     }
-    //                     console.log('Unzip to:', extract_name)
-    //                     const result = path.join(
-    //                       process.env.GITHUB_WORKSPACE, extract_name)
-    //                     console.log('Result:', result)
-    //                     fs.unlinkSync(outputFile)
-    //                     resolve(result)
-    //                   })
-    //               } else if (extension == 'gz') {
-    //                 console.log('Untaring', asset.name)
-    //                 fs.createReadStream(outputFile)
-    //                   .pipe(tar.x())
-    //                   .on('close', function () {
-    //                     let extract_name = asset.name.slice(0, -7)
-    //                     if (extract_name.endsWith('-private')) {
-    //                       extract_name = extract_name.slice(0, -8)
-    //                     }
-    //                     console.log('Untar to:', extract_name)
-    //                     const result = path.join(
-    //                       process.env.GITHUB_WORKSPACE, extract_name)
-    //                     console.log('Result:', result)
-    //                     fs.unlinkSync(outputFile)
-    //                     resolve(result)
-    //                   })
-    //               }
-    //             })
-    //         })
-    //     })
-    //   })
-    //   results.push(promise)
-    //   Promise.all(results).then(outputs => {
-    //     let result = ''
-    //     outputs.forEach(output => result += output + '')
-    //     core.setOutput('path', result)
-    //     console.log('Final result:', result)
-    //   })
-    // }
+    const og_io = og.then(() => { return deploy_repository('OpenGeode-IO') })
+    const og_geosciences = og.then(() => { return deploy_repository('OpenGeode-Geosciences') })
+    const og_geosciencesio = Promise.all([og, og_io, og_geosciences]).then(() => { return deploy_repository('OpenGeode-GeosciencesIO') })
+    const og_inspector = og_geosciencesio.then(() => { return deploy_repository('OpenGeode-Inspector') })
+    const g_common = og.then(() => { return deploy_repository('Geode-Common_private') })
+    const g_viewables = Promise.all([og_geosciencesio, g_common]).then(() => { return deploy_repository('Geode-Viewables_private') })
+    const g_conversion = g_common.then(() => { return deploy_repository('Geode-Conversion_private') })
+    const g_background = g_common.then(() => { return deploy_repository('Geode-Background_private') })
+    const g_explicit = Promise.all([og_inspector, g_conversion, g_background]).then(() => { return deploy_repository('Geode-Explicit_private') })
+    const g_numerics = g_common.then(() => { return deploy_repository('Geode-Numerics_private') })
+    const g_implicit = Promise.all([g_explicit, g_numerics]).then(() => { return deploy_repository('Geode-Implicit_private') })
+    const g_simplex = g_numerics.then(() => { return deploy_repository('Geode-Simplex_private') })
+    const g_simplexgeosciences = Promise.all([og_geosciencesio, g_simplex]).then(() => { return deploy_repository('Geode-SimplexGeosciences_private') })
+    const g_hybrid = g_simplex.then(() => { return deploy_repository('Geode-Hybrid_private') })
+    await Promise.all([g_viewables, g_implicit, g_simplexgeosciences, g_hybrid])
   } catch (error) {
     core.setFailed(error.message)
   }

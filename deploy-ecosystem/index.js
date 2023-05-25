@@ -53,7 +53,7 @@ const main = async () => {
         console.log(`Run ${repo}::${workflow_id} id: ${run_id}`)
         return run_id
       } catch (error) {
-        core.setFailed(error.message)
+         throw new Error(`${repo}::${workflow_id}: ${error.message}`)
       }
     }
 

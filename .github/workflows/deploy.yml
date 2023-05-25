@@ -1,25 +1,20 @@
 name: Deploy ecosystem
 
 on:
-  workflow_call:
-    inputs:
-      branch:
-        type: string
-        required: true
   workflow_dispatch:
     inputs:
       branch:
         type: string
         required: true
 
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   deploy-ecosystem:
     runs-on: ubuntu-latest
     steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@main
-        with:
-          access_token: ${{ secrets.TOKEN }}
       - uses: Geode-solutions/Versions/deploy-ecosystem@master
         with:
           version: ${{ inputs.branch }}

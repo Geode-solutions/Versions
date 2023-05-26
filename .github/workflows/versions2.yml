@@ -36,7 +36,8 @@ jobs:
               repo,
               run_id: wf.data.workflow_runs[0].id
             })
-            console.log(run)
+            console.log(run.data.referenced_workflows)
+            core.setFailed('Stop');
             if (conclusion != 'success') {
               core.setFailed('Last schedule failed for ' + repo);
               return;

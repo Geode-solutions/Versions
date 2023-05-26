@@ -21,7 +21,7 @@ jobs:
         script: |
           const data = require('./versions.json')
           console.log(data)
-          repos=[]
+          let repos=[]
           for (const info of data) {
             const {repo} = info
             repos.push(repo)
@@ -37,7 +37,6 @@ jobs:
             console.log(wf.data.workflow_runs[0]);
             const conclusion = wf.data.workflow_runs[0].conclusion;
             console.log(conclusion);
-            return;
             if (conclusion != 'success') {
               core.setFailed('Last schedule failed for ' + repo);
               return;

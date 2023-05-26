@@ -31,13 +31,14 @@ jobs:
             console.log(wf.data.workflow_runs);
             const conclusion = wf.data.workflow_runs[0].conclusion;
             console.log(conclusion);
-            const run = await github.rest.actions.getWorkflowRun({
+            const run = await github.rest.actions.listJobsForWorkflowRun({
               owner: 'Geode-solutions', 
               repo,
               run_id: wf.data.workflow_runs[0].id
             })
             console.log(run.data.referenced_workflows)
             core.setFailed('Stop');
+            return;
             if (conclusion != 'success') {
               core.setFailed('Last schedule failed for ' + repo);
               return;

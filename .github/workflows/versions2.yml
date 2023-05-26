@@ -22,15 +22,21 @@ jobs:
           for (const info of data) {
             const {repo} = info
             console.log('Looking for repository:', repo);
-            const wf = await github.rest.actions.listWorkflowRunsForRepo({
-              owner: context.repo.owner, 
+            const wf = await github.rest.actions.listWorkflowRuns({
+              owner: 'Geode-solutions', 
               repo,
-              per_page: '10', 
-              event: 'schedule'
+              workflow_id: 'schedule.yml',
+              per_page: '1'
             })
             console.log(wf.data.workflow_runs);
             const conclusion = wf.data.workflow_runs[0].conclusion;
             console.log(conclusion);
+            const run = await github.rest.actions.getWorkflowRun({
+              owner: 'Geode-solutions', 
+              repo,
+              run_id: wf.data.workflow_runs[0].id
+            })
+            console.log(run)
             if (conclusion != 'success') {
               core.setFailed('Last schedule failed for ' + repo);
               return;

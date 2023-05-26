@@ -3,47 +3,66 @@ name: version2
 on:
   workflow_dispatch:
   schedule:
-    - cron: 0 2 * * *
+    - cron: 0 0 * * *
 
 jobs:
-  run:
+  check-next:
     runs-on: ubuntu-latest
+    outputs:
+      repos: ${{ steps.check.outputs.repos }}
     steps:
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
     - uses: actions/github-script@v6
-      id: data
+      id: check
       with:
         github-token: ${{ secrets.TOKEN }}
         script: |
           const data = require('./versions.json')
           console.log(data)
+          repos=[]
           for (const info of data) {
             const {repo} = info
+            repos.push(repo)
             console.log('Looking for repository:', repo);
             const wf = await github.rest.actions.listWorkflowRuns({
               owner: 'Geode-solutions', 
               repo,
+              branch: 'master',
               workflow_id: 'schedule.yml',
               per_page: '1'
+              event: 'schedule'
             })
-            console.log(wf.data.workflow_runs);
+            console.log(wf.data.workflow_runs[0]);
             const conclusion = wf.data.workflow_runs[0].conclusion;
             console.log(conclusion);
-            const run = await github.rest.actions.listJobsForWorkflowRun({
-              owner: 'Geode-solutions', 
-              repo,
-              run_id: wf.data.workflow_runs[0].id
-            })
-            console.log(run.data)
-            core.setFailed('Stop');
             return;
             if (conclusion != 'success') {
               core.setFailed('Last schedule failed for ' + repo);
               return;
             }
           }
+          core.setOutput('repos', JSON.stringify(repos))
+
+  merge-master:
+    runs-on: ubuntu-latest
+    needs: check-next
+    strategy:
+      matrix:
+        repo: ${{ fromJSON(needs.check-next.outputs.repos) }}
+    steps:
+      - run: |
+          git remote set-url --push origin https://${{ secrets.TOKEN }}@github.com/Geode-solutions/${{ matrix.repo }}.git
+          git remote update
+          git fetch
+          git checkout origin/next
+          git pull origin next
+          git checkout --track origin/master
+          git pull origin master
+          git merge next
+
+        # git push origin master
     # - uses: stefanzweifel/git-auto-commit-action@v4
     #   id: commit
     #   with:

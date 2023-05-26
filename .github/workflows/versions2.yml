@@ -1,7 +1,6 @@
 name: version2
 
 on:
-  workflow_dispatch:
   schedule:
     - cron: 0 0 * * *
 
@@ -59,13 +58,85 @@ jobs:
           git pull origin next
           git checkout --track origin/master
           git pull origin master
-          git merge next
+          last_master_tag=$(git describe --tags --abbrev=0)
+          last_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
+          echo $last_master_tag
+          echo $last_tag
+          if ["$last_master_tag" != "$last_tag"]; then
+            git rebase next
+            git push origin master
+          fi
 
-        # git push origin master
-    # - uses: stefanzweifel/git-auto-commit-action@v4
-    #   id: commit
-    #   with:
-    #     commit_message: Apply version changes
-    # - name: "Run if changes have been detected"
-    #   if: steps.commit.outputs.changes_detected != 'true'
-    #   run: exit 1
+  deploy-master:
+    runs-on: ubuntu-latest
+    needs: merge-master
+    steps:
+      - uses: Geode-solutions/Versions/deploy-ecosystem@master
+        with:
+          version: master
+          token: ${{ secrets.TOKEN }}
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions/github-script@v6
+        id: update
+        with:
+          github-token: ${{ secrets.TOKEN }}
+          script: |
+            const data = require('./versions.json')
+            console.log(data)
+            let results = [];
+            for (const info of data) {
+              const {repo} = info
+              console.log('Looking for repository:', repo);
+              const release = await github.rest.repos.getLatestRelease({
+                owner: context.repo.owner, 
+                repo
+              });
+              const version = release.data.tag_name.substring(1);
+              console.log(release.data.tag_name);
+              results.push({repo, version});
+            }
+            console.log("results",results)
+            const json = JSON.stringify(results.sort(), null, 2)
+            console.log(json);
+            const fs = require('fs')
+            fs.writeFile('versions.json', json, (err) => {
+              if (err) throw err;
+              console.log('The file has been saved!');
+              core.setOutput('ecosystem', json)
+            })
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        id: commit
+        with:
+          commit_message: Apply version changes
+      - name: "Run if changes have been detected"
+        if: steps.commit.outputs.changes_detected != 'true'
+        run: exit 1
+      - name: Post to a Slack channel
+        if: steps.commit.outputs.changes_detected == 'true'
+        id: slack
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          channel-id: C0598GTCLGH
+          slack-message: "Ecosystem build result: \n${{ steps.update.outputs.ecosystem }}"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
+  merge-next:
+    runs-on: ubuntu-latest
+    needs: [check-next, deploy-master]
+    strategy:
+      matrix:
+        repo: ${{ fromJSON(needs.check-next.outputs.repos) }}
+    steps:
+      - run: |
+          git remote set-url --push origin https://${{ secrets.TOKEN }}@github.com/Geode-solutions/${{ matrix.repo }}.git
+          git remote update
+          git fetch
+          git checkout origin/master
+          git pull origin master
+          git checkout --track origin/next
+          git pull origin next
+          git reset --hard origin/master
+          git push origin next --follow-tags --force

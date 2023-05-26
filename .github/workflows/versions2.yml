@@ -36,7 +36,7 @@ jobs:
               repo,
               run_id: wf.data.workflow_runs[0].id
             })
-            console.log(run.data.referenced_workflows)
+            console.log(run.data)
             core.setFailed('Stop');
             return;
             if (conclusion != 'success') {

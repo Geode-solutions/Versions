@@ -140,3 +140,14 @@ jobs:
           git pull origin next
           git reset --hard origin/master
           git push origin next --follow-tags --force
+      - uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.TOKEN }}
+          script: |
+            github.rest.actions.createWorkflowDispatch({
+              owner: 'Geode-solutions',
+              repo: ${{ matrix.repo }},
+              workflow_id: 'schedule.yml',
+              ref: 'master',
+              inputs: { branch: 'master' }
+            })

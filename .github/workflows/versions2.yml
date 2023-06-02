@@ -63,7 +63,7 @@ jobs:
           echo $last_tag
           if [ "$last_master_tag" != "$last_tag" ]; then
             echo "rebase?"
-            git rebase origin next
+            git rebase origin/next
             echo "rebase ok"
             git push origin master
           fi
@@ -136,7 +136,7 @@ jobs:
           token: ${{ secrets.TOKEN }}
           fetch-depth: 0
       - run: |
-          git reset --hard origin master
+          git reset --hard origin/master
           git push origin next --follow-tags --force
       - uses: actions/github-script@v6
         with:

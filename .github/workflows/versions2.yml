@@ -61,9 +61,10 @@ jobs:
           last_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
           echo $last_master_tag
           echo $last_tag
-          git fetch origin next
-          if ["$last_master_tag" != "$last_tag"]; then
+          if [ "$last_master_tag" != "$last_tag" ]; then
+            echo "rebase?"
             git rebase origin next
+            echo "rebase ok"
             git push origin master
           fi
 
@@ -76,8 +77,6 @@ jobs:
           version: master
           token: ${{ secrets.TOKEN }}
       - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
       - uses: actions/github-script@v6
         id: update
         with:
@@ -135,8 +134,8 @@ jobs:
           repository: Geode-solutions/${{ matrix.repo }}
           ref: next
           token: ${{ secrets.TOKEN }}
+          fetch-depth: 0
       - run: |
-          git fetch origin master:master
           git reset --hard origin master
           git push origin next --follow-tags --force
       - uses: actions/github-script@v6

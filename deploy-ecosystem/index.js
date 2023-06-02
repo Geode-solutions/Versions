@@ -80,7 +80,7 @@ const main = async () => {
     const g_explicit = Promise.all([og_inspector, g_conversion, g_background]).then(() => { return deploy_repository('Geode-Explicit_private') })
     const g_numerics = g_common.then(() => { return deploy_repository('Geode-Numerics_private') })
     const g_implicit = Promise.all([g_explicit, g_numerics]).then(() => { return deploy_repository('Geode-Implicit_private') })
-    const g_simplex = g_numerics.then(() => { return deploy_repository('Geode-Simplex_private') })
+    const g_simplex = Promise.all([og_io, g_numerics, g_background]).then(() => { return deploy_repository('Geode-Simplex_private') })
     const g_simplexgeosciences = Promise.all([og_geosciencesio, g_simplex]).then(() => { return deploy_repository('Geode-SimplexGeosciences_private') })
     const g_hybrid = g_simplex.then(() => { return deploy_repository('Geode-Hybrid_private') })
     await Promise.all([g_viewables, g_implicit, g_simplexgeosciences, g_hybrid])

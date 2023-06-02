@@ -57,7 +57,7 @@ jobs:
           ref: master
           token: ${{ secrets.TOKEN }}
       - run: |
-          git fetch origin next
+          git fetch origin next:next
           last_master_tag=$(git describe --tags --abbrev=0)
           last_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
           echo $last_master_tag
@@ -136,7 +136,7 @@ jobs:
           ref: next
           token: ${{ secrets.TOKEN }}
       - run: |
-          git fetch origin master
+          git fetch origin master:master
           git reset --hard origin master
           git push origin next --follow-tags --force
       - uses: actions/github-script@v6

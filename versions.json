@@ -1,62 +1,62 @@
 [
   {
     "repo": "OpenGeode",
-    "version": "14.0.3"
+    "version": "14.1.10"
   },
   {
     "repo": "OpenGeode-IO",
-    "version": "6.0.0"
+    "version": "6.0.6"
   },
   {
     "repo": "OpenGeode-Geosciences",
-    "version": "7.0.4"
+    "version": "7.0.9"
   },
   {
     "repo": "OpenGeode-GeosciencesIO",
-    "version": "4.1.0"
+    "version": "4.1.3"
   },
   {
     "repo": "OpenGeode-Inspector",
-    "version": "3.0.1"
+    "version": "3.0.6"
   },
   {
     "repo": "Geode-Common_private",
-    "version": "25.0.2"
+    "version": "26.0.0"
   },
   {
     "repo": "Geode-Conversion_private",
-    "version": "5.0.1"
+    "version": "5.0.6"
   },
   {
     "repo": "Geode-Numerics_private",
-    "version": "3.0.0"
+    "version": "3.0.4"
   },
   {
     "repo": "Geode-Background_private",
-    "version": "7.1.0"
+    "version": "7.2.0"
   },
   {
     "repo": "Geode-Explicit_private",
-    "version": "3.0.1"
+    "version": "4.0.0"
   },
   {
     "repo": "Geode-Implicit_private",
-    "version": "2.0.0"
+    "version": "2.0.3"
   },
   {
     "repo": "Geode-Simplex_private",
-    "version": "6.0.2"
+    "version": "6.0.11"
   },
   {
     "repo": "Geode-SimplexGeosciences_private",
-    "version": "2.0.0"
+    "version": "2.0.2"
   },
   {
     "repo": "Geode-Hybrid_private",
-    "version": "2.0.0"
+    "version": "2.0.3"
   },
   {
     "repo": "Geode-Viewables_private",
-    "version": "2.0.0"
+    "version": "2.0.2"
   }
 ]

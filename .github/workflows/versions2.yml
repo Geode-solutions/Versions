@@ -54,16 +54,16 @@ jobs:
       - uses: actions/checkout@v3
         with:
           repository: Geode-solutions/${{ matrix.repo }}
-          ref: next
+          ref: master
           token: ${{ secrets.TOKEN }}
       - run: |
-          git checkout --track origin/master
+          git fetch origin/next
           last_master_tag=$(git describe --tags --abbrev=0)
           last_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
           echo $last_master_tag
           echo $last_tag
           if ["$last_master_tag" != "$last_tag"]; then
-            git rebase next
+            git rebase origin/next
             git push origin master
           fi
 

@@ -133,11 +133,11 @@ jobs:
       - uses: actions/checkout@v3
         with:
           repository: Geode-solutions/${{ matrix.repo }}
-          ref: master
+          ref: next
           token: ${{ secrets.TOKEN }}
       - run: |
-          git checkout --track origin/next
-          git reset --hard origin/master
+          git fetch origin master
+          git reset --hard origin master
           git push origin next --follow-tags --force
       - uses: actions/github-script@v6
         with:

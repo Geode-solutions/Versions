@@ -133,9 +133,11 @@ jobs:
         with:
           repository: Geode-solutions/${{ matrix.repo }}
           token: ${{ secrets.TOKEN }}
-          ref: next
+
           fetch-depth: 0
       - run: |
+          git checkout --track origin/next 
+          git pull
           git rebase origin/master
           git push origin next
       - uses: actions/github-script@v6

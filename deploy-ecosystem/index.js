@@ -37,7 +37,7 @@ const main = async () => {
           workflow_id,
           ref
         })
-        await new Promise(resolve => setTimeout(resolve, 5 * 1000))
+        await new Promise(resolve => setTimeout(resolve, 10 * 1000))
         const response = await octokit.actions.listWorkflowRuns({
           owner,
           repo,

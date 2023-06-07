@@ -44,6 +44,10 @@ const main = async () => {
           workflow_id,
           event: 'workflow_dispatch'
         })
+        console.log("trigger_time", trigger_time);
+        response.data.workflow_runs.forEach(run => {
+          console.log("date", new Date(run.created_at));
+        });
         const runs = response.data.workflow_runs
           .filter((run) => new Date(run.created_at) >= trigger_time)
         if (runs.length == 0) {
@@ -53,7 +57,7 @@ const main = async () => {
         console.log(`Run ${repo}::${workflow_id} id: ${run_id}`)
         return run_id
       } catch (error) {
-         throw new Error(`${repo}::${workflow_id}: ${error.message}`)
+        throw new Error(`${repo}::${workflow_id}: ${error.message}`)
       }
     }
 

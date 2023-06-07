@@ -38,7 +38,7 @@ const main = async () => {
           ref
         })
         let run_id = 0
-        for (let retry = 0; retry < 5; retry++) {
+        for (let retry = 0; retry < 10; retry++) {
           await new Promise(resolve => setTimeout(resolve, 10 * 1000))
           console.log(`${repo}::${workflow_id} retry ${retry}`)
           const response = await octokit.actions.listWorkflowRuns({

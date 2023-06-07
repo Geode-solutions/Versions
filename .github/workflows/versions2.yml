@@ -109,9 +109,6 @@ jobs:
         id: commit
         with:
           commit_message: Apply version changes
-      - name: "Run if changes have been detected"
-        if: steps.commit.outputs.changes_detected != 'true'
-        run: exit 1
       - name: Post to a Slack channel
         if: steps.commit.outputs.changes_detected == 'true'
         id: slack
@@ -129,17 +126,6 @@ jobs:
       matrix:
         repo: ${{ fromJSON(needs.check-next.outputs.repos) }}
     steps:
-      - uses: actions/checkout@v3
-        with:
-          repository: Geode-solutions/${{ matrix.repo }}
-          token: ${{ secrets.TOKEN }}
-
-          fetch-depth: 0
-      - run: |
-          git checkout --track origin/next 
-          git pull
-          git rebase origin/master
-          git push origin next
       - uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.TOKEN }}

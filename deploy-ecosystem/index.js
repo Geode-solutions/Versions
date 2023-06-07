@@ -46,7 +46,7 @@ const main = async () => {
         })
         console.log("trigger_time", trigger_time);
         response.data.workflow_runs.forEach(run => {
-          console.log("date", new Date(run.created_at));
+          console.log("date", new Date(run.created_at).getTime());
         });
         const runs = response.data.workflow_runs
           .filter((run) => new Date(run.created_at) >= trigger_time)

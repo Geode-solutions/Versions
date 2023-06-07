@@ -126,6 +126,16 @@ jobs:
       matrix:
         repo: ${{ fromJSON(needs.check-next.outputs.repos) }}
     steps:
+      - uses: actions/checkout@v3
+        with:
+          repository: Geode-solutions/${{ matrix.repo }}
+          token: ${{ secrets.TOKEN }}
+          fetch-depth: 0
+      - run: |
+          git checkout --track origin/next 
+          git pull
+          git rebase origin/master
+          git push origin next
       - uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.TOKEN }}

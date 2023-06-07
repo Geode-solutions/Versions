@@ -134,7 +134,7 @@ jobs:
       - run: |
           git checkout --track origin/next 
           git pull
-          git rebase origin/master
+          git merge origin/master
           git push origin next
       - uses: actions/github-script@v6
         with:

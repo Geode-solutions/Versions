@@ -38,25 +38,21 @@ const main = async () => {
           ref
         })
         let run_id = 0
-        for (let retry = 0; retry < 10; retry++) {
+        for (let retry = 0; retry < 20; retry++) {
           await new Promise(resolve => setTimeout(resolve, 10 * 1000))
-          console.log(`${repo}::${workflow_id} retry ${retry}`)
           const response = await octokit.actions.listWorkflowRuns({
             owner,
             repo,
             workflow_id,
             event: 'workflow_dispatch'
           })
-          console.log("trigger_time", trigger_time);
-          response.data.workflow_runs.forEach(run => {
-            console.log("date", new Date(run.created_at).getTime());
-          });
           const runs = response.data.workflow_runs
-            .filter((run) => new Date(run.created_at) >= trigger_time)
+          .filter((run) => new Date(run.created_at) >= trigger_time)
           if (runs.length != 0) {
             run_id = runs[0].id
             break
           }
+          console.log(`${repo}::${workflow_id} retry ${retry}`)
         }
         if (run_id == 0) {
           throw new Error(`${repo}::${workflow_id} run not found`)

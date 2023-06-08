@@ -62,9 +62,7 @@ jobs:
           echo $last_master_tag
           echo $last_tag
           if [ "$last_master_tag" != "$last_tag" ]; then
-            echo "rebase?"
             git rebase origin/next
-            echo "rebase ok"
             git push origin master
           fi
 
@@ -133,8 +131,9 @@ jobs:
           fetch-depth: 0
       - run: |
           git checkout --track origin/next 
-          git pull
-          git merge origin/master
+          git config user.email $GITHUB_ACTOR@users.noreply.github.com
+          git config user.name $GITHUB_ACTOR
+          git merge origin/master -m "Merge with master"
           git push origin next
       - uses: actions/github-script@v6
         with:
@@ -144,6 +143,5 @@ jobs:
               owner: 'Geode-solutions',
               repo: '${{ matrix.repo }}',
               workflow_id: 'schedule.yml',
-              ref: 'master',
-              inputs: { branch: 'master' }
+              ref: 'master'
             })

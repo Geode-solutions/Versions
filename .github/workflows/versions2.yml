@@ -83,16 +83,20 @@ jobs:
             const data = require('./versions.json')
             console.log(data)
             let results = [];
+            let ecosystem = "Ecosystem updates: \n"
             for (const info of data) {
-              const {repo} = info
+              const {repo, version} = info
               console.log('Looking for repository:', repo);
               const release = await github.rest.repos.getLatestRelease({
                 owner: context.repo.owner, 
                 repo
               });
-              const version = release.data.tag_name.substring(1);
+              const new_version = release.data.tag_name.substring(1);
               console.log(release.data.tag_name);
-              results.push({repo, version});
+              results.push({repo, new_version});
+              if (version !== new_version) {
+                ecosystem += '  * ${repo}: ${version} -> ${new_version}\n'
+              }
             }
             console.log("results",results)
             const json = JSON.stringify(results.sort(), null, 2)
@@ -101,7 +105,7 @@ jobs:
             fs.writeFile('versions.json', json, (err) => {
               if (err) throw err;
               console.log('The file has been saved!');
-              core.setOutput('ecosystem', json)
+              core.setOutput('ecosystem', ecosystem)
             })
       - uses: stefanzweifel/git-auto-commit-action@v4
         id: commit
@@ -113,7 +117,7 @@ jobs:
         uses: slackapi/slack-github-action@v1.24.0
         with:
           channel-id: C0598GTCLGH
-          slack-message: "Ecosystem build result: \n${{ steps.update.outputs.ecosystem }}"
+          slack-message: "${{ steps.update.outputs.ecosystem }}"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 

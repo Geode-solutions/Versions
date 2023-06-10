@@ -137,7 +137,7 @@ jobs:
           git checkout --track origin/next 
           git config user.email $GITHUB_ACTOR@users.noreply.github.com
           git config user.name $GITHUB_ACTOR
-          git merge origin/master -m "Merge with master"
+          git rebase -X theirs origin/master
           git push origin next
       - uses: actions/github-script@v6
         with:

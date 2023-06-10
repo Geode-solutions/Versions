@@ -95,7 +95,7 @@ jobs:
               console.log(release.data.tag_name);
               results.push({repo, new_version});
               if (version !== new_version) {
-                ecosystem += '  * ${repo}: ${version} -> ${new_version}\n'
+                ecosystem += `  * ${repo}: ${version} -> ${new_version}\n`
               }
             }
             console.log("results",results)
@@ -137,7 +137,7 @@ jobs:
           git checkout --track origin/next 
           git config user.email $GITHUB_ACTOR@users.noreply.github.com
           git config user.name $GITHUB_ACTOR
-          git merge origin/master -m "Merge with master"
+          git rebase origin/master -m "Merge with master"
           git push origin next
       - uses: actions/github-script@v6
         with:

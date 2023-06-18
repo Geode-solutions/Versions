@@ -93,7 +93,7 @@ jobs:
               });
               const new_version = release.data.tag_name.substring(1);
               console.log(release.data.tag_name);
-              results.push({repo, new_version});
+              results.push({repo, 'version': new_version});
               if (version !== new_version) {
                 ecosystem += `  * ${repo}: ${version} -> ${new_version}\n`
               }

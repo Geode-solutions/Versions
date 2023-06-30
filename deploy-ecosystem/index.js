@@ -65,7 +65,7 @@ const main = async () => {
     }
 
     async function deploy_repository(repo) {
-      const prepare_id = await launch_workflow(repo, 'prepare.yml')
+      const prepare_id = await launch_workflow(repo, 'prepare_deploy.yml')
       await wait_for_run_completed(repo, prepare_id, 40)
       const deploy_id = await launch_workflow(repo, 'deploy.yml')
       const conclusion = await wait_for_run_completed(repo, deploy_id, 60)

@@ -1,7 +1,7 @@
 [
   {
     "repo": "OpenGeode",
-    "version": "14.4.1"
+    "version": "14.4.2"
   },
   {
     "repo": "OpenGeode-IO",
@@ -9,7 +9,7 @@
   },
   {
     "repo": "OpenGeode-Geosciences",
-    "version": "7.1.1"
+    "version": "7.1.2"
   },
   {
     "repo": "OpenGeode-GeosciencesIO",
@@ -29,7 +29,7 @@
   },
   {
     "repo": "Geode-Numerics_private",
-    "version": "3.0.7"
+    "version": "3.0.8"
   },
   {
     "repo": "Geode-Background_private",
@@ -41,7 +41,7 @@
   },
   {
     "repo": "Geode-Implicit_private",
-    "version": "2.1.2"
+    "version": "2.2.0"
   },
   {
     "repo": "Geode-Simplex_private",

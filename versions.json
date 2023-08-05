@@ -1,7 +1,7 @@
 [
   {
     "repo": "OpenGeode",
-    "version": "14.4.5"
+    "version": "14.4.6"
   },
   {
     "repo": "OpenGeode-IO",
@@ -33,7 +33,7 @@
   },
   {
     "repo": "Geode-Background_private",
-    "version": "7.3.2"
+    "version": "7.3.3"
   },
   {
     "repo": "Geode-Explicit_private",

@@ -13,7 +13,7 @@
   },
   {
     "repo": "OpenGeode-GeosciencesIO",
-    "version": "4.2.4"
+    "version": "4.3.0"
   },
   {
     "repo": "OpenGeode-Inspector",
@@ -45,7 +45,7 @@
   },
   {
     "repo": "Geode-Simplex_private",
-    "version": "6.1.5"
+    "version": "6.1.6"
   },
   {
     "repo": "Geode-SimplexGeosciences_private",

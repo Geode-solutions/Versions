@@ -1,19 +1,19 @@
 [
   {
     "repo": "OpenGeode",
-    "version": "14.6.4"
+    "version": "14.7.0"
   },
   {
     "repo": "OpenGeode-IO",
-    "version": "6.1.1"
+    "version": "6.1.2"
   },
   {
     "repo": "OpenGeode-Geosciences",
-    "version": "7.1.8"
+    "version": "7.1.9"
   },
   {
     "repo": "OpenGeode-GeosciencesIO",
-    "version": "4.4.0"
+    "version": "4.4.1"
   },
   {
     "repo": "OpenGeode-Inspector",

@@ -11,38 +11,38 @@ jobs:
     outputs:
       repos: ${{ steps.check.outputs.repos }}
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-    - uses: actions/github-script@v6
-      id: check
-      with:
-        github-token: ${{ secrets.TOKEN }}
-        script: |
-          const data = require('./versions.json')
-          console.log(data)
-          const repos = []
-          for (const info of data) {
-            const {repo} = info
-            repos.push(repo)
-            console.log('Looking for repository:', repo);
-            const wf = await github.rest.actions.listWorkflowRuns({
-              owner: 'Geode-solutions', 
-              repo,
-              branch: 'master',
-              workflow_id: 'schedule.yml',
-              per_page: '1',
-              event: 'schedule'
-            })
-            console.log(wf.data.workflow_runs[0]);
-            const conclusion = wf.data.workflow_runs[0].conclusion;
-            console.log(conclusion);
-            if (conclusion != 'success') {
-              core.setFailed('Last schedule failed for ' + repo);
-              return;
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions/github-script@v6
+        id: check
+        with:
+          github-token: ${{ secrets.TOKEN }}
+          script: |
+            const data = require('./versions.json')
+            console.log(data)
+            const repos = []
+            for (const info of data) {
+              const {repo} = info
+              repos.push(repo)
+              console.log('Looking for repository:', repo);
+              const wf = await github.rest.actions.listWorkflowRuns({
+                owner: 'Geode-solutions', 
+                repo,
+                branch: 'master',
+                workflow_id: 'schedule.yml',
+                per_page: '1',
+                event: 'schedule'
+              })
+              console.log(wf.data.workflow_runs[0]);
+              const conclusion = wf.data.workflow_runs[0].conclusion;
+              console.log(conclusion);
+              if (conclusion != 'success') {
+                core.setFailed('Last schedule failed for ' + repo);
+                return;
+              }
             }
-          }
-          core.setOutput('repos', JSON.stringify(repos))
+            core.setOutput('repos', JSON.stringify(repos))
 
   merge-master:
     runs-on: ubuntu-latest
@@ -51,7 +51,7 @@ jobs:
       matrix:
         repo: ${{ fromJSON(needs.check-next.outputs.repos) }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
         with:
           repository: Geode-solutions/${{ matrix.repo }}
           token: ${{ secrets.TOKEN }}
@@ -74,7 +74,7 @@ jobs:
         with:
           version: master
           token: ${{ secrets.TOKEN }}
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
       - uses: actions/github-script@v6
         id: update
         with:
@@ -128,7 +128,7 @@ jobs:
       matrix:
         repo: ${{ fromJSON(needs.check-next.outputs.repos) }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
         with:
           repository: Geode-solutions/${{ matrix.repo }}
           token: ${{ secrets.TOKEN }}

@@ -7,52 +7,52 @@ jobs:
   run:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-    - uses: actions/github-script@v6
-      id: data
-      with:
-        github-token: ${{ secrets.TOKEN }}
-        script: |
-          const data = require('./versions.json')
-          console.log(data)
-          let results = [];
-          for (const info of data) {
-            const {repo} = info
-            console.log('Looking for repository:', repo);
-            const wf = await github.rest.actions.listWorkflowRunsForRepo({
-              owner: context.repo.owner, 
-              repo,
-              branch: 'master',
-              per_page: '1', 
-              event: 'schedule'
-            })
-            console.log(wf.data.workflow_runs);
-            const conclusion = wf.data.workflow_runs[0].conclusion;
-            console.log(conclusion);
-            if (conclusion != 'success') {
-              core.setFailed('Last schedule does not work: ' + repo);
-              return;
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions/github-script@v6
+        id: data
+        with:
+          github-token: ${{ secrets.TOKEN }}
+          script: |
+            const data = require('./versions.json')
+            console.log(data)
+            let results = [];
+            for (const info of data) {
+              const {repo} = info
+              console.log('Looking for repository:', repo);
+              const wf = await github.rest.actions.listWorkflowRunsForRepo({
+                owner: context.repo.owner, 
+                repo,
+                branch: 'master',
+                per_page: '1', 
+                event: 'schedule'
+              })
+              console.log(wf.data.workflow_runs);
+              const conclusion = wf.data.workflow_runs[0].conclusion;
+              console.log(conclusion);
+              if (conclusion != 'success') {
+                core.setFailed('Last schedule does not work: ' + repo);
+                return;
+              }
+              const release = await github.rest.repos.getLatestRelease({owner: context.repo.owner, repo});
+              const version = release.data.tag_name.substring(1);
+              console.log(release.data.tag_name);
+              results.push({repo, version});
             }
-            const release = await github.rest.repos.getLatestRelease({owner: context.repo.owner, repo});
-            const version = release.data.tag_name.substring(1);
-            console.log(release.data.tag_name);
-            results.push({repo, version});
-          }
-          console.log("results",results)
-          const json = JSON.stringify(results.sort(), null, 2)
-          console.log(json);
-          core.setOutput("json", json);
-          const fs = require('fs')
-          fs.writeFile('versions.json', json, (err) => {
-            if (err) throw err;
-            console.log('The file has been saved!');
-          })
-    - uses: stefanzweifel/git-auto-commit-action@v4
-      id: commit
-      with:
-        commit_message: Apply version changes
-    - name: "Run if changes have been detected"
-      if: steps.commit.outputs.changes_detected != 'true'
-      run: exit 1
+            console.log("results",results)
+            const json = JSON.stringify(results.sort(), null, 2)
+            console.log(json);
+            core.setOutput("json", json);
+            const fs = require('fs')
+            fs.writeFile('versions.json', json, (err) => {
+              if (err) throw err;
+              console.log('The file has been saved!');
+            })
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        id: commit
+        with:
+          commit_message: Apply version changes
+      - name: "Run if changes have been detected"
+        if: steps.commit.outputs.changes_detected != 'true'
+        run: exit 1

@@ -11,7 +11,7 @@ jobs:
     outputs:
       repos: ${{ steps.check.outputs.repos }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0
     - uses: actions/github-script@v6
@@ -51,7 +51,7 @@ jobs:
       matrix:
         repo: ${{ fromJSON(needs.check-next.outputs.repos) }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: Geode-solutions/${{ matrix.repo }}
           token: ${{ secrets.TOKEN }}
@@ -74,7 +74,7 @@ jobs:
         with:
           version: master
           token: ${{ secrets.TOKEN }}
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/github-script@v6
         id: update
         with:
@@ -128,7 +128,7 @@ jobs:
       matrix:
         repo: ${{ fromJSON(needs.check-next.outputs.repos) }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: Geode-solutions/${{ matrix.repo }}
           token: ${{ secrets.TOKEN }}

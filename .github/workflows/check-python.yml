@@ -1,0 +1,24 @@
+name: Python Ecosystem
+
+on:
+  schedule:
+    - cron: 0 23 * * *
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: "pip-compile"
+        run: |
+          pip install pip-tools
+          pip-compile --pre requirements.in
+      - name: Post to a Slack channel
+        if: failure()
+        id: slack
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          channel-id: C0598GTCLGH
+          slack-message: ":gyrophare: Python ecosystem version check failed"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}

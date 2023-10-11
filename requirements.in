@@ -1,0 +1,13 @@
+OpenGeode-core
+OpenGeode-IO
+OpenGeode-Geosciences
+OpenGeode-GeosciencesIO
+OpenGeode-Inspector
+geode-numerics
+geode-background
+geode-simplex
+geode-simplexgeosciences
+geode-explicit
+geode-implicit
+geode-common
+geode-viewables

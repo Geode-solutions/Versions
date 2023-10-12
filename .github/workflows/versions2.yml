@@ -21,9 +21,10 @@ jobs:
           script: |
             const data = require('./versions.json')
             console.log(data)
+            let pip_requirements = []
             const repos = []
             for (const info of data) {
-              const {repo} = info
+              const {repo, python} = info
               repos.push(repo)
               console.log('Looking for repository:', repo);
               const wf = await github.rest.actions.listWorkflowRuns({
@@ -41,8 +42,39 @@ jobs:
                 core.setFailed('Last schedule failed for ' + repo);
                 return;
               }
+              const releases = await github.rest.repos.listReleases({ 
+                owner: 'Geode-solutions', 
+                repo 
+              })
+              const latest = releases.data[0].tag_name.substring(1)
+              pip_requirements.push(python + "==" + latest)
             }
+            console.log("pip_requirements",pip_requirements)
+            const fs = require('fs')
+            const json = JSON.stringify(pip_requirements)
+            fs.writeFileSync('next.txt', json)
+            console.log('The file has been saved!');
+            const child_process = require('child_process')
+            try {
+              child_process.execSync("pip install -r next.txt", {stdio: 'inherit'})
+            } catch (error) {
+              console.log(error);
+              core.setOutput('pip_failed', 'true')
+              core.setOutput('pip', json)
+              core.setFailed('pip install failed');
+              return;
+            }
+            core.setOutput('pip_failed', 'false')
             core.setOutput('repos', JSON.stringify(repos))
+      - name: Post to a Slack channel
+        if: steps.check.outputs.pip_failed == 'true'
+        id: slack
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          channel-id: C0598GTCLGH
+          slack-message: ":gyrophare: pip install failed:\n${{ steps.check.outputs.pip }}"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
   merge-master:
     runs-on: ubuntu-latest

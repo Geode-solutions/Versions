@@ -67,7 +67,7 @@ jobs:
             core.setOutput('pip_failed', 'false')
             core.setOutput('repos', JSON.stringify(repos))
       - name: Post to a Slack channel
-        if: steps.check.outputs.pip_failed == 'true'
+        if: failure() && steps.check.outputs.pip_failed == 'true'
         id: slack
         uses: slackapi/slack-github-action@v1.24.0
         with:

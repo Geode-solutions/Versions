@@ -21,7 +21,7 @@ jobs:
           script: |
             const data = require('./versions.json')
             console.log(data)
-            let pip_requirements = []
+            let pip_requirements = ''
             const repos = []
             for (const info of data) {
               const {repo, python} = info
@@ -48,12 +48,11 @@ jobs:
               })
               const latest = releases.data[0].tag_name.substring(1)
               const version = latest.split('.')
-              pip_requirements.push(python + "==" + version[0] + '.*,>=' + latest)
+              pip_requirements.push(python + "==" + version[0] + '.*,>=' + latest + '\n')
             }
             console.log("pip_requirements",pip_requirements)
             const fs = require('fs')
-            const json = JSON.stringify(pip_requirements)
-            fs.writeFileSync('next.txt', json)
+            fs.writeFileSync('next.txt', pip_requirements)
             console.log('The file has been saved!');
             const child_process = require('child_process')
             try {
@@ -61,7 +60,7 @@ jobs:
             } catch (error) {
               console.log(error);
               core.setOutput('pip_failed', 'true')
-              core.setOutput('pip', json)
+              core.setOutput('pip', pip_requirements)
               core.setFailed('pip install failed');
               return;
             }
@@ -73,7 +72,7 @@ jobs:
         uses: slackapi/slack-github-action@v1.24.0
         with:
           channel-id: C0598GTCLGH
-          slack-message: ":gyrophare: pip install failed:\n${{ steps.check.outputs.pip }}"
+          slack-message: "pip install failed:\n${{ steps.check.outputs.pip }}"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 

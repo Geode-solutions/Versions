@@ -117,7 +117,7 @@ jobs:
             let results = [];
             let ecosystem = "Ecosystem updates: \n"
             for (const info of data) {
-              const {repo, version} = info
+              const {repo, version, python} = info
               console.log('Looking for repository:', repo);
               const release = await github.rest.repos.getLatestRelease({
                 owner: context.repo.owner, 
@@ -125,7 +125,7 @@ jobs:
               });
               const new_version = release.data.tag_name.substring(1);
               console.log(release.data.tag_name);
-              results.push({repo, 'version': new_version});
+              results.push({repo, python, 'version': new_version});
               if (version !== new_version) {
                 ecosystem += `  * ${repo}: ${version} -> ${new_version}\n`
               }

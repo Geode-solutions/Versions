@@ -2,6 +2,10 @@ name: version2
 
 on:
   workflow_dispatch:
+    inputs:
+      workflow:
+        type: string
+        default: "test.yml"
   schedule:
     - cron: 0 0 * * *
 
@@ -30,10 +34,8 @@ jobs:
               const wf = await github.rest.actions.listWorkflowRuns({
                 owner: 'Geode-solutions', 
                 repo,
-                branch: 'master',
-                workflow_id: 'schedule.yml',
-                per_page: '1',
-                event: 'schedule'
+                workflow_id: ${{ inputs.workflow || 'schedule.yml' }},
+                per_page: '1'
               })
               console.log(wf.data.workflow_runs[0]);
               const conclusion = wf.data.workflow_runs[0].conclusion;

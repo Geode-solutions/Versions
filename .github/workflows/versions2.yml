@@ -6,77 +6,16 @@ on:
       workflow:
         type: string
         default: "test.yml"
+      branch:
+        type: string
+        default: "next"
   schedule:
     - cron: 0 0 * * *
 
 jobs:
   check-next:
-    runs-on: ubuntu-latest
-    outputs:
-      repos: ${{ steps.check.outputs.repos }}
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - uses: actions/github-script@v6
-        id: check
-        with:
-          github-token: ${{ secrets.TOKEN }}
-          script: |
-            const data = require('./versions.json')
-            console.log(data)
-            let pip_requirements = ''
-            const repos = []
-            for (const info of data) {
-              const {repo, python} = info
-              repos.push(repo)
-              console.log('Looking for repository:', repo);
-              const wf = await github.rest.actions.listWorkflowRuns({
-                owner: 'Geode-solutions', 
-                repo,
-                workflow_id: ${{ inputs.workflow || 'schedule.yml' }},
-                per_page: '1'
-              })
-              console.log(wf.data.workflow_runs[0]);
-              const conclusion = wf.data.workflow_runs[0].conclusion;
-              console.log(conclusion);
-              if (conclusion != 'success') {
-                core.setFailed('Last schedule failed for ' + repo);
-                return;
-              }
-              const releases = await github.rest.repos.listReleases({ 
-                owner: 'Geode-solutions', 
-                repo 
-              })
-              const latest = releases.data[0].tag_name.substring(1)
-              const version = latest.split('.')
-              pip_requirements +=python + "==" + version[0] + '.*,>=' + latest + '\n'
-            }
-            console.log("pip_requirements",pip_requirements)
-            const fs = require('fs')
-            fs.writeFileSync('next.txt', pip_requirements)
-            console.log('The file has been saved!');
-            const child_process = require('child_process')
-            try {
-              child_process.execSync("pip install -r next.txt", {stdio: 'inherit'})
-            } catch (error) {
-              console.log(error);
-              core.setOutput('pip_failed', 'true')
-              core.setOutput('pip', pip_requirements)
-              core.setFailed('pip install failed');
-              return;
-            }
-            core.setOutput('pip_failed', 'false')
-            core.setOutput('repos', JSON.stringify(repos))
-      - name: Post to a Slack channel
-        if: failure() && steps.check.outputs.pip_failed == 'true'
-        id: slack
-        uses: slackapi/slack-github-action@v1.24.0
-        with:
-          channel-id: C0598GTCLGH
-          slack-message: "pip install failed:\n${{ steps.check.outputs.pip }}"
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+    uses: Geode-solutions/Versions/.github/workflows/verify.yml@master
+    secrets: inherit
 
   merge-master:
     runs-on: ubuntu-latest

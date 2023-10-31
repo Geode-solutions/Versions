@@ -27,51 +27,51 @@
   {
     "repo": "Geode-Common_private",
     "python": "geode-common",
-    "version": "28.0.0"
+    "version": "29.0.0"
   },
   {
     "repo": "Geode-Conversion_private",
     "python": "geode-conversion",
-    "version": "5.1.2"
+    "version": "5.1.3"
   },
   {
     "repo": "Geode-Numerics_private",
     "python": "geode-numerics",
-    "version": "4.0.1"
+    "version": "4.0.2"
   },
   {
     "repo": "Geode-Background_private",
     "python": "geode-background",
-    "version": "7.4.2"
+    "version": "7.4.3"
   },
   {
     "repo": "Geode-Explicit_private",
     "python": "geode-explicit",
-    "version": "4.3.2"
+    "version": "4.3.3"
   },
   {
     "repo": "Geode-Implicit_private",
     "python": "geode-implicit",
-    "version": "2.4.1"
+    "version": "2.4.2"
   },
   {
     "repo": "Geode-Simplex_private",
     "python": "geode-simplex",
-    "version": "6.2.2"
+    "version": "6.2.3"
   },
   {
     "repo": "Geode-SimplexGeosciences_private",
     "python": "geode-simplexgeosciences",
-    "version": "2.1.1"
+    "version": "2.1.2"
   },
   {
     "repo": "Geode-Hybrid_private",
     "python": "geode-hybrid",
-    "version": "2.2.0"
+    "version": "2.2.1"
   },
   {
     "repo": "Geode-Viewables_private",
     "python": "geode-viewables",
-    "version": "2.1.1"
+    "version": "2.1.2"
   }
 ]

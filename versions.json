@@ -37,7 +37,7 @@
   {
     "repo": "Geode-Numerics_private",
     "python": "geode-numerics",
-    "version": "4.0.2"
+    "version": "4.0.3"
   },
   {
     "repo": "Geode-Background_private",
@@ -57,7 +57,7 @@
   {
     "repo": "Geode-Simplex_private",
     "python": "geode-simplex",
-    "version": "6.2.3"
+    "version": "6.2.4"
   },
   {
     "repo": "Geode-SimplexGeosciences_private",

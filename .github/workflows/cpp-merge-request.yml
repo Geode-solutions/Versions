@@ -28,23 +28,22 @@ jobs:
           echo "LD_LIBRARY_PATH=$new_path" >> $GITHUB_ENV
       - name: Compile
         run: |
-          IFS=";" echo "${{ env.repos }}" | while IFS=";" read -ra projects; do
-            for project in "${projects[@]}"
-            do
-              echo "$project"
-              gh repo clone Geode-solutions/$project
-              cd $project
-              if git ls-remote --heads origin ${{ inputs.branch }}; then
-                git checkout origin/${{ inputs.branch }}
-              else
-                git checkout origin/next
-              fi
-              mkdir -p build
-              cd build
-              cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="${{ steps.repos.outputs.path }}" ../tests
-              cmake --build .
-              ctest --output-on-failure --no-tests=error -j 2
-            done
+          IFS=";" read -a projects <<< ${{ env.repos }}
+          for project in "${projects[@]}"
+          do
+            echo "$project"
+            gh repo clone Geode-solutions/$project
+            cd $project
+            if git ls-remote --heads origin ${{ inputs.branch }}; then
+              git checkout origin/${{ inputs.branch }}
+            else
+              git checkout origin/next
+            fi
+            mkdir -p build
+            cd build
+            cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="${{ steps.repos.outputs.path }}" ../tests
+            cmake --build .
+            ctest --output-on-failure --no-tests=error -j 2
           done
         env:
           GEODE_LICENSE_LOCATION: ${{ github.workspace }}/geode.lic

@@ -28,7 +28,7 @@ jobs:
           echo "LD_LIBRARY_PATH=$new_path" >> $GITHUB_ENV
       - name: Compile
         run: |
-          IFS=";" read -a projects <<< "${{ env.repos }}"
+          echo "${{ env.repos }}" | IFS=";" read -ra projects
           for project in "${projects[@]}"
           do
             echo "$project"

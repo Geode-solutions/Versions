@@ -31,7 +31,7 @@ jobs:
           projects=${{ env.repos }}
           for project in ${projects//;/ }
           do
-            echo $project
+            echo "$project"
             gh repo clone Geode-solutions/$project
             cd $project
             if git ls-remote --heads origin ${{ inputs.branch }}; then
@@ -82,12 +82,13 @@ jobs:
           choco install openssl -r --no-progress
           if(!$?) { exit 1 }
           Foreach($project in $env:repos.split(";")){
-            echo $project
+            echo "$project"
             gh repo clone Geode-solutions/$project
             cd $project
             if (git ls-remote --heads origin ${{ inputs.branch }}) {
               git checkout origin/${{ inputs.branch }}
-            } else {
+            } 
+            else {
               git checkout origin/next
             {
             mkdir -p build

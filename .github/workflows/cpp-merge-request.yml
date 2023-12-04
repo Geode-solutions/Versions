@@ -29,6 +29,7 @@ jobs:
           echo "LD_LIBRARY_PATH=$new_path" >> $GITHUB_ENV
       - name: Compile
         run: |
+          gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
           IFS=";" read -a projects <<< "${{ env.repos }}"
           for project in "${projects[@]}"
           do
@@ -86,6 +87,7 @@ jobs:
         run: |
           choco install openssl -r --no-progress
           if(!$?) { exit 1 }
+          gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
           Foreach($project in $env:repos.split(";")){
             echo "$project"
             gh repo clone Geode-solutions/$project

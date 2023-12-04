@@ -44,6 +44,7 @@ jobs:
             cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="${{ steps.repos.outputs.path }}" ../tests
             cmake --build .
             ctest --output-on-failure --no-tests=error -j 2
+            cd ${{ github.workspace }}
           done
         env:
           GEODE_LICENSE_LOCATION: ${{ github.workspace }}/geode.lic
@@ -113,6 +114,7 @@ jobs:
             }
             cmake --build .
             ctest --output-on-failure --no-tests=error -j 2
+            cd ${{ github.workspace }}
           }
         env:
           GEODE_LICENSE_LOCATION: ${{ github.workspace }}/geode.lic

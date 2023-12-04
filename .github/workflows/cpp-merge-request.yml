@@ -21,7 +21,7 @@ jobs:
           repository: ${{ env.repos }};open-license-manager
           file: "-ubuntu-private.tar.gz"
           token: ${{ secrets.TOKEN }}
-          skip-master: true
+          branch: ${{ inputs.branch }}
       - name: Libraries
         id: libraries
         run: |
@@ -70,7 +70,7 @@ jobs:
           repository: ${{ env.repos }};open-license-manager
           file: "-win64-private.zip"
           token: ${{ secrets.TOKEN }}
-          skip-master: true
+          branch: ${{ inputs.branch }}
       - name: Libraries
         id: libraries
         run: |

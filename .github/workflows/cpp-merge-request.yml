@@ -22,7 +22,7 @@ jobs:
       - uses: Geode-solutions/actions/get-release@master
         id: repos
         with:
-          repository: ${{ env.repos }};open-license-manager
+          repository: ${{ env.repos }}
           file: "-ubuntu-private.tar.gz"
           token: ${{ secrets.TOKEN }}
           branch: ${{ inputs.branch }}
@@ -72,7 +72,7 @@ jobs:
       - uses: Geode-solutions/actions/get-release@master
         id: repos
         with:
-          repository: ${{ env.repos }};open-license-manager
+          repository: ${{ env.repos }}
           file: "-win64-private.zip"
           token: ${{ secrets.TOKEN }}
           branch: ${{ inputs.branch }}
@@ -89,8 +89,6 @@ jobs:
           arch: x64
       - name: Compile & Test
         run: |
-          choco install openssl -r --no-progress
-          if(!$?) { exit 1 }
           gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
           Foreach($project in $env:repos.split(";")){
             echo "$project"

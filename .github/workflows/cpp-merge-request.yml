@@ -7,6 +7,10 @@ on:
         type: string
         required: true
 
+concurrency:
+  group: ${{ inputs.branch }}
+  cancel-in-progress: true
+
 env:
   repos: "OpenGeode;OpenGeode-IO;OpenGeode-Geosciences;OpenGeode-GeosciencesIO;OpenGeode-Inspector;Geode-Common_private;Geode-Numerics_private;Geode-Conversion_private;Geode-Background_private;Geode-Explicit_private;Geode-Implicit_private;Geode-Simplex_private;Geode-SimplexGeosciences_private;Geode-Hybrid_private;Geode-Viewables_private"
 

@@ -28,7 +28,7 @@ jobs:
           echo "LD_LIBRARY_PATH=$new_path" >> $GITHUB_ENV
       - name: Compile
         run: |
-          echo "${{ env.repos }}" | IFS=";" read -ra projects
+          IFS=";" read -a projects <<< "${{ env.repos }}"
           for project in "${projects[@]}"
           do
             echo "$project"
@@ -48,6 +48,7 @@ jobs:
         env:
           GEODE_LICENSE_LOCATION: ${{ github.workspace }}/geode.lic
           GH_TOKEN: ${{ secrets.TOKEN }}
+        shell: bash
       - name: Post to a Slack channel
         if: failure()
         id: slack

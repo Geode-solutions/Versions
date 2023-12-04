@@ -1,0 +1,119 @@
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        type: string
+        required: true
+
+env:
+  repos: OpenGeode;OpenGeode-IO;OpenGeode-Geosciences;OpenGeode-GeosciencesIO;OpenGeode-Inspector;Geode-Common_private;Geode-Numerics_private;Geode-Conversion_private;Geode-Background_private;Geode-Explicit_private;Geode-Simplex_private;Geode-SimplexGeosciences_private;Geode-Hybrid_private;Geode-Viewables_private
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    container: ghcr.io/geode-solutions/ubuntu:master
+    steps:
+      - uses: Geode-solutions/actions/get-release@master
+        id: repos
+        with:
+          repository: ${{ env.repos }};open-license-manager
+          file: "-ubuntu-private.tar.gz"
+          token: ${{ secrets.TOKEN }}
+      - name: Libraries
+        id: libraries
+        run: |
+          new_path=$(echo "${{ steps.repos.outputs.path }}" | sed 's/\;/\/lib\:/g')
+          echo "LD_LIBRARY_PATH=$new_path" >> $GITHUB_ENV
+      - name: Compile
+        run: |
+          for project in ${${{ env.repos }}//;/ }
+          do
+            gh repo clone Geode-solutions/$project
+            cd $project
+            if git ls-remote --heads origin ${{ inputs.branch }}; then
+              git checkout origin/${{ inputs.branch }}
+            else
+              git checkout origin/next
+            fi
+            mkdir -p build
+            cd build
+            cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="${{ steps.repos.outputs.path }}" ../tests
+            cmake --build .
+            ctest --output-on-failure --no-tests=error -j 2
+          done
+        env:
+          GEODE_LICENSE_LOCATION: ${{ github.workspace }}/geode.lic
+      - name: Post to a Slack channel
+        if: failure()
+        id: slack
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          channel-id: C0598GTCLGH
+          slack-message: "${{ inputs.branch }}: C++ merge request failed on Linux"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: Geode-solutions/actions/get-release@master
+        id: repos
+        with:
+          repository: ${{ env.repos }};open-license-manager
+          file: "-win64-private.zip"
+          token: ${{ secrets.TOKEN }}
+      - name: Libraries
+        id: libraries
+        run: |
+          $old_path = "${{ steps.repos.outputs.path }}"
+          $bin_path = $old_path.replace(";", "\bin;")
+          echo "bin=$bin_path" >> $env:GITHUB_OUTPUT
+          $share_path = $old_path.replace(";", "\share;")
+          echo "share=$share_path" >> $env:GITHUB_OUTPUT
+      - uses: TheMrMilchmann/setup-msvc-dev@v2
+        with:
+          arch: x64
+      - name: Compile & Test
+        run: |
+          choco install openssl -r --no-progress
+          if(!$?) { exit 1 }
+          Foreach($project in $env:repos.split(";")){
+            gh repo clone Geode-solutions/$project
+            cd $project
+            if (git ls-remote --heads origin ${{ inputs.branch }}) {
+              git checkout origin/${{ inputs.branch }}
+            } else 
+              git checkout origin/next
+            {
+            mkdir -p build
+            cd build
+            cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="${{ steps.repos.outputs.path }}" ../tests
+            $paths = "${{ steps.libraries.outputs.bin }}"
+            echo $paths
+            Foreach($path in $paths.split(";")){
+              if(Test-Path -Path $path) {
+                Copy-Item -Path $path\* -Destination bin
+              }
+            }
+            mkdir share
+            $shares = "${{ steps.libraries.outputs.share }}"
+            echo $shares
+            Foreach($share in $shares.split(";")){
+              if(Test-Path -Path $share) {
+                Copy-Item -Path $share\* -Destination share -Recurse
+              }
+            }
+            cmake --build .
+            ctest --output-on-failure --no-tests=error -j 2
+          }
+        env:
+          GEODE_LICENSE_LOCATION: ${{ github.workspace }}/geode.lic
+      - name: Post to a Slack channel
+        if: failure()
+        id: slack
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          channel-id: C0598GTCLGH
+          slack-message: "${{ inputs.branch }}: C++ merge request failed on Windows"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}

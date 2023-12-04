@@ -8,7 +8,7 @@ on:
         required: true
 
 env:
-  repos: "OpenGeode,OpenGeode-IO,OpenGeode-Geosciences,OpenGeode-GeosciencesIO,OpenGeode-Inspector,Geode-Common_private,Geode-Numerics_private,Geode-Conversion_private,Geode-Background_private,Geode-Explicit_private,Geode-Implicit_private,Geode-Simplex_private,Geode-SimplexGeosciences_private,Geode-Hybrid_private,Geode-Viewables_private"
+  repos: "OpenGeode;OpenGeode-IO;OpenGeode-Geosciences;OpenGeode-GeosciencesIO;OpenGeode-Inspector;Geode-Common_private;Geode-Numerics_private;Geode-Conversion_private;Geode-Background_private;Geode-Explicit_private;Geode-Implicit_private;Geode-Simplex_private;Geode-SimplexGeosciences_private;Geode-Hybrid_private;Geode-Viewables_private"
 
 jobs:
   linux:
@@ -28,7 +28,7 @@ jobs:
           echo "LD_LIBRARY_PATH=$new_path" >> $GITHUB_ENV
       - name: Compile
         run: |
-          IFS="," read -a projects <<< ${{ env.repos }}
+          IFS=";" read -a projects <<< "${{ env.repos }}"
           for project in "${projects[@]}"
           do
             echo "$project"
@@ -82,7 +82,7 @@ jobs:
         run: |
           choco install openssl -r --no-progress
           if(!$?) { exit 1 }
-          Foreach($project in $env:repos.split(",")){
+          Foreach($project in $env:repos.split(";")){
             echo "$project"
             gh repo clone Geode-solutions/$project
             cd $project

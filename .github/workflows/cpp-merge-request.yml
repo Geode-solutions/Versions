@@ -28,8 +28,9 @@ jobs:
           echo "LD_LIBRARY_PATH=$new_path" >> $GITHUB_ENV
       - name: Compile
         run: |
-          IFS=";" read -ra projects <<< "${{ env.repos }}"
-          for project in "${projects[@]}"
+          projects="${{ env.repos }}"
+          IFS=";" read -ra array <<< "$projects"
+          for project in "${array[@]}"
           do
             echo "$project"
             gh repo clone Geode-solutions/$project

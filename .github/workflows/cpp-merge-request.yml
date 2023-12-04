@@ -28,7 +28,7 @@ jobs:
           echo "LD_LIBRARY_PATH=$new_path" >> $GITHUB_ENV
       - name: Compile
         run: |
-          projects=${{ env.repos }}
+          projects="${{ env.repos }}"
           for project in ${projects//;/ }
           do
             echo "$project"
@@ -90,7 +90,7 @@ jobs:
             } 
             else {
               git checkout origin/next
-            {
+            }
             mkdir -p build
             cd build
             cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="${{ steps.repos.outputs.path }}" ../tests

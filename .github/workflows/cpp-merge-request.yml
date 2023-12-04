@@ -34,7 +34,7 @@ jobs:
             echo "$project"
             gh repo clone Geode-solutions/$project
             cd $project
-            if git ls-remote --heads origin ${{ inputs.branch }}; then
+            if git ls-remote --exit-code --heads origin ${{ inputs.branch }}; then
               git checkout origin/${{ inputs.branch }}
             else
               git checkout origin/next
@@ -47,7 +47,7 @@ jobs:
           done
         env:
           GEODE_LICENSE_LOCATION: ${{ github.workspace }}/geode.lic
-          GH_TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
         shell: bash
       - name: Post to a Slack channel
         if: failure()
@@ -116,7 +116,7 @@ jobs:
           }
         env:
           GEODE_LICENSE_LOCATION: ${{ github.workspace }}/geode.lic
-          GH_TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
       - name: Post to a Slack channel
         if: failure()
         id: slack

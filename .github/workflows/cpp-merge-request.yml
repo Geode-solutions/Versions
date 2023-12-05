@@ -63,7 +63,7 @@ jobs:
                 pull_number
               });
               console.log(reviews.data)
-              const approved = false
+              let approved = false
               for (const review of reviews.data) {
                 if (review.state == 'APPROVED') {
                   approved = true

@@ -78,7 +78,6 @@ jobs:
                 core.setFailed('PR not approved for ' + repo)
               }
             }
-            core.setFailed('STOP')
 
   linux:
     needs: validate-PRs
@@ -201,3 +200,34 @@ jobs:
           slack-message: "${{ inputs.branch }}: C++ merge request failed on Windows"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
+  merge-PRs:
+    needs: [linux, windows]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.TOKEN }}
+          script: |
+            const repos = "${{ env.repos }}"
+            const owner = 'Geode-solutions'
+            for(const repo of repos.split(';')) {
+              console.log(repo)
+              const prs = await github.rest.pulls.list({
+                owner,
+                repo,
+                state: 'open',
+                base: 'next'
+              })
+              const branch_pr = prs.data.find(pr => pr.head.ref == "${{ inputs.branch }}")
+              if (!branch_pr) {
+                continue
+              }
+              console.log(branch_pr)
+              const pull_number = branch_pr.number
+              await github.rest.pulls.merge({
+                owner,
+                repo,
+                pull_number
+              })
+            }

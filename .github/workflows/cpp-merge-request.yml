@@ -231,3 +231,19 @@ jobs:
                 pull_number
               })
             }
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: merge-PRs
+    steps:
+      - uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.TOKEN }}
+          script: |
+            github.rest.actions.createWorkflowDispatch({
+              owner: 'Geode-solutions',
+              repo: 'Versions',
+              workflow_id: 'deploy.yml',
+              ref: 'master',
+              inputs: { branch: 'next' }
+            })

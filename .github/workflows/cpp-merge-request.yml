@@ -23,29 +23,42 @@ jobs:
           github-token: ${{ secrets.TOKEN }}
           script: |
             const repos = "${{ env.repos }}"
+            const owner = 'Geode-solutions'
             for(const repo of repos.split(';')) {
               console.log(repo)
               const prs = await github.rest.pulls.list({
-                owner: 'Geode-solutions',
+                owner,
                 repo,
                 state: 'open',
                 base: 'next'
               })
-              console.log(prs.data)
-              if (prs.data.length == 0) {
-                continue
-              }
               const branch_pr = prs.data.find(pr => pr.head.ref == "${{ inputs.branch }}")
-              if (branch_pr) {
-                console.log('PR already exists for ' + repo)
-                continue
-              }
               if (!branch_pr) {
-                console.log('PR not exists for ' + repo)
                 continue
               }
+              console.log(branch_pr)
+              const checks = await github.rest.checks.listForRef({
+                owner,
+                repo,
+                ref: "${{ inputs.branch }}"
+              })
+              const check_run = checks.data.check_runs.find(check => check.name == "test / deploy-repository / notify / notify")
+              console.log(check_run)
+              if (!check_run || check_run.status != 'completed' || check_run.conclusion != 'success') {
+                core.setFailed('PR check not completed for ' + repo)
+              }
+              const pr = await github.rest.pulls.get({
+                owner,
+                repo,
+                pull_number: branch_pr.number
+              })
+              console.log(pr.data)
+              if (!pr.data.mergeable) {
+                core.setFailed('PR merge not mergeable for ' + repo)
+              }
+              
             }
-            core.setFailed('PRs exist for ' + repo)
+            core.setFailed('STOP')
 
   linux:
     needs: validate-PRs

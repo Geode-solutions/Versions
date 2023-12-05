@@ -31,9 +31,21 @@ jobs:
                 state: 'open',
                 base: 'next'
               })
-              console.log(prs)
+              console.log(prs.data)
+              if (prs.data.length == 0) {
+                continue
+              }
+              const branch_pr = prs.data.find(pr => pr.head.ref == ${{ inputs.branch }})
+              if (branch_pr) {
+                console.log('PR already exists for ' + repo)
+                continue
+              }
+              if (!branch_pr) {
+                console.log('PR not exists for ' + repo)
+                continue
+              }
             }
-            return 1
+            core.setFailed('PRs exist for ' + repo)
 
   linux:
     needs: validate-PRs

@@ -15,7 +15,28 @@ env:
   repos: "OpenGeode;OpenGeode-IO;OpenGeode-Geosciences;OpenGeode-GeosciencesIO;OpenGeode-Inspector;Geode-Common_private;Geode-Numerics_private;Geode-Conversion_private;Geode-Background_private;Geode-Explicit_private;Geode-Implicit_private;Geode-Simplex_private;Geode-SimplexGeosciences_private;Geode-Hybrid_private;Geode-Viewables_private"
 
 jobs:
+  validate-PRs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.TOKEN }}
+          script: |
+            const repos = "${{ env.repos }}"
+            repos.split(';').forEach(repo => {
+              console.log(repo)
+              const prs = await github.rest.pulls.list({
+                owner: 'Geode-solutions',
+                repo,
+                state: 'open',
+                base: 'next'
+              })
+              console.log(prs)
+            })
+            return 1
+
   linux:
+    needs: validate-PRs
     runs-on: ubuntu-latest
     container: ghcr.io/geode-solutions/ubuntu:master
     steps:
@@ -67,6 +88,7 @@ jobs:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
   windows:
+    needs: validate-PRs
     runs-on: windows-latest
     steps:
       - uses: Geode-solutions/actions/get-release@master

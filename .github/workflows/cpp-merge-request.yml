@@ -35,7 +35,7 @@ jobs:
               if (prs.data.length == 0) {
                 continue
               }
-              const branch_pr = prs.data.find(pr => pr.head.ref == ${{ inputs.branch }})
+              const branch_pr = prs.data.find(pr => pr.head.ref == "${{ inputs.branch }}")
               if (branch_pr) {
                 console.log('PR already exists for ' + repo)
                 continue

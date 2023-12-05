@@ -23,7 +23,7 @@ jobs:
           github-token: ${{ secrets.TOKEN }}
           script: |
             const repos = "${{ env.repos }}"
-            repos.split(';').forEach(repo => {
+            for(const repo of repos.split(';')) {
               console.log(repo)
               const prs = await github.rest.pulls.list({
                 owner: 'Geode-solutions',
@@ -32,7 +32,7 @@ jobs:
                 base: 'next'
               })
               console.log(prs)
-            })
+            }
             return 1
 
   linux:

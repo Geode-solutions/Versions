@@ -37,6 +37,7 @@ jobs:
                 continue
               }
               console.log(branch_pr)
+              const pull_number = branch_pr.number
               const checks = await github.rest.checks.listForRef({
                 owner,
                 repo,
@@ -50,13 +51,32 @@ jobs:
               const pr = await github.rest.pulls.get({
                 owner,
                 repo,
-                pull_number: branch_pr.number
+                pull_number
               })
               console.log(pr.data)
               if (!pr.data.mergeable) {
-                core.setFailed('PR merge not mergeable for ' + repo)
+                core.setFailed('PR not mergeable for ' + repo)
               }
-              
+              const reviews = await github.rest.pulls.listReviews({
+                owner,
+                repo,
+                pull_number
+              });
+              console.log(reviews.data)
+              const approved = false
+              for (const review of reviews.data) {
+                if (review.state == 'APPROVED') {
+                  approved = true
+                }
+                else if (review.state == 'CHANGES_REQUESTED') {
+                  approved = false
+                  core.setFailed('PR request changes for ' + repo)
+                  break
+                }
+              }
+              if (!approved) {
+                core.setFailed('PR not approved for ' + repo)
+              }
             }
             core.setFailed('STOP')
 

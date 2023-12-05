@@ -228,6 +228,7 @@ jobs:
               await github.rest.pulls.merge({
                 owner,
                 repo,
-                pull_number
+                pull_number,
+                merge_method: "rebase"
               })
             }

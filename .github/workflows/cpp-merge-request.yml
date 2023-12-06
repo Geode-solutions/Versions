@@ -178,18 +178,22 @@ jobs:
             IFS=";" read -a paths <<< "${{ steps.libraries.outputs.bin }}"
             for path in "${paths[@]}"
             do
+            echo $path
               if [ -d $path ]; then
-                cp -r $path\* bin
+                cp -v $path\* bin
               fi
             done
+            ls bin
             mkdir share
             IFS=";" read -a shares <<< "${{ steps.libraries.outputs.share }}"
             for share in "${shares[@]}"
             do
+              echo $share
               if [ -d $share ]; then
-                cp -r $share\* share
+                cp -v -r $share\* share
               fi
             done
+            ls share
             cmake --build .
             ctest --output-on-failure --no-tests=error -j 2
             cd ../..

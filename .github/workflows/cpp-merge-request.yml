@@ -149,15 +149,19 @@ jobs:
         id: libraries
         run: |
           $old_path = "${{ steps.repos.outputs.path }}"
-          $bin_path = $old_path.replace(";", "\bin;")
+          $bin_path = $old_path.replace(";", "\bin;").replace("\","/")
           echo "bin=$bin_path" >> $env:GITHUB_OUTPUT
-          $share_path = $old_path.replace(";", "\share;")
+          $share_path = $old_path.replace(";", "\share;").replace("\","/")
           echo "share=$share_path" >> $env:GITHUB_OUTPUT
       - uses: TheMrMilchmann/setup-msvc-dev@v2
         with:
           arch: x64
       - name: Compile & Test
         run: |
+          echo "${{ steps.libraries.outputs.bin }}"
+          new_path=$(echo "${{ steps.repos.outputs.path }}" | sed 's/\;/\/bin\;/g')
+          echo $new_path
+
           gh auth setup-git
           gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
           IFS=";" read -a projects <<< "${{ env.repos }}"

@@ -155,6 +155,7 @@ jobs:
           arch: x64
       - name: Compile & Test
         run: |
+          $ErrorActionPreference = 'Stop'
           gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
           Foreach($project in $env:repos.split(";")){
             echo "$project"

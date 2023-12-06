@@ -158,10 +158,6 @@ jobs:
           arch: x64
       - name: Compile & Test
         run: |
-          echo "${{ steps.libraries.outputs.bin }}"
-          new_path=$(echo "${{ steps.repos.outputs.path }}" | sed 's/\;/\/bin\;/g')
-          echo $new_path
-
           gh auth setup-git
           gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
           IFS=";" read -a projects <<< "${{ env.repos }}"
@@ -185,7 +181,7 @@ jobs:
             echo "$path"
               if [[ -d $path ]]; then
                 echo "ok"
-                cp -v $path\* bin
+                cp -v $path/* bin
               fi
             done
             ls bin
@@ -196,7 +192,7 @@ jobs:
               echo "$share"
               if [[ -d $share ]]; then
                 echo "ok"
-                cp -v -r $share\* share
+                cp -v -r $share/* share
               fi
             done
             ls share

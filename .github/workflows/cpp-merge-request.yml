@@ -178,10 +178,8 @@ jobs:
             IFS=";" read -a paths <<< "${{ steps.libraries.outputs.bin }}"
             for path in "${paths[@]}"
             do
-            echo "$path"
               if [[ -d $path ]]; then
-                echo "ok"
-                cp -v $path/* bin
+                cp $path/* bin
               fi
             done
             ls bin
@@ -189,10 +187,8 @@ jobs:
             IFS=";" read -a shares <<< "${{ steps.libraries.outputs.share }}"
             for share in "${shares[@]}"
             do
-              echo "$share"
               if [[ -d $share ]]; then
-                echo "ok"
-                cp -v -r $share/* share
+                cp -r $share/* share
               fi
             done
             ls share

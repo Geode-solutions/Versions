@@ -105,6 +105,7 @@ jobs:
             echo "$project"
             gh repo clone Geode-solutions/$project
             cd $project
+            git ls-remote --exit-code --heads origin ${{ inputs.branch }}
             if git ls-remote --exit-code --heads origin ${{ inputs.branch }}; then
               echo "found branch ${{ inputs.branch }}"
               git checkout origin/${{ inputs.branch }}

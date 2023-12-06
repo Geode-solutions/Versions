@@ -106,6 +106,7 @@ jobs:
             gh repo clone Geode-solutions/$project
             cd $project
             if git ls-remote --exit-code --heads origin ${{ inputs.branch }}; then
+              echo "found branch ${{ inputs.branch }}"
               git checkout origin/${{ inputs.branch }}
             else
               git checkout origin/next
@@ -161,7 +162,8 @@ jobs:
             echo "$project"
             gh repo clone Geode-solutions/$project
             cd $project
-            if (git ls-remote --heads origin ${{ inputs.branch }}) {
+            if (git ls-remote --exit-code --heads origin ${{ inputs.branch }}) {
+              echo "found branch ${{ inputs.branch }}"
               git checkout origin/${{ inputs.branch }}
             } 
             else {

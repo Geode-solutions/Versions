@@ -149,9 +149,9 @@ jobs:
         id: libraries
         run: |
           $old_path = "${{ steps.repos.outputs.path }}"
-          $bin_path = $old_path.replace(";", "\bin;").replace("\","/")
+          $bin_path = $old_path.replace(";", "\bin;").replace("\","/") + "/bin"
           echo "bin=$bin_path" >> $env:GITHUB_OUTPUT
-          $share_path = $old_path.replace(";", "\share;").replace("\","/")
+          $share_path = $old_path.replace(";", "\share;").replace("\","/") + "/share"
           echo "share=$share_path" >> $env:GITHUB_OUTPUT
       - uses: TheMrMilchmann/setup-msvc-dev@v2
         with:

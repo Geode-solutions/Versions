@@ -158,44 +158,46 @@ jobs:
           arch: x64
       - name: Compile & Test
         run: |
-          $ErrorActionPreference = 'Stop'
+          gh auth setup-git
           gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
-          Foreach($project in $env:repos.split(";")){
+          IFS=";" read -a projects <<< "${{ env.repos }}"
+          for project in "${projects[@]}"
+          do
             echo "$project"
             gh repo clone Geode-solutions/$project
             cd $project
-            if (git ls-remote --exit-code --heads origin ${{ inputs.branch }}) {
+            if git ls-remote --exit-code --heads origin ${{ inputs.branch }}; then
               echo "found branch ${{ inputs.branch }}"
               git checkout origin/${{ inputs.branch }}
-            } 
-            else {
+            else
               git checkout origin/next
-            }
+            fi
             mkdir -p build
             cd build
             cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="${{ steps.repos.outputs.path }}" ../tests
-            $paths = "${{ steps.libraries.outputs.bin }}"
-            echo $paths
-            Foreach($path in $paths.split(";")){
-              if(Test-Path -Path $path) {
-                Copy-Item -Path $path\* -Destination bin
-              }
-            }
+            IFS=";" read -a paths <<< "${{ steps.libraries.outputs.bin }}"
+            for path in "${paths[@]}"
+            do
+              if [ -d $path ]; then
+                cp -r $path\* bin
+              fi
+            done
             mkdir share
-            $shares = "${{ steps.libraries.outputs.share }}"
-            echo $shares
-            Foreach($share in $shares.split(";")){
-              if(Test-Path -Path $share) {
-                Copy-Item -Path $share\* -Destination share -Recurse
-              }
-            }
+            IFS=";" read -a shares <<< "${{ steps.libraries.outputs.share }}"
+            for share in "${shares[@]}"
+            do
+              if [ -d $share ]; then
+                cp -r $share\* share
+              fi
+            done
             cmake --build .
             ctest --output-on-failure --no-tests=error -j 2
             cd ../..
-          }
+          done
         env:
           GEODE_LICENSE_LOCATION: ${{ github.workspace }}/geode.lic
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        shell: bash
       - name: Post to a Slack channel
         if: failure()
         id: slack

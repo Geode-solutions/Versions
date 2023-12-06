@@ -149,7 +149,7 @@ jobs:
         id: libraries
         run: |
           $old_path = "${{ steps.repos.outputs.path }}"
-          $bin_path = $old_path.replace(";", "\bin;").replace("\","/").replace(":","/")
+          $bin_path = $old_path.replace(";", "\bin;").replace("\","/")
           echo "bin=$bin_path" >> $env:GITHUB_OUTPUT
           $share_path = $old_path.replace(";", "\share;").replace("\","/")
           echo "share=$share_path" >> $env:GITHUB_OUTPUT
@@ -181,7 +181,7 @@ jobs:
             echo "$path"
               if [[ -d $path ]]; then
                 echo "ok"
-                cp -v /$path/* bin
+                cp -v $path/* bin
               fi
             done
             ls bin

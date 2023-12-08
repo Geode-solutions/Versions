@@ -65,7 +65,9 @@ jobs:
                 owner: 'Geode-solutions', 
                 repo 
               })
-              const latest = releases.data[0].tag_name.substring(1)
+              const latest = releases.data.find(
+                (r) => r.name.startsWith("v") && r.name.includes("-rc.")
+              ).tag_name.substring(1)
               const version = latest.split('.')
               pip_requirements +=python + "==" + version[0] + '.*,>=' + latest + '\n'
             }

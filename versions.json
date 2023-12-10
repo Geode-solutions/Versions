@@ -22,12 +22,12 @@
   {
     "repo": "OpenGeode-Inspector",
     "python": "opengeode-inspector",
-    "version": "4.0.3"
+    "version": "4.0.4"
   },
   {
     "repo": "Geode-Common_private",
     "python": "geode-common",
-    "version": "30.0.3"
+    "version": "30.0.4"
   },
   {
     "repo": "Geode-Conversion_private",
@@ -42,12 +42,12 @@
   {
     "repo": "Geode-Background_private",
     "python": "geode-background",
-    "version": "7.4.7"
+    "version": "7.4.8"
   },
   {
     "repo": "Geode-Explicit_private",
     "python": "geode-explicit",
-    "version": "4.3.8"
+    "version": "4.3.9"
   },
   {
     "repo": "Geode-Implicit_private",
@@ -57,12 +57,12 @@
   {
     "repo": "Geode-Simplex_private",
     "python": "geode-simplex",
-    "version": "6.2.7"
+    "version": "6.2.8"
   },
   {
     "repo": "Geode-SimplexGeosciences_private",
     "python": "geode-simplexgeosciences",
-    "version": "2.1.5"
+    "version": "2.1.6"
   },
   {
     "repo": "Geode-Hybrid_private",

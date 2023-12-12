@@ -96,7 +96,7 @@ jobs:
         uses: slackapi/slack-github-action@v1.24.0
         with:
           channel-id: C0598GTCLGH
-          slack-message: "${{ inputs.branch }}: validation failed:\n${{ steps.check.outputs.result }}"
+          slack-message: "${{ inputs.branch }}: PR validation failed\n${{ steps.check.outputs.result }}"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 

@@ -19,11 +19,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/github-script@v6
+        id: check
         with:
           github-token: ${{ secrets.TOKEN }}
+          result-encoding: string
           script: |
             const repos = "${{ env.repos }}"
             const owner = 'Geode-solutions'
+            let result = ""
             for(const repo of repos.split(';')) {
               console.log(repo)
               const prs = await github.rest.pulls.list({
@@ -46,7 +49,9 @@ jobs:
               const check_run = checks.data.check_runs.find(check => check.name == "test / deploy-repository / notify / notify")
               console.log(check_run)
               if (!check_run || check_run.status != 'completed' || check_run.conclusion != 'success') {
-                core.setFailed('PR check not completed for ' + repo)
+                const message = 'PR check not completed for ' + repo
+                core.setFailed(message)
+                result += message + '\n'
               }
               const pr = await github.rest.pulls.get({
                 owner,
@@ -55,7 +60,9 @@ jobs:
               })
               console.log(pr.data)
               if (!pr.data.mergeable) {
-                core.setFailed('PR not mergeable for ' + repo)
+                const message = 'PR is not mergeable for ' + repo
+                core.setFailed(message)
+                result += message + '\n'
               }
               const reviews = await github.rest.pulls.listReviews({
                 owner,
@@ -70,14 +77,28 @@ jobs:
                 }
                 else if (review.state == 'CHANGES_REQUESTED') {
                   approved = false
-                  core.setFailed('PR request changes for ' + repo)
+                  const message = 'PR request changes for ' + repo
+                  core.setFailed(message)
+                  result += message + '\n'
                   break
                 }
               }
               if (!approved) {
-                core.setFailed('PR not approved for ' + repo)
+                const message = 'PR not approved for ' + repo
+                core.setFailed(message)
+                result += message + '\n'
               }
             }
+            return result
+      - name: Post to a Slack channel
+        if: failure()
+        id: slack
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          channel-id: C0598GTCLGH
+          slack-message: "${{ inputs.branch }}: validation failed:\n${{ steps.check.outputs.result }}"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
   linux:
     needs: validate-PRs

@@ -76,7 +76,6 @@ jobs:
                   approved = true
                 }
                 else if (review.state == 'CHANGES_REQUESTED') {
-                  approved = false
                   const message = 'PR request changes for ' + repo
                   core.setFailed(message)
                   result += message + '\n'

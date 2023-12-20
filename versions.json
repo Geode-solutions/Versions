@@ -2,7 +2,7 @@
   {
     "repo": "OpenGeode",
     "python": "opengeode-core",
-    "version": "14.10.4"
+    "version": "14.10.5"
   },
   {
     "repo": "OpenGeode-IO",
@@ -27,7 +27,7 @@
   {
     "repo": "Geode-Common_private",
     "python": "geode-common",
-    "version": "30.0.6"
+    "version": "30.0.7"
   },
   {
     "repo": "Geode-Conversion_private",
@@ -57,7 +57,7 @@
   {
     "repo": "Geode-Simplex_private",
     "python": "geode-simplex",
-    "version": "6.3.0"
+    "version": "6.3.1"
   },
   {
     "repo": "Geode-SimplexGeosciences_private",

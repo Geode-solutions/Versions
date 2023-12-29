@@ -27,7 +27,7 @@
   {
     "repo": "Geode-Common_private",
     "python": "geode-common",
-    "version": "30.0.7"
+    "version": "30.0.8"
   },
   {
     "repo": "Geode-Conversion_private",

@@ -75,14 +75,13 @@ jobs:
               for (const review of reviews.data) {
                 if (review.state == 'APPROVED') {
                   approved = true
-                  changes_requested = changes_requested.filter(r => r.user != review.user.login)
+                  changes_requested = changes_requested.filter(r => r != review.user.login)
                 }
                 else if (review.state == 'CHANGES_REQUESTED') {
-                  changes_requested.push({'user': review.user.login, 'date': review.submitted_at})
+                  changes_requested.push(review.user.login)
                   const message = 'PR request changes for ' + repo
                   core.setFailed(message)
                   result += message + '\n'
-                  break
                 }
               }
               if (changes_requested.length) {

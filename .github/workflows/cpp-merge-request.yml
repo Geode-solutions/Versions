@@ -79,9 +79,6 @@ jobs:
                 }
                 else if (review.state == 'CHANGES_REQUESTED') {
                   changes_requested.push(review.user.login)
-                  const message = 'PR request changes for ' + repo
-                  core.setFailed(message)
-                  result += message + '\n'
                 }
               }
               if (changes_requested.length) {

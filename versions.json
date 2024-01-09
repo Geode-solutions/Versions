@@ -37,7 +37,7 @@
   {
     "repo": "Geode-Numerics_private",
     "python": "geode-numerics",
-    "version": "4.2.3"
+    "version": "4.2.4"
   },
   {
     "repo": "Geode-Background_private",
@@ -67,7 +67,7 @@
   {
     "repo": "Geode-Hybrid_private",
     "python": "geode-hybrid",
-    "version": "2.3.0"
+    "version": "2.3.1"
   },
   {
     "repo": "Geode-Viewables_private",

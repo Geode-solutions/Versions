@@ -27,7 +27,7 @@
   {
     "repo": "Geode-Common_private",
     "python": "geode-common",
-    "version": "30.0.11"
+    "version": "30.0.12"
   },
   {
     "repo": "Geode-Conversion_private",
@@ -72,6 +72,6 @@
   {
     "repo": "Geode-Viewables_private",
     "python": "geode-viewables",
-    "version": "2.1.8"
+    "version": "2.2.0"
   }
 ]

@@ -77,7 +77,7 @@ jobs:
             console.log('The file has been saved!');
             const child_process = require('child_process')
             try {
-              child_process.execSync("pip install --dry-run -r next.txt", {stdio: 'inherit'})
+              child_process.execSync("pip install -r next.txt", {stdio: 'inherit'})
             } catch (error) {
               console.log(error);
               core.setOutput('pip_failed', 'true')

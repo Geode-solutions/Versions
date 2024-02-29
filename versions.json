@@ -2,12 +2,12 @@
   {
     "repo": "OpenGeode",
     "python": "opengeode-core",
-    "version": "14.15.2"
+    "version": "14.16.0"
   },
   {
     "repo": "OpenGeode-IO",
     "python": "opengeode-io",
-    "version": "6.4.3"
+    "version": "6.5.0"
   },
   {
     "repo": "OpenGeode-Geosciences",
@@ -17,7 +17,7 @@
   {
     "repo": "OpenGeode-GeosciencesIO",
     "python": "opengeode-geosciencesio",
-    "version": "4.6.3"
+    "version": "4.7.0"
   },
   {
     "repo": "OpenGeode-Inspector",

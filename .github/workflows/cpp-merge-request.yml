@@ -207,7 +207,6 @@ jobs:
                 cp $path/* bin
               fi
             done
-            ls bin
             mkdir share
             IFS=";" read -a shares <<< "${{ steps.libraries.outputs.share }}"
             for share in "${shares[@]}"
@@ -216,7 +215,6 @@ jobs:
                 cp -r $share/* share
               fi
             done
-            ls share
             cmake --build .
             ctest --output-on-failure --no-tests=error -j 2
             cd ../..

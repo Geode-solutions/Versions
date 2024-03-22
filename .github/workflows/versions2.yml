@@ -35,7 +35,7 @@ jobs:
           echo $last_master_tag
           echo $last_tag
           if [ "$last_master_tag" != "$last_tag" ]; then
-            git rebase origin/next
+            git merge origin/next
             git push origin master
           fi
 

@@ -35,6 +35,8 @@ jobs:
           echo $last_master_tag
           echo $last_tag
           if [ "$last_master_tag" != "$last_tag" ]; then
+            git config --global user.email "team-core@geode-solutions.com"
+            git config --global user.name "Geode-solutions robot"
             git merge origin/next
             git push origin master
           fi

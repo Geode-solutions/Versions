@@ -2,7 +2,7 @@
   {
     "repo": "OpenGeode",
     "python": "opengeode-core",
-    "version": "14.19.0"
+    "version": "14.19.1"
   },
   {
     "repo": "OpenGeode-IO",
@@ -22,7 +22,7 @@
   {
     "repo": "OpenGeode-Inspector",
     "python": "opengeode-inspector",
-    "version": "5.1.1"
+    "version": "5.1.2"
   },
   {
     "repo": "Geode-Common_private",
@@ -52,7 +52,7 @@
   {
     "repo": "Geode-Implicit_private",
     "python": "geode-implicit",
-    "version": "2.8.4"
+    "version": "2.8.5"
   },
   {
     "repo": "Geode-Simplex_private",

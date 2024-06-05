@@ -2,7 +2,7 @@
   {
     "repo": "OpenGeode",
     "python": "opengeode-core",
-    "version": "14.21.4"
+    "version": "14.22.0"
   },
   {
     "repo": "OpenGeode-IO",

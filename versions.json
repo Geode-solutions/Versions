@@ -47,7 +47,7 @@
   {
     "repo": "Geode-Explicit_private",
     "python": "geode-explicit",
-    "version": "4.8.4"
+    "version": "4.8.5"
   },
   {
     "repo": "Geode-Implicit_private",

@@ -7,22 +7,22 @@
   {
     "repo": "OpenGeode-IO",
     "python": "opengeode-io",
-    "version": "6.5.1"
+    "version": "6.5.2"
   },
   {
     "repo": "OpenGeode-Geosciences",
     "python": "opengeode-geosciences",
-    "version": "7.7.1"
+    "version": "7.7.2"
   },
   {
     "repo": "OpenGeode-GeosciencesIO",
     "python": "opengeode-geosciencesio",
-    "version": "4.7.8"
+    "version": "4.7.9"
   },
   {
     "repo": "OpenGeode-Inspector",
     "python": "opengeode-inspector",
-    "version": "5.1.5"
+    "version": "5.1.6"
   },
   {
     "repo": "Geode-Common_private",
@@ -37,7 +37,7 @@
   {
     "repo": "Geode-Numerics_private",
     "python": "geode-numerics",
-    "version": "4.4.3"
+    "version": "4.4.4"
   },
   {
     "repo": "Geode-Background_private",
@@ -57,7 +57,7 @@
   {
     "repo": "Geode-Simplex_private",
     "python": "geode-simplex",
-    "version": "7.1.4"
+    "version": "7.1.5"
   },
   {
     "repo": "Geode-SimplexGeosciences_private",

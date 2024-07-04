@@ -42,7 +42,7 @@ jobs:
               }
               console.log(branch_pr)
               const pull_number = branch_pr.number
-              core.exportVariable("base", branch_pr.base.ref)
+              core.setOutput("base", branch_pr.base.ref)
               const checks = await github.rest.checks.listForRef({
                 owner,
                 repo,

@@ -8,7 +8,7 @@ jobs:
   prepare:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: "pip-compile"
         run: |
           pip install pip-tools
@@ -16,7 +16,7 @@ jobs:
       - name: Post to a Slack channel
         if: failure()
         id: slack
-        uses: slackapi/slack-github-action@v1.24.0
+        uses: slackapi/slack-github-action@v1
         with:
           channel-id: C0598GTCLGH
           slack-message: ":gyrophare: Python ecosystem version check failed"

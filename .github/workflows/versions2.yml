@@ -24,7 +24,7 @@ jobs:
       matrix:
         repo: ${{ fromJSON(needs.check-next.outputs.repos) }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: Geode-solutions/${{ matrix.repo }}
           token: ${{ secrets.TOKEN }}
@@ -49,8 +49,8 @@ jobs:
         with:
           version: master
           token: ${{ secrets.TOKEN }}
-      - uses: actions/checkout@v3
-      - uses: actions/github-script@v6
+      - uses: actions/checkout@v4
+      - uses: actions/github-script@v7
         id: update
         with:
           github-token: ${{ secrets.TOKEN }}
@@ -82,14 +82,14 @@ jobs:
               console.log('The file has been saved!');
               core.setOutput('ecosystem', ecosystem)
             })
-      - uses: stefanzweifel/git-auto-commit-action@v4
+      - uses: stefanzweifel/git-auto-commit-action@v5
         id: commit
         with:
           commit_message: Apply version changes
       - name: Post to a Slack channel
         if: steps.commit.outputs.changes_detected == 'true'
         id: slack
-        uses: slackapi/slack-github-action@v1.24.0
+        uses: slackapi/slack-github-action@v1
         with:
           channel-id: C0598GTCLGH
           slack-message: "${{ steps.update.outputs.ecosystem }}"
@@ -103,7 +103,7 @@ jobs:
       matrix:
         repo: ${{ fromJSON(needs.check-next.outputs.repos) }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: Geode-solutions/${{ matrix.repo }}
           token: ${{ secrets.TOKEN }}
@@ -114,7 +114,7 @@ jobs:
           git config user.name $GITHUB_ACTOR
           git merge -X theirs origin/master -m "Merge with master"
           git push origin next
-      - uses: actions/github-script@v6
+      - uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.TOKEN }}
           script: |

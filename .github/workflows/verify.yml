@@ -31,10 +31,10 @@ jobs:
     outputs:
       repos: ${{ steps.check.outputs.repos }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: actions/github-script@v6
+      - uses: actions/github-script@v7
         id: check
         with:
           github-token: ${{ secrets.TOKEN }}
@@ -90,7 +90,7 @@ jobs:
       - name: Post to a Slack channel
         if: failure() && steps.check.outputs.pip_failed == 'true'
         id: slack
-        uses: slackapi/slack-github-action@v1.24.0
+        uses: slackapi/slack-github-action@v1
         with:
           channel-id: C0598GTCLGH
           slack-message: "pip install failed:\n${{ steps.check.outputs.pip }}"

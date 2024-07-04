@@ -18,7 +18,7 @@ jobs:
   validate-PRs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/github-script@v6
+      - uses: actions/github-script@v7
         id: check
         with:
           github-token: ${{ secrets.TOKEN }}
@@ -97,7 +97,7 @@ jobs:
       - name: Post to a Slack channel
         if: failure()
         id: slack
-        uses: slackapi/slack-github-action@v1.24.0
+        uses: slackapi/slack-github-action@v1
         with:
           channel-id: C0598GTCLGH
           slack-message: "${{ inputs.branch }}: PR validation failed\n${{ steps.check.outputs.result }}"
@@ -152,7 +152,7 @@ jobs:
       - name: Post to a Slack channel
         if: failure()
         id: slack
-        uses: slackapi/slack-github-action@v1.24.0
+        uses: slackapi/slack-github-action@v1
         with:
           channel-id: C0598GTCLGH
           slack-message: "${{ inputs.branch }}: C++ merge request failed on Linux\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
@@ -178,7 +178,7 @@ jobs:
           echo "bin=$bin_path" >> $env:GITHUB_OUTPUT
           $share_path = $old_path.replace(";", "\share;").replace("\","/") + "/share"
           echo "share=$share_path" >> $env:GITHUB_OUTPUT
-      - uses: TheMrMilchmann/setup-msvc-dev@v2
+      - uses: TheMrMilchmann/setup-msvc-dev@v3
         with:
           arch: x64
       - name: Compile & Test
@@ -226,7 +226,7 @@ jobs:
       - name: Post to a Slack channel
         if: failure()
         id: slack
-        uses: slackapi/slack-github-action@v1.24.0
+        uses: slackapi/slack-github-action@v1
         with:
           channel-id: C0598GTCLGH
           slack-message: "${{ inputs.branch }}: C++ merge request failed on Windows\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
@@ -237,7 +237,7 @@ jobs:
     needs: [linux, windows]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/github-script@v6
+      - uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.TOKEN }}
           script: |
@@ -268,7 +268,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: merge-PRs
     steps:
-      - uses: actions/github-script@v6
+      - uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.TOKEN }}
           script: |

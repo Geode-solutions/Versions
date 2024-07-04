@@ -17,6 +17,8 @@ env:
 jobs:
   validate-PRs:
     runs-on: ubuntu-latest
+    outputs:
+      base: ${{ steps.check.outputs.base }}
     steps:
       - uses: actions/github-script@v7
         id: check
@@ -32,8 +34,7 @@ jobs:
               const prs = await github.rest.pulls.list({
                 owner,
                 repo,
-                state: 'open',
-                base: 'next'
+                state: 'open'
               })
               const branch_pr = prs.data.find(pr => pr.head.ref == "${{ inputs.branch }}")
               if (!branch_pr) {
@@ -41,6 +42,7 @@ jobs:
               }
               console.log(branch_pr)
               const pull_number = branch_pr.number
+              core.exportVariable("base", branch_pr.base.ref)
               const checks = await github.rest.checks.listForRef({
                 owner,
                 repo,
@@ -136,7 +138,7 @@ jobs:
               echo "found branch ${{ inputs.branch }}"
               git checkout origin/${{ inputs.branch }}
             else
-              git checkout origin/next
+              git checkout origin/${{ needs.validate-PRs.outputs.base }}
             fi
             mkdir -p build
             cd build
@@ -195,7 +197,7 @@ jobs:
               echo "found branch ${{ inputs.branch }}"
               git checkout origin/${{ inputs.branch }}
             else
-              git checkout origin/next
+              git checkout origin/${{ needs.validate-PRs.outputs.base }}
             fi
             mkdir -p build
             cd build
@@ -248,8 +250,7 @@ jobs:
               const prs = await github.rest.pulls.list({
                 owner,
                 repo,
-                state: 'open',
-                base: 'next'
+                state: 'open'
               })
               const branch_pr = prs.data.find(pr => pr.head.ref == "${{ inputs.branch }}")
               if (!branch_pr) {

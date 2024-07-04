@@ -1,13 +1,12 @@
-name: 'Deploy Geode-solutions ecosytem'
-description: 'Deploy Geode-solutions ecosytem'
+name: "Deploy Geode-solutions ecosytem"
+description: "Deploy Geode-solutions ecosytem"
 inputs:
   version:
-    description: 'Release version'
-    default: 'master'
+    description: "Release version"
+    default: "master"
   token:
-    description: 'Github token'
+    description: "Github token"
     required: true
 runs:
-  using: 'node16'
-  main: 'index.js'
-
+  using: "node20"
+  main: "index.js"

@@ -118,6 +118,7 @@ jobs:
           file: "-ubuntu-private.tar.gz"
           token: ${{ secrets.TOKEN }}
           branch: ${{ inputs.branch }}
+          base: ${{ needs.validate-PRs.outputs.base }}
       - name: Libraries
         id: libraries
         run: |
@@ -172,6 +173,7 @@ jobs:
           file: "-win64-private.zip"
           token: ${{ secrets.TOKEN }}
           branch: ${{ inputs.branch }}
+          base: ${{ needs.validate-PRs.outputs.base }}
       - name: Libraries
         id: libraries
         run: |

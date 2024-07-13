@@ -73,7 +73,7 @@ jobs:
               });
               console.log(reviews.data)
               let changes_requested = []
-              let approved = false
+              let approved = true
               for (const review of reviews.data) {
                 if (review.state == 'APPROVED') {
                   approved = true

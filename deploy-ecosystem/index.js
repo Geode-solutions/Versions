@@ -123,12 +123,6 @@ const main = async () => {
     const g_hybrid = g_simplex.then(() => {
       return deploy_repository("Geode-Hybrid_private");
     });
-    await Promise.all([
-      g_viewables,
-      g_implicit,
-      g_simplexgeosciences,
-      g_hybrid,
-    ]);
     const g_explicit = Promise.all([
       og_inspector,
       g_conversion,
@@ -141,6 +135,13 @@ const main = async () => {
         return deploy_repository("Geode-Implicit_private");
       }
     );
+
+    await Promise.all([
+      g_viewables,
+      g_implicit,
+      g_simplexgeosciences,
+      g_hybrid,
+    ]);
   } catch (error) {
     core.setFailed(error.message);
   }

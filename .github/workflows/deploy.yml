@@ -5,6 +5,7 @@ on:
     inputs:
       branch:
         type: string
+        default: next
         required: true
 
 concurrency:

@@ -110,6 +110,8 @@ jobs:
     needs: validate-PRs
     runs-on: ubuntu-latest
     container: ghcr.io/geode-solutions/ubuntu:master
+    outputs:
+      path: ${{ steps.repos.outputs.path }}
     steps:
       - uses: Geode-solutions/actions/get-release@master
         id: repos
@@ -165,6 +167,55 @@ jobs:
           slack-message: "${{ inputs.branch }}: C++ merge request failed on Linux\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
+  linux-test:
+    needs: [validate-PRs, linux]
+    runs-on: ubuntu-latest
+    container: ghcr.io/geode-solutions/ubuntu:master
+    continue-on-error: true
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: linux
+      - name: Libraries
+        id: libraries
+        run: |
+          new_path=$(echo "${{ needs.linux.outputs.path }}" | sed 's/\;/\/lib\:/g')
+          echo "LD_LIBRARY_PATH=$new_path" >> $GITHUB_ENV
+      - name: Compile
+        run: |
+          gh auth setup-git
+          gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
+          project=OpenGeode
+          gh repo clone Geode-solutions/$project
+          cd $project
+          git ls-remote --heads origin ${{ inputs.branch }}
+          if git ls-remote --exit-code --heads origin ${{ inputs.branch }}; then
+            echo "found branch ${{ inputs.branch }}"
+            git checkout origin/${{ inputs.branch }}
+          else
+            git checkout origin/${{ needs.validate-PRs.outputs.base }}
+          fi
+          mkdir -p build
+          cd build
+          cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="${{ needs.linux.outputs.path }}" ../tests
+          cmake --build .
+          ctest --output-on-failure --no-tests=error -j 2
+          cd ../..
+        env:
+          GEODE_LICENSE_LOCATION: ${{ github.workspace }}/geode.lic
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        shell: bash
+      # - name: Post to a Slack channel
+      #   if: failure()
+      #   id: slack
+      #   uses: slackapi/slack-github-action@v1
+      #   with:
+      #     channel-id: C0598GTCLGH
+      #     slack-message: "${{ inputs.branch }}: C++ merge request failed on Linux\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+      #   env:
+      #     SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        
 
   windows:
     needs: validate-PRs

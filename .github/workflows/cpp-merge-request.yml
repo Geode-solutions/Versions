@@ -119,6 +119,10 @@ jobs:
           token: ${{ secrets.TOKEN }}
           branch: ${{ inputs.branch }}
           base: ${{ needs.validate-PRs.outputs.base }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux
+          path: .
       - name: Libraries
         id: libraries
         run: |
@@ -174,6 +178,10 @@ jobs:
           token: ${{ secrets.TOKEN }}
           branch: ${{ inputs.branch }}
           base: ${{ needs.validate-PRs.outputs.base }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: .
       - name: Libraries
         id: libraries
         run: |

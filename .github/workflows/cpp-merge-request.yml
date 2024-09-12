@@ -137,6 +137,7 @@ jobs:
     strategy:
       matrix:
         repo: ${{ fromJSON(needs.validate-PRs.outputs.repos) }}
+      fail-fast: false
     steps:
       - uses: actions/download-artifact@v4
         with:
@@ -176,7 +177,6 @@ jobs:
           slack-message: "${{ inputs.branch }}: C++ merge request failed on Linux\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-        
 
   windows:
     needs: validate-PRs
@@ -197,13 +197,13 @@ jobs:
           name: windows
           path: .
 
-
   windows-test:
     needs: [validate-PRs, windows]
     runs-on: windows-latest
     strategy:
       matrix:
         repo: ${{ fromJSON(needs.validate-PRs.outputs.repos) }}
+      fail-fast: false
     steps:
       - uses: actions/download-artifact@v4
         with:

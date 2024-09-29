@@ -66,7 +66,7 @@ jobs:
                 repo 
               })
               const latest = releases.data.find(
-                (r) => r.name.startsWith("v") && r.name.includes("-rc.")
+                (r) => r.name.startsWith("v")
               ).tag_name.substring(1)
               const version = latest.split('.')
               pip_requirements +=python + "==" + version[0] + '.*,>=' + latest + '\n'

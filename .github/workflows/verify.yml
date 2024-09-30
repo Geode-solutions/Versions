@@ -65,6 +65,7 @@ jobs:
                 owner: 'Geode-solutions', 
                 repo 
               })
+              console.log(releases.data);
               const latest = releases.data.find(
                 (r) => r.name.startsWith("v")
               ).tag_name.substring(1)

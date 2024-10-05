@@ -27,7 +27,7 @@
   {
     "repo": "Geode-Common_private",
     "python": "geode-common",
-    "version": "33.0.1"
+    "version": "33.0.2"
   },
   {
     "repo": "Geode-Conversion_private",
@@ -42,12 +42,12 @@
   {
     "repo": "Geode-Background_private",
     "python": "geode-background",
-    "version": "8.3.3"
+    "version": "8.3.4"
   },
   {
     "repo": "Geode-Explicit_private",
     "python": "geode-explicit",
-    "version": "6.1.5"
+    "version": "6.1.6"
   },
   {
     "repo": "Geode-Implicit_private",
@@ -72,6 +72,6 @@
   {
     "repo": "Geode-Viewables_private",
     "python": "geode-viewables",
-    "version": "3.0.3"
+    "version": "3.0.4"
   }
 ]

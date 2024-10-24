@@ -106,7 +106,7 @@ jobs:
         uses: slackapi/slack-github-action@v1
         with:
           channel-id: C0598GTCLGH
-          slack-message: "${{ inputs.branch }}: PR validation failed\n${{ steps.check.outputs.result }}"
+          slack-message: "${{ inputs.branch }}: PR validation failed\n${{ steps.check.outputs.result }}\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
@@ -310,3 +310,11 @@ jobs:
               ref: 'master',
               inputs: { branch: '${{ needs.validate-PRs.outputs.base }}' }
             })
+      - name: Post to a Slack channel
+        id: slack
+        uses: slackapi/slack-github-action@v1
+        with:
+          channel-id: C0598GTCLGH
+          slack-message: "Merge request for ${{ inputs.branch }} complete :tada:"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}

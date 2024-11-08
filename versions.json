@@ -42,7 +42,7 @@
   {
     "repo": "Geode-Background_private",
     "python": "geode-background",
-    "version": "8.6.10"
+    "version": "8.7.0"
   },
   {
     "repo": "Geode-Explicit_private",

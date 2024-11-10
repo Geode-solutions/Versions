@@ -17,7 +17,7 @@
   {
     "repo": "OpenGeode-GeosciencesIO",
     "python": "opengeode-geosciencesio",
-    "version": "5.2.3"
+    "version": "5.3.0"
   },
   {
     "repo": "OpenGeode-Inspector",
@@ -27,7 +27,7 @@
   {
     "repo": "Geode-Common_private",
     "python": "geode-common",
-    "version": "33.0.9"
+    "version": "33.0.10"
   },
   {
     "repo": "Geode-Conversion_private",
@@ -42,7 +42,7 @@
   {
     "repo": "Geode-Background_private",
     "python": "geode-background",
-    "version": "8.7.0"
+    "version": "8.7.1"
   },
   {
     "repo": "Geode-Explicit_private",

@@ -22,7 +22,7 @@
   {
     "repo": "OpenGeode-Inspector",
     "python": "opengeode-inspector",
-    "version": "6.1.12"
+    "version": "6.1.13"
   },
   {
     "repo": "Geode-Common_private",

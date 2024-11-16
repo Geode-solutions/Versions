@@ -2,7 +2,7 @@
   {
     "repo": "OpenGeode",
     "python": "opengeode-core",
-    "version": "15.6.4"
+    "version": "15.6.5"
   },
   {
     "repo": "OpenGeode-IO",
@@ -42,7 +42,7 @@
   {
     "repo": "Geode-Background_private",
     "python": "geode-background",
-    "version": "8.7.2"
+    "version": "8.7.3"
   },
   {
     "repo": "Geode-Explicit_private",

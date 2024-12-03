@@ -73,5 +73,9 @@
     "repo": "Geode-Viewables_private",
     "python": "geode-viewables",
     "version": "3.0.8"
+  },
+  {
+    "repo": "Geode-FEFLOW",
+    "version": "0.0.0"
   }
 ]

@@ -136,12 +136,18 @@ const main = async () => {
         return deploy_repository("Geode-Implicit_private");
       }
     );
+    const g_feflow = Promise.all([g_explicit, g_implicit, g_simplex]).then(
+      () => {
+        return deploy_repository("Geode-FEFLOW");
+      }
+    );
 
     await Promise.all([
       g_viewables,
       g_implicit,
       g_simplexgeosciences,
       g_hybrid,
+      g_feflow,
     ]);
   } catch (error) {
     core.setFailed(error.message);

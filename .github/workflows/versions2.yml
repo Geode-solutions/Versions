@@ -2,13 +2,6 @@ name: version2
 
 on:
   workflow_dispatch:
-    inputs:
-      workflow:
-        type: string
-        default: "test.yml"
-      branch:
-        type: string
-        default: "next"
   schedule:
     - cron: 0 0 * * *
 

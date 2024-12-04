@@ -70,7 +70,9 @@ jobs:
                 (r) => r.name.startsWith("v")
               ).tag_name.substring(1)
               const version = latest.split('.')
-              pip_requirements +=python + "==" + version[0] + '.*,>=' + latest + '\n'
+              if( python !== undefined ) {
+                pip_requirements +=python + "==" + version[0] + '.*,>=' + latest + '\n'
+              }
             }
             console.log("pip_requirements",pip_requirements)
             const fs = require('fs')

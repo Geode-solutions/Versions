@@ -57,7 +57,7 @@
   {
     "repo": "Geode-Simplex_private",
     "python": "geode-simplex",
-    "version": "9.0.3"
+    "version": "9.0.4"
   },
   {
     "repo": "Geode-SimplexGeosciences_private",
@@ -76,6 +76,6 @@
   },
   {
     "repo": "Geode-FEFLOW",
-    "version": "5.8.1"
+    "version": "5.9.0"
   }
 ]

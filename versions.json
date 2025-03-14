@@ -70,6 +70,11 @@
     "version": "3.0.18"
   },
   {
+    "repo": "Geode-Hybrid_Geosciences_private",
+    "python": "geode-hybrid_geosciences",
+    "version": "0.0.0"
+  },
+  {
     "repo": "Geode-Viewables_private",
     "python": "geode-viewables",
     "version": "3.0.10"

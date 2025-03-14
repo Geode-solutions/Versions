@@ -124,6 +124,12 @@ const main = async () => {
     const g_hybrid = g_simplex.then(() => {
       return deploy_repository("Geode-Hybrid_private");
     });
+    const g_hybrid_geosciences = Promise.all([
+      og_geosciences,
+      g_background,
+    ]).then(() => {
+      return deploy_repository("Geode-Hybrid_Geosciences_private");
+    });
     const g_explicit = Promise.all([
       og_inspector,
       g_conversion,
@@ -147,6 +153,7 @@ const main = async () => {
       g_implicit,
       g_simplexgeosciences,
       g_hybrid,
+      g_hybrid_geosciences,
       g_feflow,
     ]);
   } catch (error) {

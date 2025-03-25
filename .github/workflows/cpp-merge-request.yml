@@ -275,6 +275,8 @@ jobs:
           script: |
             const repos = "${{ env.repos }}"
             const owner = 'Geode-solutions'
+            const branchName = "${{ inputs.branch }}"
+            const testReleasePattern = `${branchName}-tag`
             for(const repo of repos.split(';')) {
               console.log(repo)
               const prs = await github.rest.pulls.list({
@@ -286,13 +288,27 @@ jobs:
               if (!branch_pr) {
                 continue
               }
-              console.log(branch_pr)
               const pull_number = branch_pr.number
+              console.log(`Merging PR #${pull_number}, for branch ${branch_pr}, in repo ${repo}`)
               await github.rest.pulls.merge({
                 owner,
                 repo,
                 pull_number
               })
+              console.log(`Deleting test releases in ${repo}...`)
+              const releases = await github.paginate(github.rest.repos.listReleases, {
+              owner,
+              repo
+              for (const release of releases) {
+                if (release.name === testReleasePattern) {
+                  console.log(`Deleting release: ${release.name} (ID: ${release.id})`)
+                  await github.rest.repos.deleteRelease({
+                    owner,
+                    repo,
+                    release_id: release.id
+                  })
+                }
+              }
             }
 
   deploy:
@@ -318,3 +334,22 @@ jobs:
           slack-message: "Merge request for ${{ inputs.branch }} complete :tada:"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+  
+  delete-test-releases:
+    if: github.event.pull_request.merged == true  # Only run if PR is merged
+    runs-on: ubuntu-latest
+    steps:
+      - name: List releases
+        run: |
+          gh release list --json name,url --jq '.[] | select(.name | startswith("test-")) | .name' > releases.txt
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Delete test releases
+        run: |
+          while read release; do
+            echo "Deleting release: $release"
+            gh release delete "$release" --yes
+          done < releases.txt
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

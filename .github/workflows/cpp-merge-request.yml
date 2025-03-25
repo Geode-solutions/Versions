@@ -301,7 +301,7 @@ jobs:
               repo
               })
               for (const release of releases) {
-                if (release.name === testReleasePattern) {
+                if (release.tag_name === testReleasePattern) {
                   console.log(`Deleting release: ${release.name} (ID: ${release.id})`)
                   await github.rest.repos.deleteRelease({
                     owner,

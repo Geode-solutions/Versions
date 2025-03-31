@@ -126,6 +126,8 @@ const main = async () => {
     });
     const g_hybrid_geosciences = Promise.all([
       og_geosciences,
+      og_inspector,
+      g_conversion,
       g_background,
     ]).then(() => {
       return deploy_repository("Geode-Hybrid_Geosciences_private");

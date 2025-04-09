@@ -115,5 +115,6 @@ jobs:
               owner: 'Geode-solutions',
               repo: '${{ matrix.repo }}',
               workflow_id: 'schedule.yml',
-              ref: 'master'
+              ref: 'master',
+              inputs: { branch: 'master' }
             })

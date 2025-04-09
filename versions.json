@@ -2,62 +2,62 @@
   {
     "repo": "OpenGeode",
     "python": "opengeode-core",
-    "version": "15.17.6"
+    "version": "15.17.7"
   },
   {
     "repo": "OpenGeode-IO",
     "python": "opengeode-io",
-    "version": "7.1.4"
+    "version": "7.1.5"
   },
   {
     "repo": "OpenGeode-Geosciences",
     "python": "opengeode-geosciences",
-    "version": "8.4.2"
+    "version": "8.4.3"
   },
   {
     "repo": "OpenGeode-GeosciencesIO",
     "python": "opengeode-geosciencesio",
-    "version": "5.3.7"
+    "version": "5.3.8"
   },
   {
     "repo": "OpenGeode-Inspector",
     "python": "opengeode-inspector",
-    "version": "6.3.10"
+    "version": "6.3.11"
   },
   {
     "repo": "Geode-Common_private",
     "python": "geode-common",
-    "version": "33.6.2"
+    "version": "33.7.0"
   },
   {
     "repo": "Geode-Conversion_private",
     "python": "geode-conversion",
-    "version": "6.2.5"
+    "version": "6.2.6"
   },
   {
     "repo": "Geode-Numerics_private",
     "python": "geode-numerics",
-    "version": "6.0.1"
+    "version": "6.0.2"
   },
   {
     "repo": "Geode-Background_private",
     "python": "geode-background",
-    "version": "9.1.2"
+    "version": "9.1.3"
   },
   {
     "repo": "Geode-Explicit_private",
     "python": "geode-explicit",
-    "version": "6.1.33"
+    "version": "6.1.34"
   },
   {
     "repo": "Geode-Implicit_private",
     "python": "geode-implicit",
-    "version": "3.7.2"
+    "version": "3.7.3"
   },
   {
     "repo": "Geode-Simplex_private",
     "python": "geode-simplex",
-    "version": "9.2.2"
+    "version": "9.2.3"
   },
   {
     "repo": "Geode-SimplexGeosciences_private",
@@ -67,20 +67,20 @@
   {
     "repo": "Geode-Hybrid_private",
     "python": "geode-hybrid",
-    "version": "3.0.19"
+    "version": "3.0.20"
   },
   {
     "repo": "Geode-Hybrid_Geosciences_private",
     "python": "geode-hybrid_geosciences",
-    "version": "1.2.2"
+    "version": "1.2.3"
   },
   {
     "repo": "Geode-Viewables_private",
     "python": "geode-viewables",
-    "version": "3.0.11"
+    "version": "3.0.12"
   },
   {
     "repo": "Geode-FEFLOW",
-    "version": "6.3.2"
+    "version": "6.4.0"
   }
 ]

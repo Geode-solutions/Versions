@@ -2,7 +2,7 @@
   {
     "repo": "OpenGeode",
     "python": "opengeode-core",
-    "version": "15.17.11"
+    "version": "15.17.12"
   },
   {
     "repo": "OpenGeode-IO",
@@ -27,12 +27,12 @@
   {
     "repo": "Geode-Common_private",
     "python": "geode-common",
-    "version": "33.7.4"
+    "version": "33.7.5"
   },
   {
     "repo": "Geode-Conversion_private",
     "python": "geode-conversion",
-    "version": "6.2.8"
+    "version": "6.2.9"
   },
   {
     "repo": "Geode-Numerics_private",
@@ -42,7 +42,7 @@
   {
     "repo": "Geode-Background_private",
     "python": "geode-background",
-    "version": "9.1.5"
+    "version": "9.2.0"
   },
   {
     "repo": "Geode-Explicit_private",
@@ -81,6 +81,6 @@
   },
   {
     "repo": "Geode-FEFLOW",
-    "version": "6.4.5"
+    "version": "6.4.6"
   }
 ]

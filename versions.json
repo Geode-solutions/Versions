@@ -42,7 +42,7 @@
   {
     "repo": "Geode-Background_private",
     "python": "geode-background",
-    "version": "9.2.1"
+    "version": "9.2.2"
   },
   {
     "repo": "Geode-Explicit_private",
@@ -52,7 +52,7 @@
   {
     "repo": "Geode-Implicit_private",
     "python": "geode-implicit",
-    "version": "3.7.6"
+    "version": "3.7.7"
   },
   {
     "repo": "Geode-Simplex_private",
@@ -81,6 +81,6 @@
   },
   {
     "repo": "Geode-FEFLOW",
-    "version": "6.4.6"
+    "version": "6.4.7"
   }
 ]

@@ -2,62 +2,62 @@
   {
     "repo": "OpenGeode",
     "python": "opengeode-core",
-    "version": "15.17.13"
+    "version": "15.17.14"
   },
   {
     "repo": "OpenGeode-IO",
     "python": "opengeode-io",
-    "version": "7.1.5"
+    "version": "7.2.0"
   },
   {
     "repo": "OpenGeode-Geosciences",
     "python": "opengeode-geosciences",
-    "version": "8.4.5"
+    "version": "8.4.6"
   },
   {
     "repo": "OpenGeode-GeosciencesIO",
     "python": "opengeode-geosciencesio",
-    "version": "5.3.8"
+    "version": "5.3.9"
   },
   {
     "repo": "OpenGeode-Inspector",
     "python": "opengeode-inspector",
-    "version": "6.3.11"
+    "version": "6.4.0"
   },
   {
     "repo": "Geode-Common_private",
     "python": "geode-common",
-    "version": "33.7.5"
+    "version": "33.7.6"
   },
   {
     "repo": "Geode-Conversion_private",
     "python": "geode-conversion",
-    "version": "6.2.10"
+    "version": "6.2.11"
   },
   {
     "repo": "Geode-Numerics_private",
     "python": "geode-numerics",
-    "version": "6.0.5"
+    "version": "6.0.6"
   },
   {
     "repo": "Geode-Background_private",
     "python": "geode-background",
-    "version": "9.2.2"
+    "version": "9.2.3"
   },
   {
     "repo": "Geode-Explicit_private",
     "python": "geode-explicit",
-    "version": "6.1.37"
+    "version": "6.1.38"
   },
   {
     "repo": "Geode-Implicit_private",
     "python": "geode-implicit",
-    "version": "3.7.7"
+    "version": "3.7.8"
   },
   {
     "repo": "Geode-Simplex_private",
     "python": "geode-simplex",
-    "version": "9.2.6"
+    "version": "9.2.7"
   },
   {
     "repo": "Geode-SimplexGeosciences_private",
@@ -67,7 +67,7 @@
   {
     "repo": "Geode-Hybrid_private",
     "python": "geode-hybrid",
-    "version": "3.0.23"
+    "version": "3.0.24"
   },
   {
     "repo": "Geode-Hybrid_Geosciences_private",
@@ -77,10 +77,10 @@
   {
     "repo": "Geode-Viewables_private",
     "python": "geode-viewables",
-    "version": "3.1.0"
+    "version": "3.1.1"
   },
   {
     "repo": "Geode-FEFLOW",
-    "version": "6.4.7"
+    "version": "6.4.8"
   }
 ]

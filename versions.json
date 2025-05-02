@@ -52,12 +52,12 @@
   {
     "repo": "Geode-Implicit_private",
     "python": "geode-implicit",
-    "version": "3.7.9"
+    "version": "3.7.10"
   },
   {
     "repo": "Geode-Simplex_private",
     "python": "geode-simplex",
-    "version": "9.2.9"
+    "version": "9.3.0"
   },
   {
     "repo": "Geode-SimplexGeosciences_private",
@@ -81,6 +81,6 @@
   },
   {
     "repo": "Geode-FEFLOW",
-    "version": "6.4.11"
+    "version": "6.4.12"
   }
 ]

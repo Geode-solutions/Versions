@@ -12,7 +12,7 @@
   {
     "repo": "OpenGeode-Geosciences",
     "python": "opengeode-geosciences",
-    "version": "8.4.6"
+    "version": "8.4.7"
   },
   {
     "repo": "OpenGeode-GeosciencesIO",
@@ -57,7 +57,7 @@
   {
     "repo": "Geode-Simplex_private",
     "python": "geode-simplex",
-    "version": "9.3.1"
+    "version": "9.3.2"
   },
   {
     "repo": "Geode-SimplexGeosciences_private",
@@ -81,6 +81,6 @@
   },
   {
     "repo": "Geode-FEFLOW",
-    "version": "6.4.13"
+    "version": "6.4.14"
   }
 ]

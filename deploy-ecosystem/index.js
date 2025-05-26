@@ -76,6 +76,7 @@ const main = async () => {
     }
 
     const og = deploy_repository("OpenGeode");
+    const og_stochastic = deploy_repository("OpenGeode");
     const og_io = og.then(() => {
       return deploy_repository("OpenGeode-IO");
     });
@@ -151,6 +152,7 @@ const main = async () => {
     );
 
     await Promise.all([
+      og_stochastic,
       g_viewables,
       g_implicit,
       g_simplexgeosciences,

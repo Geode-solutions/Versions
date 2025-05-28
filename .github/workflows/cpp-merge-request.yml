@@ -312,7 +312,7 @@ jobs:
                   await github.rest.git.deleteRef({
                     owner,
                     repo,
-                    ref: `refs/tags/${release.tag_name}`
+                    ref: `tags/${release.tag_name}`
                   })
                 }
               }

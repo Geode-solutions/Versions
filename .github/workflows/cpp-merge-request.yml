@@ -308,6 +308,12 @@ jobs:
                     repo,
                     release_id: release.id
                   })
+                  console.log(`Deleting tag: ${release.tag_name}`)
+                  await github.rest.git.deleteRef({
+                    owner,
+                    repo,
+                    ref: `refs/tags/${release.tag_name}`
+                  })
                 }
               }
             }

@@ -76,7 +76,9 @@ const main = async () => {
     }
 
     const og = deploy_repository("OpenGeode");
-    const og_stochastic = deploy_repository("OpenGeode-Stochastic");
+    const og_stochastic = og.then(() => {
+      return deploy_repository("OpenGeode-Stochastic");
+    });
     const og_io = og.then(() => {
       return deploy_repository("OpenGeode-IO");
     });

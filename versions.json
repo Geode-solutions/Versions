@@ -12,7 +12,7 @@
   {
     "repo": "OpenGeode-Geosciences",
     "python": "opengeode-geosciences",
-    "version": "8.5.0"
+    "version": "8.5.1"
   },
   {
     "repo": "OpenGeode-GeosciencesIO",
@@ -42,7 +42,7 @@
   {
     "repo": "Geode-Numerics_private",
     "python": "geode-numerics",
-    "version": "6.2.1"
+    "version": "6.2.2"
   },
   {
     "repo": "Geode-Background_private",

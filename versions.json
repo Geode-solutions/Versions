@@ -2,7 +2,7 @@
   {
     "repo": "OpenGeode",
     "python": "opengeode-core",
-    "version": "15.21.4"
+    "version": "15.21.5"
   },
   {
     "repo": "OpenGeode-IO",
@@ -22,7 +22,7 @@
   {
     "repo": "OpenGeode-Inspector",
     "python": "opengeode-inspector",
-    "version": "6.6.2"
+    "version": "6.6.3"
   },
   {
     "repo": "OpenGeode-Stochastic",
@@ -86,6 +86,6 @@
   },
   {
     "repo": "Geode-FEFLOW",
-    "version": "6.11.0"
+    "version": "6.12.0"
   }
 ]

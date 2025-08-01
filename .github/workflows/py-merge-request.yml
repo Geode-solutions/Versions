@@ -21,7 +21,10 @@ jobs:
 
   wheels:
     needs: validate-PRs
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
     outputs:
       path: ${{ steps.repos.outputs.path }}
     steps:
@@ -35,7 +38,7 @@ jobs:
           base: ${{ needs.validate-PRs.outputs.base }}
       - uses: actions/upload-artifact@v4
         with:
-          name: wheels
+          name: wheels-$${{ runner.os }}
           path: .
 
   test:
@@ -52,7 +55,7 @@ jobs:
           python-version: "3.12"
       - uses: actions/download-artifact@v4
         with:
-          name: wheels
+          name: wheels-$${{ runner.os }}
       - name: Clone repository
         run: |
           gh auth setup-git

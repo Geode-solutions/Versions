@@ -86,15 +86,15 @@ jobs:
         shell: bash
         env:
           GEODE_LICENSE_LOCATION: ${{ github.workspace }}/geode.lic
-      - name: Post to a Slack channel
-        if: failure()
-        id: slack
-        uses: slackapi/slack-github-action@v1
-        with:
-          channel-id: C0598GTCLGH
-          slack-message: "${{ inputs.branch }}: C++ merge request failed for ${{ matrix.repo }} on Linux\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      # - name: Post to a Slack channel
+      #   if: failure()
+      #   id: slack
+      #   uses: slackapi/slack-github-action@v1
+      #   with:
+      #     channel-id: C0598GTCLGH
+      #     slack-message: "${{ inputs.branch }}: Python merge request failed for ${{ matrix.repo }} on ${{ runner.os }}\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+      #   env:
+      #     SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
   # windows:
   #   needs: validate-PRs

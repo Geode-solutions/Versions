@@ -38,7 +38,7 @@ jobs:
           base: ${{ needs.validate-PRs.outputs.base }}
       - uses: actions/upload-artifact@v4
         with:
-          name: wheels-$${{ runner.os }}
+          name: wheels-${{ runner.os }}
           path: .
 
   test:
@@ -55,7 +55,7 @@ jobs:
           python-version: "3.12"
       - uses: actions/download-artifact@v4
         with:
-          name: wheels-$${{ runner.os }}
+          name: wheels-${{ runner.os }}
       - name: Clone repository
         run: |
           gh auth setup-git
@@ -75,6 +75,7 @@ jobs:
         run: |
           cd ${{ matrix.repo }}
           pip install -r requirements.txt
+          echo "${{ needs.wheels.outputs.path }}"
           wheels=$(echo "${{ needs.wheels.outputs.path }}" | sed 's/\;/\ /g')
           echo $wheels
           if [ -n "$wheels" ]; then 

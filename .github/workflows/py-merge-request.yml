@@ -22,7 +22,6 @@ jobs:
   wheels:
     needs: validate-PRs
     runs-on: ubuntu-latest
-    container: ghcr.io/geode-solutions/ubuntu:master
     outputs:
       path: ${{ steps.repos.outputs.path }}
     steps:
@@ -48,6 +47,9 @@ jobs:
         os: [ubuntu-latest, windows-latest]
       fail-fast: false
     steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
       - uses: actions/download-artifact@v4
         with:
           name: wheels
@@ -68,6 +70,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
       - name: Install dependencies
         run: |
+          cd ${{ matrix.repo }}
           pip install -r requirements.txt
           wheels=$(echo "${{ needs.wheels.outputs.path }}" | sed 's/\;/\ /g')
           echo $wheels
@@ -77,6 +80,7 @@ jobs:
         shell: bash
       - name: Run tests
         run: |
+          cd ${{ matrix.repo }}
           pip install pytest
           pytest
         shell: bash

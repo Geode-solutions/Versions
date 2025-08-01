@@ -11,15 +11,12 @@ concurrency:
   group: ${{ inputs.branch }}
   cancel-in-progress: true
 
-env:
-  repos: "OpenGeode;OpenGeode-IO;OpenGeode-Geosciences;OpenGeode-GeosciencesIO;OpenGeode-Inspector;OpenGeode-Stochastic;Geode-Common_private;Geode-Numerics_private;Geode-Conversion_private;Geode-Background_private;Geode-Simplex_private;Geode-SimplexGeosciences_private;Geode-Hybrid_private;Geode-Hybrid_Geosciences_private;Geode-Viewables_private;Geode-Explicit_private;Geode-Implicit_private;Geode-FEFLOW"
-
 jobs:
   validate-PRs:
     uses: Geode-solutions/Versions/.github/workflows/validate-pr.yml@master
     with:
       branch: ${{ inputs.branch }}
-      repos: ${{ env.repos }}
+      repos: "OpenGeode;OpenGeode-IO;OpenGeode-Geosciences;OpenGeode-GeosciencesIO;OpenGeode-Inspector;OpenGeode-Stochastic;Geode-Common_private;Geode-Numerics_private;Geode-Conversion_private;Geode-Background_private;Geode-Simplex_private;Geode-SimplexGeosciences_private;Geode-Hybrid_private;Geode-Hybrid_Geosciences_private;Geode-Viewables_private;Geode-Explicit_private;Geode-Implicit_private;Geode-FEFLOW"
     secrets: inherit
 
   linux:
@@ -48,7 +45,7 @@ jobs:
     container: ghcr.io/geode-solutions/ubuntu:master
     strategy:
       matrix:
-        repo: ${{ fromJSON(needs.validate-PRs.outputs.repos) }}
+        repo: ${{ fromJSON(needs.validate-PRs.outputs.repos_array) }}
       fail-fast: false
     steps:
       - uses: actions/download-artifact@v4
@@ -99,7 +96,7 @@ jobs:
       - uses: Geode-solutions/actions/get-release@master
         id: repos
         with:
-          repository: ${{ env.repos }}
+          repository: ${{ needs.validate-PRs.outputs.repos }}
           file: "-win64-private.zip"
           token: ${{ secrets.TOKEN }}
           branch: ${{ inputs.branch }}
@@ -114,7 +111,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        repo: ${{ fromJSON(needs.validate-PRs.outputs.repos) }}
+        repo: ${{ fromJSON(needs.validate-PRs.outputs.repos_array) }}
       fail-fast: false
     steps:
       - uses: actions/download-artifact@v4
@@ -178,14 +175,14 @@ jobs:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
   merge-PRs:
-    needs: [linux-test, windows-test]
+    needs: [validate-PRs, linux-test, windows-test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.TOKEN }}
           script: |
-            const repos = "${{ env.repos }}"
+            const repos = "${{ needs.validate-PRs.outputs.repos }}"
             const owner = 'Geode-solutions'
             const branchName = "${{ inputs.branch }}"
             const testReleasePattern = `${branchName}-tag`

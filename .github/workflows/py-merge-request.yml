@@ -11,15 +11,12 @@ concurrency:
   group: ${{ inputs.branch }}
   cancel-in-progress: true
 
-env:
-  repos: "OpenGeodeWeb-Back;Vease-Back"
-
 jobs:
   validate-PRs:
     uses: Geode-solutions/Versions/.github/workflows/validate-pr.yml@master
     with:
       branch: ${{ inputs.branch }}
-      repos: ${{ env.repos }}
+      repos: "OpenGeodeWeb-Back;Vease-Back"
     secrets: inherit
 
   wheels:
@@ -32,7 +29,7 @@ jobs:
       - uses: Geode-solutions/actions/get-release@master
         id: repos
         with:
-          repository: ${{ env.repos }}
+          repository: ${{ needs.validate-PRs.outputs.repos }}
           file: ".whl"
           token: ${{ secrets.TOKEN }}
           branch: ${{ inputs.branch }}
@@ -47,7 +44,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        repo: ${{ fromJSON(needs.validate-PRs.outputs.repos) }}
+        repo: ${{ fromJSON(needs.validate-PRs.outputs.repos_array) }}
         os: [ubuntu-latest, windows-latest]
       fail-fast: false
     steps:
@@ -104,7 +101,7 @@ jobs:
   #     - uses: Geode-solutions/actions/get-release@master
   #       id: repos
   #       with:
-  #         repository: ${{ env.repos }}
+  #         repository: ${{ needs.validate-PRs.outputs.repos }}
   #         file: "-win64-private.zip"
   #         token: ${{ secrets.TOKEN }}
   #         branch: ${{ inputs.branch }}
@@ -119,7 +116,7 @@ jobs:
   #   runs-on: windows-latest
   #   strategy:
   #     matrix:
-  #       repo: ${{ fromJSON(needs.validate-PRs.outputs.repos) }}
+  #       repo: ${{ fromJSON(needs.validate-PRs.outputs.repos_array) }}
   #     fail-fast: false
   #   steps:
   #     - uses: actions/download-artifact@v4
@@ -190,7 +187,7 @@ jobs:
   #       with:
   #         github-token: ${{ secrets.TOKEN }}
   #         script: |
-  #           const repos = "${{ env.repos }}"
+  #           const repos = "${{ needs.validate-PRs.outputs.repos }}"
   #           const owner = 'Geode-solutions'
   #           const branchName = "${{ inputs.branch }}"
   #           const testReleasePattern = `${branchName}-tag`

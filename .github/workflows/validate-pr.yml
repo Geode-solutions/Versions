@@ -10,6 +10,8 @@ on:
     outputs:
       base:
         value: ${{ jobs.validate-PRs.outputs.base }}
+      repos_array:
+        value: ${{ jobs.validate-PRs.outputs.repos_array }}
       repos:
         value: ${{ jobs.validate-PRs.outputs.repos }}
 
@@ -97,7 +99,8 @@ jobs:
                 result += message + '\n'
               }
             }
-            core.setOutput("repos", JSON.stringify(array_repos))
+            core.setOutput("repos", repos)
+            core.setOutput("repos_array", JSON.stringify(array_repos))
             return result
       - name: Post to a Slack channel
         if: failure()

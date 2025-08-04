@@ -101,7 +101,7 @@ jobs:
 
   merge-PRs:
     needs: [validate-PRs, test]
-    uses: Geode-solutions/actions/.github/workflows/merge-pr.yml@master
+    uses: Geode-solutions/Versions/.github/workflows/merge-pr.yml@master
     with:
       branch: ${{ inputs.branch }}
       repos: ${{ needs.validate-PRs.outputs.repos }}

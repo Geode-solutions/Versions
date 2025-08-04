@@ -73,7 +73,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
       - name: Install dependencies
         run: |
-          ls
           cd ${{ matrix.repo }}
           pip install -r requirements.txt
           wheels=$(cat ../repos_path.txt | sed 's/\;/\ /g')
@@ -90,102 +89,15 @@ jobs:
         shell: bash
         env:
           GEODE_LICENSE_LOCATION: ${{ github.workspace }}/geode.lic
-      # - name: Post to a Slack channel
-      #   if: failure()
-      #   id: slack
-      #   uses: slackapi/slack-github-action@v1
-      #   with:
-      #     channel-id: C0598GTCLGH
-      #     slack-message: "${{ inputs.branch }}: Python merge request failed for ${{ matrix.repo }} on ${{ runner.os }}\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-      #   env:
-      #     SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-
-  # windows:
-  #   needs: validate-PRs
-  #   runs-on: windows-latest
-  #   outputs:
-  #     path: ${{ steps.repos.outputs.path }}
-  #   steps:
-  #     - uses: Geode-solutions/actions/get-release@master
-  #       id: repos
-  #       with:
-  #         repository: ${{ needs.validate-PRs.outputs.repos }}
-  #         file: "-win64-private.zip"
-  #         token: ${{ secrets.TOKEN }}
-  #         branch: ${{ inputs.branch }}
-  #         base: ${{ needs.validate-PRs.outputs.base }}
-  #     - uses: actions/upload-artifact@v4
-  #       with:
-  #         name: windows
-  #         path: .
-
-  # windows-test:
-  #   needs: [validate-PRs, windows]
-  #   runs-on: windows-latest
-  #   strategy:
-  #     matrix:
-  #       repo: ${{ fromJSON(needs.validate-PRs.outputs.repos_array) }}
-  #     fail-fast: false
-  #   steps:
-  #     - uses: actions/download-artifact@v4
-  #       with:
-  #         name: windows
-  #     - name: Libraries
-  #       id: libraries
-  #       run: |
-  #         $old_path = "${{ needs.windows.outputs.path }}"
-  #         $bin_path = $old_path.replace(";", "\bin;").replace("\","/") + "/bin"
-  #         echo "bin=$bin_path" >> $env:GITHUB_OUTPUT
-  #         $share_path = $old_path.replace(";", "\share;").replace("\","/") + "/share"
-  #         echo "share=$share_path" >> $env:GITHUB_OUTPUT
-  #     - uses: TheMrMilchmann/setup-msvc-dev@v3
-  #       with:
-  #         arch: x64
-  #     - name: Compile & Test
-  #       run: |
-  #         gh auth setup-git
-  #         gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
-  #         gh repo clone Geode-solutions/${{ matrix.repo }}
-  #         cd ${{ matrix.repo }}
-  #         if git ls-remote --exit-code --heads origin ${{ inputs.branch }}; then
-  #           echo "found branch ${{ inputs.branch }}"
-  #           git checkout origin/${{ inputs.branch }}
-  #         else
-  #           git checkout origin/${{ needs.validate-PRs.outputs.base }}
-  #         fi
-  #         mkdir -p build
-  #         cd build
-  #         cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="${{ needs.windows.outputs.path }}" ../tests
-  #         IFS=";" read -a paths <<< "${{ steps.libraries.outputs.bin }}"
-  #         for path in "${paths[@]}"
-  #         do
-  #           if [[ -d $path ]]; then
-  #             cp $path/* bin
-  #           fi
-  #         done
-  #         mkdir share
-  #         IFS=";" read -a shares <<< "${{ steps.libraries.outputs.share }}"
-  #         for share in "${shares[@]}"
-  #         do
-  #           if [[ -d $share ]]; then
-  #             cp -r $share/* share
-  #           fi
-  #         done
-  #         cmake --build .
-  #         ctest --output-on-failure --no-tests=error -j 2 -LE unstable
-  #       env:
-  #         GEODE_LICENSE_LOCATION: ${{ github.workspace }}/geode.lic
-  #         GITHUB_TOKEN: ${{ secrets.TOKEN }}
-  #       shell: bash
-  #     - name: Post to a Slack channel
-  #       if: failure()
-  #       id: slack
-  #       uses: slackapi/slack-github-action@v1
-  #       with:
-  #         channel-id: C0598GTCLGH
-  #         slack-message: "${{ inputs.branch }}: C++ merge request failed for ${{ matrix.repo }} on Windows\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-  #       env:
-  #         SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      - name: Post to a Slack channel
+        if: failure()
+        id: slack
+        uses: slackapi/slack-github-action@v1
+        with:
+          channel-id: C0598GTCLGH
+          slack-message: "${{ inputs.branch }}: Python merge request failed for ${{ matrix.repo }} on ${{ runner.os }}\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
   # merge-PRs:
   #   needs: [linux-test, windows-test]

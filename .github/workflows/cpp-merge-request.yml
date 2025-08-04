@@ -29,7 +29,7 @@ jobs:
       - uses: Geode-solutions/actions/get-release@master
         id: repos
         with:
-          repository: ${{ env.repos }}
+          repository: ${{ needs.validate-PRs.outputs.repos }}
           file: "-ubuntu-private.tar.gz"
           token: ${{ secrets.TOKEN }}
           branch: ${{ inputs.branch }}

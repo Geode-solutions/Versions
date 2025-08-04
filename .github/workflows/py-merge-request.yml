@@ -25,8 +25,6 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-    outputs:
-      path: ${{ steps.repos.outputs.path }}
     steps:
       - uses: Geode-solutions/actions/get-release@master
         id: repos
@@ -36,6 +34,8 @@ jobs:
           token: ${{ secrets.TOKEN }}
           branch: ${{ inputs.branch }}
           base: ${{ needs.validate-PRs.outputs.base }}
+      - name: Save data to file
+        run: echo "${{ steps.repos.outputs.path }}" > repos_path.txt
       - uses: actions/upload-artifact@v4
         with:
           name: wheels-${{ runner.os }}
@@ -75,8 +75,7 @@ jobs:
         run: |
           cd ${{ matrix.repo }}
           pip install -r requirements.txt
-          echo "${{ needs.wheels.outputs.path }}"
-          wheels=$(echo "${{ needs.wheels.outputs.path }}" | sed 's/\;/\ /g')
+          wheels=$(cat repos_path.txt | sed 's/\;/\ /g')
           echo $wheels
           if [ -n "$wheels" ]; then 
             pip install --no-deps $wheels

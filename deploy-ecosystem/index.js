@@ -1,8 +1,8 @@
 import core from "@actions/core";
 import { Octokit } from "@octokit/rest";
 
-import cpp_deploy from "./cpp";
-import py_deploy from "./py";
+import cpp_deploy from "./cpp.js";
+import py_deploy from "./py.js";
 
 try {
   const ref = core.getInput("version");

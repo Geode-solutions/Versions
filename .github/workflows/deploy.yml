@@ -7,6 +7,9 @@ on:
         type: string
         default: next
         required: true
+      workflow:
+        type: string
+        required: true
 
 concurrency:
   group: ${{ github.ref }}
@@ -20,3 +23,4 @@ jobs:
         with:
           version: ${{ inputs.branch }}
           token: ${{ secrets.TOKEN }}
+          workflow: ${{ inputs.workflow }}

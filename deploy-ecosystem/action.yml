@@ -9,7 +9,7 @@ inputs:
     required: true
   workflow:
     description: "Workflow to launch"
-    default: "cpp"
+    required: true
 runs:
   using: "node20"
   main: "index.js"

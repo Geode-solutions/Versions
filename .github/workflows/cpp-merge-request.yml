@@ -176,56 +176,11 @@ jobs:
 
   merge-PRs:
     needs: [validate-PRs, linux-test, windows-test]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/github-script@v7
-        with:
-          github-token: ${{ secrets.TOKEN }}
-          script: |
-            const repos = "${{ needs.validate-PRs.outputs.repos }}"
-            const owner = 'Geode-solutions'
-            const branchName = "${{ inputs.branch }}"
-            const testReleasePattern = `${branchName}-tag`
-            for(const repo of repos.split(';')) {
-              console.log(repo)
-              const prs = await github.rest.pulls.list({
-                owner,
-                repo,
-                state: 'open'
-              })
-              const branch_pr = prs.data.find(pr => pr.head.ref == "${{ inputs.branch }}")
-              if (!branch_pr) {
-                continue
-              }
-              const pull_number = branch_pr.number
-              console.log(`Merging PR #${pull_number}, for branch ${branch_pr}, in repo ${repo}`)
-              await github.rest.pulls.merge({
-                owner,
-                repo,
-                pull_number
-              })
-              console.log(`Deleting test releases in ${repo}...`)
-              const releases = await github.paginate(github.rest.repos.listReleases, {
-              owner,
-              repo
-              })
-              for (const release of releases) {
-                if (release.tag_name === testReleasePattern) {
-                  console.log(`Deleting release: ${release.name} (ID: ${release.id})`)
-                  await github.rest.repos.deleteRelease({
-                    owner,
-                    repo,
-                    release_id: release.id
-                  })
-                  console.log(`Deleting tag: ${release.tag_name}`)
-                  await github.rest.git.deleteRef({
-                    owner,
-                    repo,
-                    ref: `tags/${release.tag_name}`
-                  })
-                }
-              }
-            }
+    uses: Geode-solutions/actions/.github/workflows/merge-pr.yml@master
+    with:
+      branch: ${{ inputs.branch }}
+      repos: ${{ needs.validate-PRs.outputs.repos }}
+    secrets: inherit
 
   deploy:
     runs-on: ubuntu-latest
@@ -240,7 +195,7 @@ jobs:
               repo: 'Versions',
               workflow_id: 'deploy.yml',
               ref: 'master',
-              inputs: { branch: '${{ needs.validate-PRs.outputs.base }}' }
+              inputs: { branch: '${{ needs.validate-PRs.outputs.base }}', workflow: 'cpp' }
             })
       - name: Post to a Slack channel
         id: slack

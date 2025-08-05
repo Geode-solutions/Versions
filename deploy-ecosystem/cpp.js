@@ -1,4 +1,4 @@
-import deploy_repository from "./utils";
+import deploy_repository from "./utils.js";
 
 export default async function cpp_deploy(octokit, ref) {
   const og = deploy_repository(octokit, "Geode-solutions", "OpenGeode", ref);

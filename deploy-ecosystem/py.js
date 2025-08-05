@@ -1,4 +1,4 @@
-import deploy_repository from "./utils";
+import deploy_repository from "./utils.js";
 
 export default async function py_deploy(octokit, ref) {
   const ogw_back = deploy_repository(

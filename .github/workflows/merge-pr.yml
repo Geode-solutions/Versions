@@ -42,7 +42,7 @@ jobs:
               await github.rest.git.deleteRef({
                 owner,
                 repo,
-                ref: ${{ inputs.branch }}
+                ref: heads/${{ inputs.branch }}
               });
               console.log(`Deleting test releases in ${repo}...`)
               const releases = await github.paginate(github.rest.repos.listReleases, {

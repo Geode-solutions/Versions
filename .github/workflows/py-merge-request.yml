@@ -74,8 +74,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd ${{ matrix.repo }}
-          pip install -r requirements.txt
-          pip install .
+          pip install .[cpu]
           wheels=$(cat ../repos_path.txt | sed 's/\;/\ /g')
           echo $wheels
           if [ -n "$wheels" ]; then 

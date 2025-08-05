@@ -38,6 +38,12 @@ jobs:
                 repo,
                 pull_number
               })
+              console.log(`Deleting branch in ${repo}...`)
+              await github.rest.git.deleteRef({
+                owner,
+                repo,
+                ref: ${{ inputs.branch }}
+              });
               console.log(`Deleting test releases in ${repo}...`)
               const releases = await github.paginate(github.rest.repos.listReleases, {
               owner,

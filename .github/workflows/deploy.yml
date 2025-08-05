@@ -8,8 +8,11 @@ on:
         default: next
         required: true
       workflow:
-        type: string
         required: true
+        type: choice
+        options:
+          - cpp
+          - py
 
 concurrency:
   group: ${{ github.ref }}

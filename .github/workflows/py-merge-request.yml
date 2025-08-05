@@ -74,7 +74,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd ${{ matrix.repo }}
-          pip install .[cpu]
+          pip install --extra-index-url https://wheels.vtk.org .[cpu]
           wheels=$(cat ../repos_path.txt | sed 's/\;/\ /g')
           echo $wheels
           if [ -n "$wheels" ]; then 

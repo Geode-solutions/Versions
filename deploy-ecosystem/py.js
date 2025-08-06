@@ -10,5 +10,14 @@ export default async function py_deploy(octokit, ref) {
   const vease_back = ogw_back.then(() => {
     return deploy_repository(octokit, "Geode-solutions", "Vease-Back", ref);
   });
-  await Promise.all([ogw_back, vease_back]);
+  const ogw_viewer = deploy_repository(
+    octokit,
+    "Geode-solutions",
+    "OpenGeodeWeb-Viewer",
+    ref
+  );
+  const vease_viewer = ogw_viewer.then(() => {
+    return deploy_repository(octokit, "Geode-solutions", "Vease-Viewer", ref);
+  });
+  await Promise.all([vease_back, vease_viewer]);
 }

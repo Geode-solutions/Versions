@@ -16,7 +16,7 @@ jobs:
     uses: Geode-solutions/Versions/.github/workflows/validate-pr.yml@master
     with:
       branch: ${{ inputs.branch }}
-      repos: "OpenGeodeWeb-Back;Vease-Back"
+      repos: "OpenGeodeWeb-Back;Vease-Back;OpenGeodeWeb-Viewer;Vease-Viewer"
     secrets: inherit
 
   wheels:
@@ -84,7 +84,7 @@ jobs:
       - name: Run tests
         run: |
           cd ${{ matrix.repo }}
-          pip install pytest
+          pip install pytest pytest-xprocess
           pytest
         shell: bash
         env:

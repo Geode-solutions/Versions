@@ -42,6 +42,7 @@ jobs:
         with:
           version: master
           token: ${{ secrets.TOKEN }}
+          workflow: cpp
       - uses: actions/checkout@v4
       - uses: actions/github-script@v7
         id: update

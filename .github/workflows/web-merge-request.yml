@@ -151,6 +151,8 @@ jobs:
           echo "done cloning"
           cd ${{ matrix.repo }}
           ls
+          git ls-remote --exit-code --heads origin ${{ inputs.branch }}
+          echo "check $?"
           if git ls-remote --exit-code --heads origin ${{ inputs.branch }}; then
             echo "found branch ${{ inputs.branch }}"
             git checkout origin/${{ inputs.branch }}

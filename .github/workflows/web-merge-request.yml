@@ -1,4 +1,4 @@
-name: Ecosystem branch check (Python)
+name: Ecosystem branch check (Web)
 
 on:
   workflow_dispatch:
@@ -149,7 +149,7 @@ jobs:
           gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
           gh repo clone Geode-solutions/${{ matrix.repo }}
           cd ${{ matrix.repo }}
-          if git ls-remote --exit-code --heads origin ${{ inputs.branch }}; then
+          if gh api repos/Geode-solutions/${{ matrix.repo }}/branches/${{ inputs.branch }} >/dev/null 2>&1; then
             echo "found branch ${{ inputs.branch }}"
             git checkout origin/${{ inputs.branch }}
           else

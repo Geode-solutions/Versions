@@ -151,8 +151,10 @@ jobs:
           echo "done cloning"
           cd ${{ matrix.repo }}
           ls
-          git ls-remote --exit-code --heads origin ${{ inputs.branch }}
-          echo "check $?"
+          gh api repos/Geode-solutions/${{ matrix.repo }}/branches/${{ inputs.branch }} --silent
+          echo "GH $?"
+          git ls-remote --exit-code --heads origin refs/heads/${{ inputs.branch }}
+          echo "GIT $?"
           if git ls-remote --exit-code --heads origin ${{ inputs.branch }}; then
             echo "found branch ${{ inputs.branch }}"
             git checkout origin/${{ inputs.branch }}

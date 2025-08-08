@@ -148,8 +148,10 @@ jobs:
           gh auth setup-git
           gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
           gh repo clone Geode-solutions/${{ matrix.repo }}
+          echo "done cloning"
           cd ${{ matrix.repo }}
-          if gh api repos/Geode-solutions/${{ matrix.repo }}/branches/${{ inputs.branch }} >/dev/null 2>&1; then
+          ls
+          if git ls-remote --exit-code --heads origin ${{ inputs.branch }}; then
             echo "found branch ${{ inputs.branch }}"
             git checkout origin/${{ inputs.branch }}
           else

@@ -2,7 +2,7 @@ import core from "@actions/core";
 import { Octokit } from "@octokit/rest";
 
 import cpp_deploy from "./cpp.js";
-import py_deploy from "./py.js";
+import web_deploy from "./web.js";
 
 try {
   const ref = core.getInput("version");
@@ -11,8 +11,8 @@ try {
   const workflow = core.getInput("workflow");
   if (workflow === "cpp") {
     cpp_deploy(octokit, ref);
-  } else if (workflow === "py") {
-    py_deploy(octokit, ref);
+  } else if (workflow === "web") {
+    web_deploy(octokit, ref);
   } else {
     throw new Error(`Unknown workflow: ${workflow}`);
   }

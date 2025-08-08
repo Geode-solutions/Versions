@@ -12,7 +12,7 @@ on:
         type: choice
         options:
           - cpp
-          - py
+          - web
 
 concurrency:
   group: ${{ github.ref }}

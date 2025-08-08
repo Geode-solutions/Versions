@@ -12,15 +12,22 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  validate-PRs:
+  validate-js-PRs:
+    uses: Geode-solutions/Versions/.github/workflows/validate-pr.yml@master
+    with:
+      branch: ${{ inputs.branch }}
+      repos: "OpenGeodeWeb-Front"
+    secrets: inherit
+
+  validate-py-PRs:
     uses: Geode-solutions/Versions/.github/workflows/validate-pr.yml@master
     with:
       branch: ${{ inputs.branch }}
       repos: "OpenGeodeWeb-Back;Vease-Back;OpenGeodeWeb-Viewer;Vease-Viewer"
     secrets: inherit
 
-  wheels:
-    needs: validate-PRs
+  tarballs:
+    needs: [validate-js-PRs, validate-py-PRs]
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -29,11 +36,33 @@ jobs:
       - uses: Geode-solutions/actions/get-release@master
         id: repos
         with:
-          repository: ${{ needs.validate-PRs.outputs.repos }}
+          repository: ${{ needs.validate-js-PRs.outputs.repos }}
+          file: ".tgz"
+          token: ${{ secrets.TOKEN }}
+          branch: ${{ inputs.branch }}
+          base: ${{ needs.validate-js-PRs.outputs.base }}
+      - name: Save data to file
+        run: echo "${{ steps.repos.outputs.path }}" > repos_path.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tarballs-${{ runner.os }}
+          path: .
+
+  wheels:
+    needs: [validate-js-PRs, validate-py-PRs]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: Geode-solutions/actions/get-release@master
+        id: repos
+        with:
+          repository: ${{ needs.validate-py-PRs.outputs.repos }}
           file: ".whl"
           token: ${{ secrets.TOKEN }}
           branch: ${{ inputs.branch }}
-          base: ${{ needs.validate-PRs.outputs.base }}
+          base: ${{ needs.validate-py-PRs.outputs.base }}
       - name: Save data to file
         run: echo "${{ steps.repos.outputs.path }}" > repos_path.txt
       - uses: actions/upload-artifact@v4
@@ -41,12 +70,70 @@ jobs:
           name: wheels-${{ runner.os }}
           path: .
 
-  test:
-    needs: [validate-PRs, wheels]
+  test-js:
+    needs: [validate-js-PRs, tarballs]
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        repo: ${{ fromJSON(needs.validate-PRs.outputs.repos_array) }}
+        repo: ${{ fromJSON(needs.validate-js-PRs.outputs.repos_array) }}
+        os: [ubuntu-latest, windows-latest]
+      fail-fast: false
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/download-artifact@v4
+        with:
+          name: tarballs-${{ runner.os }}
+      - name: Clone repository
+        run: |
+          gh auth setup-git
+          gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
+          gh repo clone Geode-solutions/${{ matrix.repo }}
+          cd ${{ matrix.repo }}
+          if git ls-remote --exit-code --heads origin ${{ inputs.branch }}; then
+            echo "found branch ${{ inputs.branch }}"
+            git checkout origin/${{ inputs.branch }}
+          else
+            git checkout origin/${{ needs.validate-js-PRs.outputs.base }}
+          fi
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+      - name: Install dependencies
+        run: |
+          cd ${{ matrix.repo }}
+          npm install
+          tarballs=$(cat ../repos_path.txt | sed 's/\;/\ /g')
+          echo "Tarballs = $tarballs"
+          if [ -n "$tarballs" ]; then 
+            npm install $tarballs
+          fi
+          npm list --depth=0
+        shell: bash
+      - name: Run tests
+        run: |
+          cd ${{ matrix.repo }}
+          npm run test
+        shell: bash
+        env:
+          GEODE_LICENSE_LOCATION: ${{ github.workspace }}/geode.lic
+      - name: Post to a Slack channel
+        if: failure()
+        id: slack
+        uses: slackapi/slack-github-action@v1
+        with:
+          channel-id: C0598GTCLGH
+          slack-message: "${{ inputs.branch }}: Javascript merge request failed for ${{ matrix.repo }} on ${{ runner.os }}\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
+  test-py:
+    needs: [validate-py-PRs, wheels]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        repo: ${{ fromJSON(needs.validate-py-PRs.outputs.repos_array) }}
         os: [ubuntu-latest, windows-latest]
       fail-fast: false
     steps:
@@ -66,7 +153,7 @@ jobs:
             echo "found branch ${{ inputs.branch }}"
             git checkout origin/${{ inputs.branch }}
           else
-            git checkout origin/${{ needs.validate-PRs.outputs.base }}
+            git checkout origin/${{ needs.validate-py-PRs.outputs.base }}
           fi
         shell: bash
         env:
@@ -100,16 +187,16 @@ jobs:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
   merge-PRs:
-    needs: [validate-PRs, test]
+    needs: [validate-js-PRs, validate-py-PRs, test-js, test-py]
     uses: Geode-solutions/Versions/.github/workflows/merge-pr.yml@master
     with:
       branch: ${{ inputs.branch }}
-      repos: ${{ needs.validate-PRs.outputs.repos }}
+      repos: ${{ needs.validate-js-PRs.outputs.repos }};${{ needs.validate-py-PRs.outputs.repos }}
     secrets: inherit
 
   deploy:
     runs-on: ubuntu-latest
-    needs: [merge-PRs, validate-PRs]
+    needs: [merge-PRs, validate-js-PRs]
     steps:
       - uses: actions/github-script@v7
         with:
@@ -120,7 +207,7 @@ jobs:
               repo: 'Versions',
               workflow_id: 'deploy.yml',
               ref: 'master',
-              inputs: { branch: '${{ needs.validate-PRs.outputs.base }}', workflow: 'py' }
+              inputs: { branch: '${{ needs.validate-js-PRs.outputs.base }}', workflow: 'web' }
             })
       - name: Post to a Slack channel
         id: slack

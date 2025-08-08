@@ -62,10 +62,11 @@ jobs:
           gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
           gh repo clone Geode-solutions/${{ matrix.repo }}
           cd ${{ matrix.repo }}
-          if git ls-remote --exit-code --heads origin ${{ inputs.branch }}; then
+          if gh api repos/Geode-solutions/${{ matrix.repo }}/branches/${{ inputs.branch }} --silent; then
             echo "found branch ${{ inputs.branch }}"
             git checkout origin/${{ inputs.branch }}
           else
+            echo "branch not found, checking base branch"
             git checkout origin/${{ needs.validate-PRs.outputs.base }}
           fi
           mkdir -p build

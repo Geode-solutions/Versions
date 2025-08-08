@@ -1,3 +1,5 @@
+name: Merge PRs
+
 on:
   workflow_call:
     inputs:

@@ -37,7 +37,7 @@
   {
     "repo": "Geode-Conversion_private",
     "python": "geode-conversion",
-    "version": "6.4.4"
+    "version": "6.4.5"
   },
   {
     "repo": "Geode-Numerics_private",
@@ -62,7 +62,7 @@
   {
     "repo": "Geode-Simplex_private",
     "python": "geode-simplex",
-    "version": "9.6.0"
+    "version": "9.6.1"
   },
   {
     "repo": "Geode-SimplexGeosciences_private",
@@ -77,7 +77,7 @@
   {
     "repo": "Geode-Hybrid_Geosciences_private",
     "python": "geode-hybrid_geosciences",
-    "version": "1.6.0"
+    "version": "1.6.1"
   },
   {
     "repo": "Geode-Viewables_private",
@@ -86,6 +86,6 @@
   },
   {
     "repo": "Geode-FEFLOW",
-    "version": "6.14.4"
+    "version": "6.14.5"
   }
 ]

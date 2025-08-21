@@ -2,7 +2,7 @@
   {
     "repo": "OpenGeode",
     "python": "opengeode-core",
-    "version": "15.24.4"
+    "version": "15.25.0"
   },
   {
     "repo": "OpenGeode-IO",
@@ -37,7 +37,7 @@
   {
     "repo": "Geode-Conversion_private",
     "python": "geode-conversion",
-    "version": "6.4.5"
+    "version": "6.4.6"
   },
   {
     "repo": "Geode-Numerics_private",

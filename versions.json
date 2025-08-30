@@ -27,12 +27,12 @@
   {
     "repo": "OpenGeode-Stochastic",
     "python": "opengeode-stochastic",
-    "version": "1.7.0"
+    "version": "1.7.1"
   },
   {
     "repo": "Geode-Common_private",
     "python": "geode-common",
-    "version": "33.9.1"
+    "version": "33.9.2"
   },
   {
     "repo": "Geode-Conversion_private",
@@ -47,7 +47,7 @@
   {
     "repo": "Geode-Background_private",
     "python": "geode-background",
-    "version": "9.4.1"
+    "version": "9.4.2"
   },
   {
     "repo": "Geode-Explicit_private",

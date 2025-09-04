@@ -35,12 +35,13 @@ jobs:
       - name: Set base branch
         id: base
         run: |
-          if ${{ needs.validate-js-PRs.outputs.base }}; then
+          if [[ -n "${{ needs.validate-js-PRs.outputs.base }}" ]]; then
             echo "base=${{ needs.validate-js-PRs.outputs.base }}" >> $GITHUB_OUTPUT
-          else
+          elif [[ -n "${{ needs.validate-py-PRs.outputs.base }}" ]]; then
             echo "base=${{ needs.validate-py-PRs.outputs.base }}" >> $GITHUB_OUTPUT
+          else
+            echo "base=next" >> $GITHUB_OUTPUT
           fi
-          echo "base=next" >> $GITHUB_OUTPUT
 
   tarballs:
     needs: [validate-js-PRs, validate-py-PRs, base]

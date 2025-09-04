@@ -130,9 +130,9 @@ jobs:
           tarballs=$(cat ../repos_path.txt | sed 's/\;/\ /g')
           echo "Tarballs = $tarballs"
           if [ -n "$tarballs" ]; then 
-            npm install $tarballs
+            npm install --no-save $tarballs
           fi
-          npm list --depth=0
+          npm list --depth=0 || true
         shell: bash
       - name: Run tests
         run: |

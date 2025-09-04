@@ -38,10 +38,13 @@ jobs:
           echo "JS base: ${{ needs.validate-js-PRs.outputs.base }}"
           echo "Py base: ${{ needs.validate-py-PRs.outputs.base }}"
           if [[ -n "${{ needs.validate-js-PRs.outputs.base }}" ]]; then
+            echo "Using JS base"
             echo "base=${{ needs.validate-js-PRs.outputs.base }}" >> $GITHUB_OUTPUT
           elif [[ -n "${{ needs.validate-py-PRs.outputs.base }}" ]]; then
+            echo "Using Py base"
             echo "base=${{ needs.validate-py-PRs.outputs.base }}" >> $GITHUB_OUTPUT
           else
+            echo "Using default base 'next'"
             echo "base=next" >> $GITHUB_OUTPUT
           fi
 

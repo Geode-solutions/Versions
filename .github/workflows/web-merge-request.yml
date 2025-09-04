@@ -30,7 +30,7 @@ jobs:
     needs: [validate-js-PRs, validate-py-PRs]
     runs-on: ubuntu-latest
     outputs:
-      base: ${{ needs.validate-js-PRs.outputs.base }}
+      base: ${{ steps.base.outputs.base }}
     steps:
       - name: Set base branch
         id: base

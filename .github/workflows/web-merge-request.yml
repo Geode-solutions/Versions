@@ -189,7 +189,7 @@ jobs:
           wheels=$(cat ../repos_path.txt | sed 's/\;/\ /g')
           echo $wheels
           if [ -n "$wheels" ]; then 
-            pip installs --extra-index-url https://wheels.vtk.org $wheels
+            pip install --extra-index-url https://wheels.vtk.org $wheels
           fi
         shell: bash
       - name: Run tests

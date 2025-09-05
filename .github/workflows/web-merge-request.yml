@@ -23,7 +23,7 @@ jobs:
     uses: Geode-solutions/Versions/.github/workflows/validate-pr.yml@master
     with:
       branch: ${{ inputs.branch }}
-      repos: "OpenGeodeWeb-Back;Vease-Back;OpenGeodeWeb-Viewer;Vease-Viewer"
+      repos: "Vease-Viewer;OpenGeodeWeb-Viewer;Vease-Back;OpenGeodeWeb-Back"
     secrets: inherit
 
   base:
@@ -188,6 +188,8 @@ jobs:
           pip install --extra-index-url https://wheels.vtk.org .[cpu]
           wheels=$(cat ../repos_path.txt | sed 's/\;/\ /g')
           echo $wheels
+          wheels=$(echo "$wheels" | tr ' ' '\n' | grep '0\.0\.0' | tr '\n' ' ' | sed 's/ $//')
+          echo "$wheels"
           if [ -n "$wheels" ]; then 
             pip install --extra-index-url https://wheels.vtk.org $wheels
           fi

@@ -189,18 +189,14 @@ jobs:
           wheels=$(cat ../repos_path.txt | sed 's/\;/\ /g')
           echo "all wheels = $wheels"
           if [ -n "$wheels" ]; then 
-            step0=$(echo "$wheels" | tr ' ' '\n')
-            echo "step0 = $step0"
-            step1=$(echo "$step0" | grep '0\.0\.0')
-            echo "step1 = $step1"
-            step2=$(echo "$step1" | tr '\n' ' ')
-            echo "step2 = $step2"
-            step3=$(echo "$step2" | sed 's/ $//')
-            echo "step3 = $step3"
-            filtered_wheels=$(echo "$wheels" | tr ' ' '\n' | grep '0\.0\.0' | tr '\n' ' ' | sed 's/ $//')
-            echo "filtered wheels = $filtered_wheels"
-            if [ -n "$filtered_wheels" ]; then 
-              pip install --extra-index-url https://wheels.vtk.org $filtered_wheels
+            dev_wheels=$(echo "$wheels" | tr ' ' '\n' | grep '0\.0\.0' || echo "")
+            echo "dev wheels = $dev_wheels"
+            if [ -n "$dev_wheels" ]; then 
+              filtered_wheels=$(echo "$dev_wheels" | tr '\n' ' ' | sed 's/ $//')
+              echo "filtered wheels = $filtered_wheels"
+              if [ -n "$filtered_wheels" ]; then 
+                pip install --extra-index-url https://wheels.vtk.org $filtered_wheels
+              fi
             fi
           fi
         shell: bash

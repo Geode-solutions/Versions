@@ -199,6 +199,7 @@ jobs:
               fi
             fi
           fi
+          pip list
         shell: bash
       - name: Run tests
         run: |

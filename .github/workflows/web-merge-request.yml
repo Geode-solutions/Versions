@@ -195,7 +195,9 @@ jobs:
               filtered_wheels=$(echo "$dev_wheels" | tr '\n' ' ' | sed 's/ $//')
               echo "filtered wheels = $filtered_wheels"
               if [ -n "$filtered_wheels" ]; then 
-                pip install --extra-index-url https://wheels.vtk.org $filtered_wheels
+                for wheel in $filtered_wheels; do
+                  pip install --extra-index-url https://wheels.vtk.org $wheel
+                done
               fi
             fi
           fi

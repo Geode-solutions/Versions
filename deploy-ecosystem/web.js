@@ -13,7 +13,7 @@ export default async function web_deploy(octokit, ref) {
   const vease_back = ogw_back.then(() => {
     return deploy_repository(octokit, "Geode-solutions", "Vease-Back", ref);
   });
-  const ogw_viewer = ogw_back.then(() => {
+  const ogw_viewer = ogw_microservice.then(() => {
     return deploy_repository(
       octokit,
       "Geode-solutions",

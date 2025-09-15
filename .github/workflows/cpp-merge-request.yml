@@ -48,7 +48,7 @@ jobs:
         repo: ${{ fromJSON(needs.validate-PRs.outputs.repos_array) }}
       fail-fast: false
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         with:
           name: linux
       - name: Libraries
@@ -115,7 +115,7 @@ jobs:
         repo: ${{ fromJSON(needs.validate-PRs.outputs.repos_array) }}
       fail-fast: false
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         with:
           name: windows
       - name: Libraries

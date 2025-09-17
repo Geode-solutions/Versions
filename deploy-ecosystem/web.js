@@ -32,8 +32,8 @@ export default async function web_deploy(octokit, ref) {
       ref
     );
   });
-  const vease = Promise.all([vease_back, vease_viewer, ogw_front]).then(() => {
-    return deploy_repository(octokit, "Geode-solutions", "Vease", ref);
-  });
-  await Promise.all([vease]);
+  // const vease = Promise.all([vease_back, vease_viewer, ogw_front]).then(() => {
+  //   return deploy_repository(octokit, "Geode-solutions", "Vease", ref);
+  // });
+  await Promise.all([vease_back, vease_viewer, ogw_front]);
 }

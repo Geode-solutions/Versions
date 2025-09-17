@@ -16,7 +16,7 @@ jobs:
     uses: Geode-solutions/Versions/.github/workflows/validate-pr.yml@master
     with:
       branch: ${{ inputs.branch }}
-      repos: "OpenGeodeWeb-Front"
+      repos: "Vease;OpenGeodeWeb-Front"
     secrets: inherit
 
   validate-py-PRs:

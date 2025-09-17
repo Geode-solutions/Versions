@@ -8,7 +8,12 @@ export default async function web_deploy(octokit, ref) {
     ref
   );
   const ogw_back = ogw_microservice.then(() => {
-    deploy_repository(octokit, "Geode-solutions", "OpenGeodeWeb-Back", ref);
+    return deploy_repository(
+      octokit,
+      "Geode-solutions",
+      "OpenGeodeWeb-Back",
+      ref
+    );
   });
   const vease_back = ogw_back.then(() => {
     return deploy_repository(octokit, "Geode-solutions", "Vease-Back", ref);

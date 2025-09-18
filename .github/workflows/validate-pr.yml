@@ -150,7 +150,7 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          pattern: ${{ inputs.workflow }}-config
+          pattern: "*${{ inputs.workflow }}-config"
       - name: Save data to file
         run: |
           ls

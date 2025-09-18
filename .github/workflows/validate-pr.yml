@@ -9,6 +9,9 @@ on:
       repos:
         type: string
         required: true
+      workflow:
+        type: string
+        required: true
     outputs:
       base:
         value: ${{ jobs.validate-PRs.outputs.base }}
@@ -114,3 +117,37 @@ jobs:
           slack-message: "${{ inputs.branch }}: PR validation failed\n${{ steps.check.outputs.result }}\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
+  get-py-configs:
+    if: ${{ inputs.workflow == 'py' }}
+    needs: validate-PRs
+    strategy:
+      matrix:
+        repo: ${{ fromJSON(needs.validate-PRs.outputs.repos_array) }}
+    uses: Geode-solutions/actions/.github/workflows/py-config.yml@master
+    with:
+      repo: "Geode-solutions/${{ matrix.repo }}"
+    secrets: inherit
+
+  get-js-configs:
+    if: ${{ inputs.workflow == 'js' }}
+    needs: validate-PRs
+    strategy:
+      matrix:
+        repo: ${{ fromJSON(needs.validate-PRs.outputs.repos_array) }}
+    uses: Geode-solutions/actions/.github/workflows/js-config.yml@master
+    with:
+      repo: "Geode-solutions/${{ matrix.repo }}"
+    secrets: inherit
+
+  concat-configs:
+    needs: [get-py-configs, get-js-configs]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: ${{ inputs.workflow }}-configs
+      - name: Save data to file
+        run: |
+          ls
+          exit 1

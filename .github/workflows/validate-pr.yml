@@ -143,7 +143,7 @@ jobs:
     secrets: inherit
 
   concat-configs:
-    needs: [get-py-configs, get-js-configs]
+    needs: [validate-PRs, get-py-configs, get-js-configs]
     if: |
       always() && 
       (needs.get-py-configs.result == 'success' || needs.get-py-configs.result == 'skipped') && 
@@ -175,6 +175,8 @@ jobs:
                 }
               }
             }
+            console.log(${{needs.validate-PRs.outputs.repos_array}});
+            console.log(JSON.parse(${{needs.validate-PRs.outputs.repos_array}}));
             console.log(fullConfig);
             core.setOutput("repo_configs", JSON.stringify(fullConfig))
             exit(1);

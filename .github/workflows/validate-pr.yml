@@ -127,6 +127,7 @@ jobs:
     uses: Geode-solutions/actions/.github/workflows/py-config.yml@master
     with:
       repo: "Geode-solutions/${{ matrix.repo }}"
+      branch: ${{ inputs.branch }}
     secrets: inherit
 
   get-js-configs:
@@ -138,6 +139,7 @@ jobs:
     uses: Geode-solutions/actions/.github/workflows/js-config.yml@master
     with:
       repo: "Geode-solutions/${{ matrix.repo }}"
+      branch: ${{ inputs.branch }}
     secrets: inherit
 
   concat-configs:

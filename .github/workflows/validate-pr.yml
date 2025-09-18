@@ -161,10 +161,9 @@ jobs:
             const folders = fs.readdirSync('.');
             const fullConfig = [];
             for (const folder of folders) {
-              console.log(folder);
               const file = fs.readdirSync(folder)[0];
               console.log(file);
-              const repo = file.split(${{ inputs.workflow}})[0];
+              const repo = file.split('${{ inputs.workflow}}')[0];
               const data = JSON.parse(fs.readFileSync(path.join(folder, file), 'utf-8'));
               console.log(data);
               for(const [config, value] in Object.entries(data)) {

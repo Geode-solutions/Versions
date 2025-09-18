@@ -163,12 +163,12 @@ jobs:
             for (const folder of folders) {
               const file = fs.readdirSync(folder)[0];
               console.log(file);
-              const repo = file.split('${{ inputs.workflow}}')[0];
+              const repo = file.split('-${{ inputs.workflow}}')[0];
               const data = JSON.parse(fs.readFileSync(path.join(folder, file), 'utf-8'));
               console.log(data);
               for(const config in data) {
                 console.log(config, data[config]);
-                if( data[config] ) {
+                if( data[config] === true ) {
                   fullConfig.push( { repo, config } );
                 }
               }

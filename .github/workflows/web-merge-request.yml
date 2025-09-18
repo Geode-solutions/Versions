@@ -17,6 +17,7 @@ jobs:
     with:
       branch: ${{ inputs.branch }}
       repos: "OpenGeodeWeb-Front"
+      worklfow: "js"
     secrets: inherit
 
   validate-py-PRs:
@@ -24,6 +25,7 @@ jobs:
     with:
       branch: ${{ inputs.branch }}
       repos: "Vease-Viewer;OpenGeodeWeb-Viewer;Vease-Back;OpenGeodeWeb-Back;OpenGeodeWeb-Microservice"
+      worklfow: "py"
     secrets: inherit
 
   base:

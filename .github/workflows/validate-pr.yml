@@ -153,19 +153,27 @@ jobs:
           pattern: "*${{ inputs.workflow }}-config"
       - name: Save data to file
         uses: actions/github-script@v7
+        id: result
         with:
           script: |
             const fs = require('fs');
             const path = require('path');
             const folders = fs.readdirSync('.');
+            const fullConfig = [];
             for (const folder of folders) {
               console.log(folder);
               const file = fs.readdirSync(folder)[0];
               console.log(file);
+              const repo = file.split(${{ inputs.workflow}})[0];
               const data = JSON.parse(fs.readFileSync(path.join(folder, file), 'utf-8'));
               console.log(data);
-              for(const config in data) {
-                console.log(config);
+              for(const [config, value] in Object.entries(data)) {
+                console.log(config, value);
+                if( value == "true" ) {
+                  fullConfig.push( { repo, config })
+                }
               }
             }
+            console.log(fullConfig);
+            core.setOutput("repo_configs", JSON.stringify(fullConfig))
             exit(1);

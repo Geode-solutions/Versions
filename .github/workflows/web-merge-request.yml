@@ -144,15 +144,15 @@ jobs:
         shell: bash
         env:
           GEODE_LICENSE_LOCATION: ${{ github.workspace }}/geode.lic
-      - name: Post to a Slack channel
-        if: failure()
-        id: slack
-        uses: slackapi/slack-github-action@v1
-        with:
-          channel-id: C0598GTCLGH
-          slack-message: "${{ inputs.branch }}: Javascript merge request failed for ${{ matrix.repo }} on ${{ runner.os }}\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      # - name: Post to a Slack channel
+      #   if: failure()
+      #   id: slack
+      #   uses: slackapi/slack-github-action@v1
+      #   with:
+      #     channel-id: C0598GTCLGH
+      #     slack-message: "${{ inputs.branch }}: Javascript merge request failed for ${{ matrix.repo }} on ${{ runner.os }}\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+      #   env:
+      #     SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
   test-py:
     needs: [validate-py-PRs, wheels, base]
@@ -210,15 +210,15 @@ jobs:
         shell: bash
         env:
           GEODE_LICENSE_LOCATION: ${{ github.workspace }}/geode.lic
-      - name: Post to a Slack channel
-        if: failure()
-        id: slack
-        uses: slackapi/slack-github-action@v1
-        with:
-          channel-id: C0598GTCLGH
-          slack-message: "${{ inputs.branch }}: Python merge request failed for ${{ matrix.repo }} on ${{ runner.os }}\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      # - name: Post to a Slack channel
+      #   if: failure()
+      #   id: slack
+      #   uses: slackapi/slack-github-action@v1
+      #   with:
+      #     channel-id: C0598GTCLGH
+      #     slack-message: "${{ inputs.branch }}: Python merge request failed for ${{ matrix.repo }} on ${{ runner.os }}\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+      #   env:
+      #     SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
   merge-PRs:
     needs: [validate-js-PRs, validate-py-PRs, test-js, test-py]

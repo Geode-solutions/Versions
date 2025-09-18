@@ -147,6 +147,7 @@ jobs:
   concat-configs:
     needs: [validate-PRs, get-py-configs, get-js-configs]
     if: |
+      always() &&
       (inputs.workflow == 'py' || inputs.workflow == 'js') && 
       (needs.get-py-configs.result == 'success' || needs.get-py-configs.result == 'skipped') && 
       (needs.get-js-configs.result == 'success' || needs.get-js-configs.result == 'skipped')

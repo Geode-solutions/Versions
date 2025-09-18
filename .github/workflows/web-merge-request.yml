@@ -111,6 +111,7 @@ jobs:
           name: tarballs-${{ runner.os }}
       - name: Clone repository
         run: |
+          exit 1
           gh auth setup-git
           gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
           gh repo clone Geode-solutions/${{ matrix.repo }}
@@ -158,7 +159,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        repo: ${{ fromJSON(needs.validate-py-PRs.outputs.repos_array) }}
+        config: ${{ fromJSON(needs.validate-py-PRs.outputs.repo_configs) }}
         os: [ubuntu-latest, windows-latest]
       fail-fast: false
     steps:
@@ -168,25 +169,21 @@ jobs:
       - uses: actions/download-artifact@v5
         with:
           name: wheels-${{ runner.os }}
+      - name: Get license
+        uses: Geode-solutions/actions/install/license@master
+        with:
+          token: ${{ secrets.TOKEN }}
       - name: Clone repository
-        run: |
-          gh auth setup-git
-          gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
-          gh repo clone Geode-solutions/${{ matrix.repo }}
-          cd ${{ matrix.repo }}
-          if gh api repos/Geode-solutions/${{ matrix.repo }}/branches/${{ inputs.branch }} --silent; then
-            echo "found branch ${{ inputs.branch }}"
-            git checkout origin/${{ inputs.branch }}
-          else
-            echo "branch not found, checking base branch"
-            git checkout origin/${{ needs.base.outputs.base }}
-          fi
-        shell: bash
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        uses: Geode-solutions/actions/install/checkout@master
+        with:
+          repo: "Geode-solutions/${{ matrix.config.repo }}"
+          token: ${{ secrets.TOKEN }}
+          branch: ${{ inputs.branch }}
+          base: ${{ needs.base.outputs.base }}
       - name: Install dependencies
         run: |
-          cd ${{ matrix.repo }}
+          ls
+          cd ${{ matrix.config.repo }}
           pip install --extra-index-url https://wheels.vtk.org .[cpu]
           wheels=$(cat ../repos_path.txt | sed 's/\;/\ /g')
           echo "all wheels = $wheels"
@@ -207,7 +204,7 @@ jobs:
         shell: bash
       - name: Run tests
         run: |
-          cd ${{ matrix.repo }}
+          cd ${{ matrix.config.repo }}
           pip install pytest pytest-xprocess
           pytest
         shell: bash

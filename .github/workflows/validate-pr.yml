@@ -19,6 +19,8 @@ on:
         value: ${{ jobs.validate-PRs.outputs.repos_array }}
       repos:
         value: ${{ jobs.validate-PRs.outputs.repos }}
+      repo_configs:
+        value: ${{ jobs.concat-configs.outputs.repo_configs }}
 
 jobs:
   validate-PRs:
@@ -145,10 +147,12 @@ jobs:
   concat-configs:
     needs: [validate-PRs, get-py-configs, get-js-configs]
     if: |
-      always() && 
+      (inputs.workflow == 'py' || inputs.workflow == 'js') && 
       (needs.get-py-configs.result == 'success' || needs.get-py-configs.result == 'skipped') && 
       (needs.get-js-configs.result == 'success' || needs.get-js-configs.result == 'skipped')
     runs-on: ubuntu-latest
+    outputs:
+      repo_configs: ${{ steps.result.outputs.repo_configs }}
     steps:
       - uses: actions/download-artifact@v4
         with:
@@ -175,8 +179,5 @@ jobs:
                 }
               }
             }
-            console.log(${{needs.validate-PRs.outputs.repos_array}});
-            console.log(JSON.parse(${{needs.validate-PRs.outputs.repos_array}}));
             console.log(fullConfig);
             core.setOutput("repo_configs", JSON.stringify(fullConfig))
-            exit(1);

@@ -168,7 +168,7 @@ jobs:
               console.log(data);
               for(const config in data) {
                 console.log(config, data[config]);
-                if( data[config] == "true" ) {
+                if( data[config] ) {
                   fullConfig.push( { repo, config } );
                 }
               }

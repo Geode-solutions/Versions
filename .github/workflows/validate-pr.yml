@@ -142,7 +142,7 @@ jobs:
 
   concat-configs:
     needs: [get-py-configs, get-js-configs]
-      if: ${{ (needs.get-py-configs.result == 'success' || needs.get-py-configs.result == 'skipped') && (needs.get-js-configs.result == 'success' || needs.get-js-configs.result == 'skipped') }}
+    if: ${{ (needs.get-py-configs.result == 'success' || needs.get-py-configs.result == 'skipped') && (needs.get-js-configs.result == 'success' || needs.get-js-configs.result == 'skipped') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4

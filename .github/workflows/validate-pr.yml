@@ -152,6 +152,21 @@ jobs:
         with:
           pattern: "*${{ inputs.workflow }}-config"
       - name: Save data to file
-        run: |
-          ls
-          exit 1
+        uses: actions/github-script@v7
+        with:
+          script: |
+            #iterate over every folders
+            const fs = require('fs');
+            const path = require('path');
+            const folders = fs.readdirSync('.');
+            for (const folder of folders) {
+              console.log(folder);
+              const file = fs.readdirSync(folder)[0];
+              console.log(file);
+              const data = JSON.parse(fs.readFileSync(path.join(folder, file), 'utf-8'));
+              console.log(data);
+              for(const config in data) {
+                console.log(config);
+              }
+            }
+            exit(1);

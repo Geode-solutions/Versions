@@ -157,10 +157,11 @@ jobs:
       fail-fast: false
     steps:
       - name: Skip useless configs
-        if: matrix.config.config == 'docker' && runner.os == 'Windows'
+        if: ${{ matrix.config.config == 'docker' && runner.os == 'Windows' }}
         id: check
         run: |
           echo "skip=true" >> $GITHUB_OUTPUT
+        shell: bash
       - name: Stop job if needed
         if: ${{ steps.check.outputs.skip == 'true' }}
         run: |

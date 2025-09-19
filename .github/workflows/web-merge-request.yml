@@ -169,7 +169,7 @@ jobs:
       - name: Get wheels
         id: wheels
         run: |
-          wheels=$(cat ../repos_path.txt)
+          wheels=$(cat repos_path.txt)
           echo "wheels=$wheels" >> $GITHUB_OUTPUT
         shell: bash
       - name: Get license
@@ -183,7 +183,8 @@ jobs:
           token: ${{ secrets.TOKEN }}
           branch: ${{ inputs.branch }}
           base: ${{ needs.base.outputs.base }}
-      - name: Install dependencies
+      - name: Test Python
+        if: ${{ matrix.config.config == "python" }}
         uses: Geode-solutions/actions/test/python@master
         with:
           token: ${{ secrets.TOKEN }}

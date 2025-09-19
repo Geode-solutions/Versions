@@ -190,6 +190,12 @@ jobs:
           token: ${{ secrets.TOKEN }}
           branch: ${{ inputs.branch }}
           wheels: ${{ steps.wheels.outputs.path }}
+      - name: Build docker
+        if: matrix.config.config == 'docker'
+        uses: Geode-solutions/actions/build/docker@master
+        id: docker
+        with:
+          tag: test
       # - name: Post to a Slack channel
       #   if: failure()
       #   id: slack

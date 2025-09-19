@@ -156,6 +156,9 @@ jobs:
         os: [ubuntu-latest, windows-latest]
       fail-fast: false
     steps:
+      - name: Skip useless configs
+        if: matrix.config.config == 'docker' && runner.os == 'Windows'
+        run: exit 0
       - name: Clone repository
         uses: Geode-solutions/actions/install/checkout@master
         with:

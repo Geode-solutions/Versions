@@ -17,6 +17,7 @@ jobs:
     with:
       branch: ${{ inputs.branch }}
       repos: "OpenGeode;OpenGeode-IO;OpenGeode-Geosciences;OpenGeode-GeosciencesIO;OpenGeode-Inspector;OpenGeode-Stochastic;Geode-Common_private;Geode-Numerics_private;Geode-Conversion_private;Geode-Background_private;Geode-Simplex_private;Geode-SimplexGeosciences_private;Geode-Hybrid_private;Geode-Hybrid_Geosciences_private;Geode-Viewables_private;Geode-Explicit_private;Geode-Implicit_private;Geode-FEFLOW"
+      workflow: cpp
     secrets: inherit
 
   linux:

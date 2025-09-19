@@ -99,51 +99,44 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        repo: ${{ fromJSON(needs.validate-js-PRs.outputs.repos_array) }}
+        config: ${{ fromJSON(needs.validate-js-PRs.outputs.repos_array) }}
         os: [ubuntu-latest, windows-latest]
       fail-fast: false
     steps:
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "22"
       - uses: actions/download-artifact@v5
         with:
           name: tarballs-${{ runner.os }}
+      - name: Get tarballs
+        id: tarballs
+        run: |
+          tarballs=$(cat repos_path.txt)
+          echo "tarballs=$tarballs" >> $GITHUB_OUTPUT
+      - name: Get license
+        uses: Geode-solutions/actions/install/license@master
+        with:
+          token: ${{ secrets.TOKEN }}
       - name: Clone repository
-        run: |
-          exit 1
-          gh auth setup-git
-          gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
-          gh repo clone Geode-solutions/${{ matrix.repo }}
-          cd ${{ matrix.repo }}
-          if gh api repos/Geode-solutions/${{ matrix.repo }}/branches/${{ inputs.branch }} --silent; then
-            echo "found branch ${{ inputs.branch }}"
-            git checkout origin/${{ inputs.branch }}
-          else
-            echo "branch not found, checking base branch"
-            git checkout origin/${{ needs.base.outputs.base }}
-          fi
-        shell: bash
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-      - name: Install dependencies
-        run: |
-          cd ${{ matrix.repo }}
-          npm install
-          tarballs=$(cat ../repos_path.txt | sed 's/\;/\ /g')
-          echo "Tarballs = $tarballs"
-          if [ -n "$tarballs" ]; then 
-            npm install --no-save $tarballs
-          fi
-          npm list --depth=0 || true
-        shell: bash
-      - name: Run tests
-        run: |
-          cd ${{ matrix.repo }}
-          npm run test
-        shell: bash
-        env:
-          GEODE_LICENSE_LOCATION: ${{ github.workspace }}/geode.lic
+        uses: Geode-solutions/actions/install/checkout@master
+        with:
+          repo: "Geode-solutions/${{ matrix.config.repo }}"
+          token: ${{ secrets.TOKEN }}
+          branch: ${{ inputs.branch }}
+          base: ${{ needs.base.outputs.base }}
+      - name: Test Node
+        if: matrix.config.config == 'node'
+        uses: Geode-solutions/actions/test/node@master
+        with:
+          branch: ${{ inputs.branch }}
+          tarballs: ${{ steps.tarballs.outputs.tarballs }}
+          token: ${{ secrets.TOKEN }}
+      - name: Test Integration
+        if: matrix.config.config == 'integration'
+        uses: Geode-solutions/actions/test/integration@master
+        with:
+          branch: ${{ inputs.branch }}
+          token: ${{ secrets.TOKEN }}
+          tarballs: ${{ steps.tarballs.outputs.tarballs }}
+          microservices: ${{ inputs.microservices }}
       # - name: Post to a Slack channel
       #   if: failure()
       #   id: slack
@@ -189,51 +182,51 @@ jobs:
         with:
           token: ${{ secrets.TOKEN }}
           branch: ${{ inputs.branch }}
-          wheels: ${{ steps.wheels.outputs.path }}
+          wheels: ${{ steps.wheels.outputs.wheels }}
       - name: Build docker
         if: matrix.config.config == 'docker'
         uses: Geode-solutions/actions/build/docker@master
         id: docker
         with:
           tag: test
-      # - name: Post to a Slack channel
-      #   if: failure()
-      #   id: slack
-      #   uses: slackapi/slack-github-action@v1
-      #   with:
-      #     channel-id: C0598GTCLGH
-      #     slack-message: "${{ inputs.branch }}: Python merge request failed for ${{ matrix.repo }} on ${{ runner.os }}\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-      #   env:
-      #     SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-
-  merge-PRs:
-    needs: [validate-js-PRs, validate-py-PRs, test-js, test-py]
-    uses: Geode-solutions/Versions/.github/workflows/merge-pr.yml@master
-    with:
-      branch: ${{ inputs.branch }}
-      repos: ${{ needs.validate-js-PRs.outputs.repos }};${{ needs.validate-py-PRs.outputs.repos }}
-    secrets: inherit
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: [merge-PRs, base]
-    steps:
-      - uses: actions/github-script@v7
-        with:
-          github-token: ${{ secrets.TOKEN }}
-          script: |
-            github.rest.actions.createWorkflowDispatch({
-              owner: 'Geode-solutions',
-              repo: 'Versions',
-              workflow_id: 'deploy.yml',
-              ref: 'master',
-              inputs: { branch: '${{ needs.base.outputs.base }}', workflow: 'web' }
-            })
       - name: Post to a Slack channel
+        if: failure()
         id: slack
         uses: slackapi/slack-github-action@v1
         with:
           channel-id: C0598GTCLGH
-          slack-message: "Merge request for ${{ inputs.branch }} complete :tada:"
+          slack-message: "${{ inputs.branch }}: Python merge request failed for ${{ matrix.config.repo }} on ${{ runner.os }}\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
+  # merge-PRs:
+  #   needs: [validate-js-PRs, validate-py-PRs, test-js, test-py]
+  #   uses: Geode-solutions/Versions/.github/workflows/merge-pr.yml@master
+  #   with:
+  #     branch: ${{ inputs.branch }}
+  #     repos: ${{ needs.validate-js-PRs.outputs.repos }};${{ needs.validate-py-PRs.outputs.repos }}
+  #   secrets: inherit
+
+  # deploy:
+  #   runs-on: ubuntu-latest
+  #   needs: [merge-PRs, base]
+  #   steps:
+  #     - uses: actions/github-script@v7
+  #       with:
+  #         github-token: ${{ secrets.TOKEN }}
+  #         script: |
+  #           github.rest.actions.createWorkflowDispatch({
+  #             owner: 'Geode-solutions',
+  #             repo: 'Versions',
+  #             workflow_id: 'deploy.yml',
+  #             ref: 'master',
+  #             inputs: { branch: '${{ needs.base.outputs.base }}', workflow: 'web' }
+  #           })
+  #     - name: Post to a Slack channel
+  #       id: slack
+  #       uses: slackapi/slack-github-action@v1
+  #       with:
+  #         channel-id: C0598GTCLGH
+  #         slack-message: "Merge request for ${{ inputs.branch }} complete :tada:"
+  #       env:
+  #         SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}

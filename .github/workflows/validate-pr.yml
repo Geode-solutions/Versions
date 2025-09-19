@@ -173,10 +173,11 @@ jobs:
               const repo = file.split('-${{ inputs.workflow}}')[0];
               const data = JSON.parse(fs.readFileSync(path.join(folder, file), 'utf-8'));
               console.log(data);
+              const microservices = data['microservices']
               for(const config in data) {
                 console.log(config, data[config]);
                 if( data[config] === true ) {
-                  fullConfig.push( { repo, config } );
+                  fullConfig.push( { repo, config, microservices } );
                 }
               }
             }

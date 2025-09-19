@@ -156,6 +156,13 @@ jobs:
         os: [ubuntu-latest, windows-latest]
       fail-fast: false
     steps:
+      - name: Clone repository
+        uses: Geode-solutions/actions/install/checkout@master
+        with:
+          repo: "Geode-solutions/${{ matrix.config.repo }}"
+          token: ${{ secrets.TOKEN }}
+          branch: ${{ inputs.branch }}
+          base: ${{ needs.base.outputs.base }}
       - uses: actions/download-artifact@v5
         with:
           name: wheels-${{ runner.os }}
@@ -169,13 +176,6 @@ jobs:
         uses: Geode-solutions/actions/install/license@master
         with:
           token: ${{ secrets.TOKEN }}
-      - name: Clone repository
-        uses: Geode-solutions/actions/install/checkout@master
-        with:
-          repo: "Geode-solutions/${{ matrix.config.repo }}"
-          token: ${{ secrets.TOKEN }}
-          branch: ${{ inputs.branch }}
-          base: ${{ needs.base.outputs.base }}
       - name: Test Python
         if: matrix.config.config == 'python'
         uses: Geode-solutions/actions/test/python@master

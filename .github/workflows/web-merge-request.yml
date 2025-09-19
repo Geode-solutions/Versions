@@ -158,7 +158,15 @@ jobs:
     steps:
       - name: Skip useless configs
         if: matrix.config.config == 'docker' && runner.os == 'Windows'
-        run: exit 0
+        id: check
+        run: |
+          echo "skip=true" >> $GITHUB_OUTPUT
+      - name: Stop job if needed
+        if: ${{ steps.check.outputs.skip == 'true' }}
+        run: |
+          echo "Job stopped early due to Windows and Docker config."
+          # Exit the step cleanly to mark job as successful
+          exit 0
       - name: Clone repository
         uses: Geode-solutions/actions/install/checkout@master
         with:

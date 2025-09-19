@@ -99,7 +99,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        config: ${{ fromJSON(needs.validate-js-PRs.outputs.repos_array) }}
+        config: ${{ fromJSON(needs.validate-js-PRs.outputs.repo_configs) }}
         os: [ubuntu-latest, windows-latest]
       fail-fast: false
     steps:
@@ -156,18 +156,6 @@ jobs:
         os: [ubuntu-latest, windows-latest]
       fail-fast: false
     steps:
-      - name: Skip useless configs
-        if: ${{ matrix.config.config == 'docker' && runner.os == 'Windows' }}
-        id: check
-        run: |
-          echo "skip=true" >> $GITHUB_OUTPUT
-        shell: bash
-      - name: Stop job if needed
-        if: ${{ steps.check.outputs.skip == 'true' }}
-        run: |
-          echo "Job stopped early due to Windows and Docker config."
-          # Exit the step cleanly to mark job as successful
-          exit 0
       - name: Clone repository
         uses: Geode-solutions/actions/install/checkout@master
         with:
@@ -196,7 +184,7 @@ jobs:
           branch: ${{ inputs.branch }}
           wheels: ${{ steps.wheels.outputs.wheels }}
       - name: Build docker
-        if: matrix.config.config == 'docker'
+        if: matrix.config.config == 'docker' && runner.os != 'Windows'
         uses: Geode-solutions/actions/build/docker@master
         id: docker
         with:

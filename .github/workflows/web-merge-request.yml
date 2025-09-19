@@ -184,7 +184,7 @@ jobs:
           branch: ${{ inputs.branch }}
           base: ${{ needs.base.outputs.base }}
       - name: Test Python
-        if: ${{ matrix.config.config == "python" }}
+        if: matrix.config.config == 'python'
         uses: Geode-solutions/actions/test/python@master
         with:
           token: ${{ secrets.TOKEN }}

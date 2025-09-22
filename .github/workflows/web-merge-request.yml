@@ -118,6 +118,7 @@ jobs:
         run: |
           tarballs=$(cat repos_path.txt)
           echo "tarballs=$tarballs" >> $GITHUB_OUTPUT
+        shell: bash
       - name: Get license
         uses: Geode-solutions/actions/install/license@master
         with:

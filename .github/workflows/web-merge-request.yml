@@ -116,7 +116,6 @@ jobs:
       - name: Get tarballs
         id: tarballs
         run: |
-          ls
           tarballs=$(cat repos_path.txt)
           echo "$tarballs"
           echo "tarballs=$tarballs" >> $GITHUB_OUTPUT
@@ -193,9 +192,8 @@ jobs:
       - name: Get wheels
         id: wheels
         run: |
-          ls
           wheels=$(cat repos_path.txt)
-          echo"$wheels"
+          echo "$wheels"
           echo "wheels=$wheels" >> $GITHUB_OUTPUT
         shell: bash
       - name: Get license

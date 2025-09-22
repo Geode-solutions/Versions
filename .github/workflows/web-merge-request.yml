@@ -95,7 +95,7 @@ jobs:
           path: .
 
   test-js:
-    needs: [validate-js-PRs, tarballs, base]
+    needs: [validate-js-PRs, tarballs, wheels, base]
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -120,6 +120,16 @@ jobs:
           echo "$tarballs"
           echo "tarballs=$tarballs" >> $GITHUB_OUTPUT
         shell: bash
+      - uses: actions/download-artifact@v5
+        with:
+          name: wheels-${{ runner.os }}
+      - name: Get wheels
+        id: wheels
+        run: |
+          wheels=$(cat repos_path.txt)
+          echo "$wheels"
+          echo "wheels=$wheels" >> $GITHUB_OUTPUT
+        shell: bash
       - name: Get license
         uses: Geode-solutions/actions/install/license@master
         with:
@@ -138,6 +148,7 @@ jobs:
           branch: ${{ inputs.branch }}
           token: ${{ secrets.TOKEN }}
           tarballs: ${{ steps.tarballs.outputs.tarballs }}
+          wheels: ${{ steps.wheels.outputs.wheels }}
           microservices: ${{ matrix.config.microservices }}
       - name: Test Browser
         if: matrix.config.config == 'browser'
@@ -146,6 +157,7 @@ jobs:
           branch: ${{ inputs.branch }}
           token: ${{ secrets.TOKEN }}
           tarballs: ${{ steps.tarballs.outputs.tarballs }}
+          wheels: ${{ steps.wheels.outputs.wheels }}
           microservices: ${{ matrix.config.microservices }}
       - name: Test Desktop
         if: matrix.config.config == 'desktop'
@@ -154,6 +166,7 @@ jobs:
           branch: ${{ inputs.branch }}
           token: ${{ secrets.TOKEN }}
           tarballs: ${{ steps.tarballs.outputs.tarballs }}
+          wheels: ${{ steps.wheels.outputs.wheels }}
           microservices: ${{ matrix.config.microservices }}
           AZURE_KEY_VAULT_URI: ${{ secrets.AZURE_KEY_VAULT_URI }}
           AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}

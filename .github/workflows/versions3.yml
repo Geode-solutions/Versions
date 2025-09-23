@@ -1,0 +1,124 @@
+name: version3
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: 0 0 * * *
+
+jobs:
+  check-next:
+    uses: Geode-solutions/Versions/.github/workflows/verify3.yml@master
+    secrets: inherit
+
+  merge-master:
+    runs-on: ubuntu-latest
+    needs: check-next
+    strategy:
+      matrix:
+        repo: ${{ fromJSON(needs.check-next.outputs.repos) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: Geode-solutions/${{ matrix.repo }}
+          token: ${{ secrets.TOKEN }}
+          fetch-depth: 0
+      - run: |
+          last_master_tag=$(git describe --tags --abbrev=0)
+          last_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
+          echo $last_master_tag
+          echo $last_tag
+          if [ "$last_master_tag" != "$last_tag" ]; then
+            git config --global user.email "team-core@geode-solutions.com"
+            git config --global user.name "Geode-solutions robot"
+            git merge origin/next
+            git push origin master
+          fi
+
+  deploy-master:
+    runs-on: ubuntu-latest
+    needs: merge-master
+    steps:
+      - uses: Geode-solutions/Versions/deploy-ecosystem@master
+        with:
+          version: master
+          token: ${{ secrets.TOKEN }}
+          workflow: web
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.TOKEN }}
+      - uses: actions/github-script@v7
+        id: update
+        with:
+          github-token: ${{ secrets.TOKEN }}
+          script: |
+            const data = require('./versions_web.json')
+            console.log(data)
+            let results = [];
+            let ecosystem = "Ecosystem updates: \n"
+            for (const info of data) {
+              const {repo, version, python} = info
+              console.log('Looking for repository:', repo);
+              const release = await github.rest.repos.getLatestRelease({
+                owner: context.repo.owner, 
+                repo
+              });
+              const new_version = release.data.tag_name.substring(1);
+              console.log(release.data.tag_name);
+              results.push({repo, python, 'version': new_version});
+              if (version !== new_version) {
+                ecosystem += `  * ${repo}: ${version} -> ${new_version}\n`
+              }
+            }
+            console.log("results",results)
+            const json = JSON.stringify(results.sort(), null, 2)
+            console.log(json);
+            const fs = require('fs')
+            fs.writeFile('versions.json', json, (err) => {
+              if (err) throw err;
+              console.log('The file has been saved!');
+              core.setOutput('ecosystem', ecosystem)
+            })
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        id: commit
+        with:
+          commit_message: Apply version changes
+      - name: Post to a Slack channel
+        if: steps.commit.outputs.changes_detected == 'true'
+        id: slack
+        uses: slackapi/slack-github-action@v1
+        with:
+          channel-id: C0598GTCLGH
+          slack-message: "${{ steps.update.outputs.ecosystem }}"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
+  merge-next:
+    runs-on: ubuntu-latest
+    needs: [check-next, deploy-master]
+    strategy:
+      matrix:
+        repo: ${{ fromJSON(needs.check-next.outputs.repos) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: Geode-solutions/${{ matrix.repo }}
+          token: ${{ secrets.TOKEN }}
+          fetch-depth: 0
+      - run: |
+          git checkout --track origin/next 
+          git config user.email $GITHUB_ACTOR@users.noreply.github.com
+          git config user.name $GITHUB_ACTOR
+          git merge -X theirs origin/master -m "Merge with master"
+          git push origin next
+      - uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.TOKEN }}
+          script: |
+            github.rest.actions.createWorkflowDispatch({
+              owner: 'Geode-solutions',
+              repo: '${{ matrix.repo }}',
+              workflow_id: 'schedule.yml',
+              ref: 'master',
+              inputs: { branch: 'master' }
+            })

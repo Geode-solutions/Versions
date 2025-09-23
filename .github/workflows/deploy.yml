@@ -15,7 +15,7 @@ on:
           - web
 
 concurrency:
-  group: ${{ github.ref }}
+  group: ${{ github.ref }}-${{ inputs.workflow }}
   cancel-in-progress: true
 
 jobs:

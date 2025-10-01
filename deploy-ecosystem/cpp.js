@@ -146,7 +146,7 @@ export default async function cpp_deploy(octokit, ref) {
     }
   );
   const g_feflow = Promise.all([g_explicit, g_implicit, g_simplex]).then(() => {
-    return deploy_repository(octokit, "Geode-solutions", "Geode-FEFLOW", ref);
+    return deploy_repository(octokit, "Geode-solutions", "Geode-DHI", ref);
   });
 
   await Promise.all([

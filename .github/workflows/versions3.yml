@@ -74,7 +74,7 @@ jobs:
             const json = JSON.stringify(results.sort(), null, 2)
             console.log(json);
             const fs = require('fs')
-            fs.writeFile('versions.json', json, (err) => {
+            fs.writeFile('versions_web.json', json, (err) => {
               if (err) throw err;
               console.log('The file has been saved!');
               core.setOutput('ecosystem', ecosystem)

@@ -63,7 +63,16 @@ export default async function deploy_repository(octokit, owner, repo, ref) {
     "prepare_deploy.yml",
     ref
   );
-  await wait_for_run_completed(octokit, owner, repo, prepare_id, 40);
+  const prepare_conclusion = await wait_for_run_completed(
+    octokit,
+    owner,
+    repo,
+    prepare_id,
+    40
+  );
+  if (prepare_conclusion !== "success") {
+    throw new Error(`${repo} failed to prepare deploy`);
+  }
   const deploy_id = await launch_workflow(
     octokit,
     owner,
@@ -71,14 +80,14 @@ export default async function deploy_repository(octokit, owner, repo, ref) {
     "deploy.yml",
     ref
   );
-  const conclusion = await wait_for_run_completed(
+  const deploy_conclusion = await wait_for_run_completed(
     octokit,
     owner,
     repo,
     deploy_id,
     60
   );
-  if (conclusion !== "success") {
+  if (deploy_conclusion !== "success") {
     throw new Error(`${repo} failed to deploy`);
   }
 }

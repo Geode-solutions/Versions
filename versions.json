@@ -32,7 +32,7 @@
   {
     "repo": "Geode-Common_private",
     "python": "geode-common",
-    "version": "33.11.2"
+    "version": "33.11.3"
   },
   {
     "repo": "Geode-Conversion_private",
@@ -62,7 +62,7 @@
   {
     "repo": "Geode-Simplex_private",
     "python": "geode-simplex",
-    "version": "9.8.4"
+    "version": "9.8.5"
   },
   {
     "repo": "Geode-SimplexGeosciences_private",
@@ -82,7 +82,7 @@
   {
     "repo": "Geode-Viewables_private",
     "python": "geode-viewables",
-    "version": "3.3.1"
+    "version": "3.3.2"
   },
   {
     "repo": "Geode-DHI",

@@ -87,5 +87,9 @@
   {
     "repo": "Geode-DHI",
     "version": "7.0.2"
+  },
+  {
+    "repo": "Geode-SLB",
+    "version": "0.0.0"
   }
 ]

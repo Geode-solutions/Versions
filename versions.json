@@ -62,7 +62,7 @@
   {
     "repo": "Geode-Simplex_private",
     "python": "geode-simplex",
-    "version": "9.8.9"
+    "version": "9.8.10"
   },
   {
     "repo": "Geode-SimplexGeosciences_private",
@@ -86,7 +86,7 @@
   },
   {
     "repo": "Geode-DHI",
-    "version": "7.0.12"
+    "version": "7.0.13"
   },
   {
     "repo": "Geode-SLB",

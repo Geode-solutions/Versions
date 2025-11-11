@@ -27,7 +27,7 @@
   {
     "repo": "OpenGeode-Stochastic",
     "python": "opengeode-stochastic",
-    "version": "1.13.0"
+    "version": "1.14.0"
   },
   {
     "repo": "Geode-Common_private",
@@ -42,7 +42,7 @@
   {
     "repo": "Geode-Numerics_private",
     "python": "geode-numerics",
-    "version": "6.4.4"
+    "version": "6.4.5"
   },
   {
     "repo": "Geode-Background_private",
@@ -52,12 +52,12 @@
   {
     "repo": "Geode-Explicit_private",
     "python": "geode-explicit",
-    "version": "6.6.1"
+    "version": "6.6.2"
   },
   {
     "repo": "Geode-Implicit_private",
     "python": "geode-implicit",
-    "version": "4.3.8"
+    "version": "4.3.9"
   },
   {
     "repo": "Geode-Simplex_private",
@@ -86,7 +86,7 @@
   },
   {
     "repo": "Geode-DHI",
-    "version": "7.0.14"
+    "version": "7.0.15"
   },
   {
     "repo": "Geode-SLB",

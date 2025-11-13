@@ -27,7 +27,7 @@
   {
     "repo": "OpenGeode-Stochastic",
     "python": "opengeode-stochastic",
-    "version": "1.14.0"
+    "version": "1.15.0"
   },
   {
     "repo": "Geode-Common_private",
@@ -86,7 +86,7 @@
   },
   {
     "repo": "Geode-DHI",
-    "version": "7.0.15"
+    "version": "7.0.16"
   },
   {
     "repo": "Geode-SLB",

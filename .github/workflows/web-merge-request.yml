@@ -141,6 +141,7 @@ jobs:
           branch: ${{ inputs.branch }}
           tarballs: ${{ steps.tarballs.outputs.tarballs }}
           token: ${{ secrets.TOKEN }}
+          use_registry: false
       - name: Test Integration
         if: matrix.config.config == 'integration'
         uses: Geode-solutions/actions/test/integration@master
@@ -150,6 +151,7 @@ jobs:
           tarballs: ${{ steps.tarballs.outputs.tarballs }}
           wheels: ${{ steps.wheels.outputs.wheels }}
           microservices: ${{ matrix.config.microservices }}
+          use_registry: false
       - name: Test Browser
         if: matrix.config.config == 'browser'
         uses: Geode-solutions/actions/test/browser@master
@@ -159,6 +161,7 @@ jobs:
           tarballs: ${{ steps.tarballs.outputs.tarballs }}
           wheels: ${{ steps.wheels.outputs.wheels }}
           microservices: ${{ matrix.config.microservices }}
+          use_registry: false
       - name: Test Desktop
         if: matrix.config.config == 'desktop'
         uses: Geode-solutions/actions/test/desktop@master
@@ -173,13 +176,14 @@ jobs:
           AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
           AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
           AZURE_CERT_NAME: ${{ secrets.AZURE_CERT_NAME }}
+          use_registry: false
       - name: Post to a Slack channel
         if: failure()
         id: slack
         uses: slackapi/slack-github-action@v1
         with:
           channel-id: C0598GTCLGH
-          slack-message: "${{ inputs.branch }}: Javascript merge request failed for ${{ matrix.repo }} on ${{ runner.os }}\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          slack-message: "${{ inputs.branch }}: Javascript merge request failed for ${{ matrix.config.repo }} on ${{ runner.os }}\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
@@ -220,12 +224,14 @@ jobs:
           token: ${{ secrets.TOKEN }}
           branch: ${{ inputs.branch }}
           wheels: ${{ steps.wheels.outputs.wheels }}
+          use_registry: false
       - name: Build docker
         if: matrix.config.config == 'docker' && runner.os != 'Windows'
         uses: Geode-solutions/actions/build/docker@master
         id: docker
         with:
           tag: test
+          license_token: ${{ secrets.TOKEN }}
       - name: Post to a Slack channel
         if: failure()
         id: slack

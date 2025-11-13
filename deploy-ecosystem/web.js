@@ -18,6 +18,9 @@ export default async function web_deploy(octokit, ref) {
   const vease_back = ogw_back.then(() => {
     return deploy_repository(octokit, "Geode-solutions", "Vease-Back", ref);
   });
+  const pegghy_back = ogw_back.then(() => {
+    return deploy_repository(octokit, "Geode-solutions", "PEGGHy-Back", ref);
+  });
   const ogw_viewer = ogw_microservice.then(() => {
     return deploy_repository(
       octokit,
@@ -28,6 +31,9 @@ export default async function web_deploy(octokit, ref) {
   });
   const vease_viewer = ogw_viewer.then(() => {
     return deploy_repository(octokit, "Geode-solutions", "Vease-Viewer", ref);
+  });
+  const pegghy_viewer = ogw_viewer.then(() => {
+    return deploy_repository(octokit, "Geode-solutions", "PEGGHy-Viewer", ref);
   });
   const ogw_front = Promise.all([ogw_back, ogw_viewer]).then(() => {
     return deploy_repository(
@@ -40,5 +46,10 @@ export default async function web_deploy(octokit, ref) {
   const vease = Promise.all([vease_back, vease_viewer, ogw_front]).then(() => {
     return deploy_repository(octokit, "Geode-solutions", "Vease", ref);
   });
-  await Promise.all([vease]);
+  const pegghy = Promise.all([pegghy_back, pegghy_viewer, ogw_front]).then(
+    () => {
+      return deploy_repository(octokit, "Geode-solutions", "PEGGHy", ref);
+    }
+  );
+  await Promise.all([vease, pegghy]);
 }

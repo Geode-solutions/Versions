@@ -16,7 +16,7 @@ jobs:
     uses: Geode-solutions/Versions/.github/workflows/validate-pr.yml@master
     with:
       branch: ${{ inputs.branch }}
-      repos: "Vease;OpenGeodeWeb-Front"
+      repos: "Vease;PEGGHy;OpenGeodeWeb-Front"
       workflow: js
     secrets: inherit
 
@@ -24,7 +24,7 @@ jobs:
     uses: Geode-solutions/Versions/.github/workflows/validate-pr.yml@master
     with:
       branch: ${{ inputs.branch }}
-      repos: "Vease-Viewer;OpenGeodeWeb-Viewer;Vease-Back;OpenGeodeWeb-Back;OpenGeodeWeb-Microservice"
+      repos: "Vease-Viewer;PEGGHy-Viewer;OpenGeodeWeb-Viewer;Vease-Back;PEGGHy-Back;OpenGeodeWeb-Back;OpenGeodeWeb-Microservice"
       workflow: py
     secrets: inherit
 

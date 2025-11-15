@@ -31,5 +31,19 @@
   {
     "repo": "Vease",
     "version": "1.15.1"
+  },
+  {
+    "repo": "PEGGHy-Back",
+    "python": "pegghy-back",
+    "version": "0.0.0"
+  },
+  {
+    "repo": "PEGGHy-Viewer",
+    "python": "pegghy-viewer",
+    "version": "0.0.0"
+  },
+  {
+    "repo": "PEGGHy",
+    "version": "0.0.0"
   }
 ]

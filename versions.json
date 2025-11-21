@@ -12,7 +12,7 @@
   {
     "repo": "OpenGeode-Geosciences",
     "python": "opengeode-geosciences",
-    "version": "9.5.4"
+    "version": "9.5.5"
   },
   {
     "repo": "OpenGeode-GeosciencesIO",
@@ -37,7 +37,7 @@
   {
     "repo": "Geode-Conversion_private",
     "python": "geode-conversion",
-    "version": "6.5.6"
+    "version": "6.5.7"
   },
   {
     "repo": "Geode-Numerics_private",
@@ -52,7 +52,7 @@
   {
     "repo": "Geode-Explicit_private",
     "python": "geode-explicit",
-    "version": "6.6.3"
+    "version": "6.6.4"
   },
   {
     "repo": "Geode-Implicit_private",

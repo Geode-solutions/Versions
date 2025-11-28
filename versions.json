@@ -2,7 +2,7 @@
   {
     "repo": "OpenGeode",
     "python": "opengeode-core",
-    "version": "15.30.4"
+    "version": "15.30.5"
   },
   {
     "repo": "OpenGeode-IO",
@@ -27,12 +27,12 @@
   {
     "repo": "OpenGeode-Stochastic",
     "python": "opengeode-stochastic",
-    "version": "1.17.0"
+    "version": "1.17.1"
   },
   {
     "repo": "Geode-Common_private",
     "python": "geode-common",
-    "version": "33.13.0"
+    "version": "33.13.1"
   },
   {
     "repo": "Geode-Conversion_private",

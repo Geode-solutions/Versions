@@ -47,12 +47,12 @@
   {
     "repo": "Geode-Background_private",
     "python": "geode-background",
-    "version": "9.8.0"
+    "version": "9.8.1"
   },
   {
     "repo": "Geode-Explicit_private",
     "python": "geode-explicit",
-    "version": "6.6.4"
+    "version": "6.6.5"
   },
   {
     "repo": "Geode-Implicit_private",
@@ -72,12 +72,12 @@
   {
     "repo": "Geode-Hybrid_private",
     "python": "geode-hybrid",
-    "version": "3.2.3"
+    "version": "3.2.4"
   },
   {
     "repo": "Geode-Hybrid_Geosciences_private",
     "python": "geode-hybrid_geosciences",
-    "version": "1.9.2"
+    "version": "1.9.3"
   },
   {
     "repo": "Geode-Viewables_private",

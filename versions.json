@@ -2,7 +2,7 @@
   {
     "repo": "OpenGeode",
     "python": "opengeode-core",
-    "version": "15.30.6"
+    "version": "15.30.7"
   },
   {
     "repo": "OpenGeode-IO",
@@ -77,7 +77,7 @@
   {
     "repo": "Geode-Hybrid_Geosciences_private",
     "python": "geode-hybrid_geosciences",
-    "version": "1.9.3"
+    "version": "1.9.4"
   },
   {
     "repo": "Geode-Viewables_private",

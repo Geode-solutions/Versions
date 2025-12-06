@@ -42,12 +42,12 @@
   {
     "repo": "Geode-Numerics_private",
     "python": "geode-numerics",
-    "version": "6.4.5"
+    "version": "6.4.6"
   },
   {
     "repo": "Geode-Background_private",
     "python": "geode-background",
-    "version": "9.8.2"
+    "version": "9.8.3"
   },
   {
     "repo": "Geode-Explicit_private",
@@ -57,12 +57,12 @@
   {
     "repo": "Geode-Implicit_private",
     "python": "geode-implicit",
-    "version": "4.3.10"
+    "version": "4.4.0"
   },
   {
     "repo": "Geode-Simplex_private",
     "python": "geode-simplex",
-    "version": "9.8.12"
+    "version": "9.8.13"
   },
   {
     "repo": "Geode-SimplexGeosciences_private",

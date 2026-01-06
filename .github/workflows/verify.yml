@@ -80,15 +80,6 @@ jobs:
             fs.writeFileSync('next.txt', pip_requirements)
             console.log('The file has been saved!');
             const child_process = require('child_process')
-            # try {
-            #   child_process.execSync("pip install -r next.txt", {encoding: "utf8", stdio: 'inherit'})
-            # } catch (error) {
-            #   console.log(error);
-            #   core.setOutput('pip_failed', 'true')
-            #   core.setOutput('pip', pip_requirements)
-            #   core.setFailed('pip install failed');
-            #   return;
-            # }
             core.setOutput('pip_failed', 'false')
             core.setOutput('repos', JSON.stringify(repos))
       - name: Post to a Slack channel

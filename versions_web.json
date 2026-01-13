@@ -19,6 +19,15 @@
     "version": "10.0.6"
   },
   {
+    "repo": "Vease-Modeling-Back",
+    "python": "vease-modeling-back",
+    "version": "0.0.0"
+  },
+  {
+    "repo": "Vease-Modeling",
+    "version": "0.0.0"
+  },
+  {
     "repo": "Vease-Back",
     "python": "vease-back",
     "version": "1.7.3"

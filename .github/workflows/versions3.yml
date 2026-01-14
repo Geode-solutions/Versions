@@ -23,7 +23,7 @@ jobs:
           token: ${{ secrets.TOKEN }}
           fetch-depth: 0
       - run: |
-          last_master_tag=$(git describe --tags --abbrev=0)
+          last_master_tag=$(git describe --tags --abbrev=0 --always)
           last_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
           echo $last_master_tag
           echo $last_tag

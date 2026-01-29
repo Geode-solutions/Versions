@@ -2,27 +2,27 @@
   {
     "repo": "OpenGeode",
     "python": "opengeode-core",
-    "version": "15.30.15"
+    "version": "15.30.16"
   },
   {
     "repo": "OpenGeode-IO",
     "python": "opengeode-io",
-    "version": "7.4.6"
+    "version": "7.4.7"
   },
   {
     "repo": "OpenGeode-Geosciences",
     "python": "opengeode-geosciences",
-    "version": "9.5.6"
+    "version": "9.5.7"
   },
   {
     "repo": "OpenGeode-GeosciencesIO",
     "python": "opengeode-geosciencesio",
-    "version": "5.8.7"
+    "version": "5.8.8"
   },
   {
     "repo": "OpenGeode-Inspector",
     "python": "opengeode-inspector",
-    "version": "6.8.14"
+    "version": "6.8.15"
   },
   {
     "repo": "OpenGeode-Stochastic",
@@ -32,61 +32,61 @@
   {
     "repo": "Geode-Common_private",
     "python": "geode-common",
-    "version": "33.16.1"
+    "version": "33.16.2"
   },
   {
     "repo": "Geode-Conversion_private",
     "python": "geode-conversion",
-    "version": "6.5.9"
+    "version": "6.5.10"
   },
   {
     "repo": "Geode-Numerics_private",
     "python": "geode-numerics",
-    "version": "6.4.9"
+    "version": "6.4.10"
   },
   {
     "repo": "Geode-Background_private",
     "python": "geode-background",
-    "version": "9.9.3"
+    "version": "9.9.4"
   },
   {
     "repo": "Geode-Explicit_private",
     "python": "geode-explicit",
-    "version": "6.7.1"
+    "version": "6.7.2"
   },
   {
     "repo": "Geode-Implicit_private",
     "python": "geode-implicit",
-    "version": "4.4.3"
+    "version": "4.4.4"
   },
   {
     "repo": "Geode-Simplex_private",
     "python": "geode-simplex",
-    "version": "10.0.1"
+    "version": "10.0.2"
   },
   {
     "repo": "Geode-SimplexGeosciences_private",
     "python": "geode-simplexgeosciences",
-    "version": "3.2.2"
+    "version": "3.2.3"
   },
   {
     "repo": "Geode-Hybrid_private",
     "python": "geode-hybrid",
-    "version": "3.4.0"
+    "version": "3.4.1"
   },
   {
     "repo": "Geode-Hybrid_Geosciences_private",
     "python": "geode-hybrid_geosciences",
-    "version": "1.11.1"
+    "version": "1.11.2"
   },
   {
     "repo": "Geode-Viewables_private",
     "python": "geode-viewables",
-    "version": "3.3.2"
+    "version": "3.3.3"
   },
   {
     "repo": "Geode-DHI",
-    "version": "7.1.0"
+    "version": "7.1.1"
   },
   {
     "repo": "Geode-SLB",

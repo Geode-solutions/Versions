@@ -151,6 +151,9 @@ export default async function cpp_deploy(octokit, ref) {
   const g_slb = Promise.all([g_explicit, g_simplex]).then(() => {
     return deploy_repository(octokit, "Geode-solutions", "Geode-SLB", ref);
   });
+  const g_fracsima = Promise.all([g_explicit, g_simplex]).then(() => {
+    return deploy_repository(octokit, "Geode-solutions", "Geode-Fracsima", ref);
+  });
 
   await Promise.all([
     og_stochastic,
@@ -160,6 +163,7 @@ export default async function cpp_deploy(octokit, ref) {
     g_hybrid,
     g_hybrid_geosciences,
     g_feflow,
-    g_slb
+    g_slb,
+    g_fracsima
   ]);
 }

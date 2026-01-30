@@ -91,5 +91,9 @@
   {
     "repo": "Geode-SLB",
     "version": "0.3.0"
+  },
+  {
+    "repo": "Geode-Fracsima",
+    "version": "0.0.0"
   }
 ]

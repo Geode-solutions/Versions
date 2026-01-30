@@ -16,7 +16,7 @@ jobs:
     uses: Geode-solutions/Versions/.github/workflows/validate-pr.yml@master
     with:
       branch: ${{ inputs.branch }}
-      repos: "OpenGeode;OpenGeode-IO;OpenGeode-Geosciences;OpenGeode-GeosciencesIO;OpenGeode-Inspector;OpenGeode-Stochastic;Geode-Common_private;Geode-Numerics_private;Geode-Conversion_private;Geode-Background_private;Geode-Simplex_private;Geode-SimplexGeosciences_private;Geode-Hybrid_private;Geode-Hybrid_Geosciences_private;Geode-Viewables_private;Geode-Explicit_private;Geode-Implicit_private;Geode-DHI;Geode-SLB"
+      repos: "OpenGeode;OpenGeode-IO;OpenGeode-Geosciences;OpenGeode-GeosciencesIO;OpenGeode-Inspector;OpenGeode-Stochastic;Geode-Common_private;Geode-Numerics_private;Geode-Conversion_private;Geode-Background_private;Geode-Simplex_private;Geode-SimplexGeosciences_private;Geode-Hybrid_private;Geode-Hybrid_Geosciences_private;Geode-Viewables_private;Geode-Explicit_private;Geode-Implicit_private;Geode-DHI;Geode-SLB;Geode-Fracsima"
       workflow: cpp
     secrets: inherit
 

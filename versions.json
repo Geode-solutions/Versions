@@ -57,7 +57,7 @@
   {
     "repo": "Geode-Implicit_private",
     "python": "geode-implicit",
-    "version": "4.5.1"
+    "version": "4.5.2"
   },
   {
     "repo": "Geode-Simplex_private",
@@ -86,7 +86,7 @@
   },
   {
     "repo": "Geode-DHI",
-    "version": "7.1.2"
+    "version": "7.1.3"
   },
   {
     "repo": "Geode-SLB",

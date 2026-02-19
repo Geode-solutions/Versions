@@ -65,11 +65,6 @@
     "version": "10.1.4"
   },
   {
-    "repo": "Geode-SimplexGeosciences_private",
-    "python": "geode-simplexgeosciences",
-    "version": "3.2.4"
-  },
-  {
     "repo": "Geode-Hybrid_private",
     "python": "geode-hybrid",
     "version": "3.4.2"

@@ -90,18 +90,6 @@ export default async function cpp_deploy(octokit, ref) {
       ref
     );
   });
-  const g_simplexgeosciences = Promise.all([
-    og_geosciencesio,
-    g_conversion,
-    g_simplex,
-  ]).then(() => {
-    return deploy_repository(
-      octokit,
-      "Geode-solutions",
-      "Geode-SimplexGeosciences_private",
-      ref
-    );
-  });
   const g_hybrid = g_simplex.then(() => {
     return deploy_repository(
       octokit,
@@ -159,7 +147,6 @@ export default async function cpp_deploy(octokit, ref) {
     og_stochastic,
     g_viewables,
     g_implicit,
-    g_simplexgeosciences,
     g_hybrid,
     g_hybrid_geosciences,
     g_feflow,

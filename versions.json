@@ -37,7 +37,7 @@
   {
     "repo": "Geode-Conversion_private",
     "python": "geode-conversion",
-    "version": "6.5.14"
+    "version": "6.5.15"
   },
   {
     "repo": "Geode-Numerics_private",
@@ -52,7 +52,7 @@
   {
     "repo": "Geode-Explicit_private",
     "python": "geode-explicit",
-    "version": "6.7.4"
+    "version": "6.7.5"
   },
   {
     "repo": "Geode-Implicit_private",

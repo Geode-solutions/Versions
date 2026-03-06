@@ -2,7 +2,7 @@
   {
     "repo": "OpenGeode",
     "python": "opengeode-core",
-    "version": "16.0.0"
+    "version": "16.1.0"
   },
   {
     "repo": "OpenGeode-IO",
@@ -52,7 +52,7 @@
   {
     "repo": "Geode-Explicit_private",
     "python": "geode-explicit",
-    "version": "6.7.7"
+    "version": "6.7.8"
   },
   {
     "repo": "Geode-Implicit_private",
@@ -81,7 +81,7 @@
   },
   {
     "repo": "Geode-DHI",
-    "version": "7.1.7"
+    "version": "7.1.8"
   },
   {
     "repo": "Geode-SLB",

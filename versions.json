@@ -55,6 +55,11 @@
     "version": "6.7.8"
   },
   {
+    "repo": "Geode-Explicit_Geosciences_private",
+    "python": "geode-explicit_geosciences",
+    "version": "0.0.0"
+  },
+  {
     "repo": "Geode-Implicit_private",
     "python": "geode-implicit",
     "version": "4.6.0"

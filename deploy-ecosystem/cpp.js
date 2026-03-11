@@ -7,7 +7,7 @@ export default async function cpp_deploy(octokit, ref) {
       octokit,
       "Geode-solutions",
       "OpenGeode-Stochastic",
-      ref
+      ref,
     );
   });
   const og_io = og.then(() => {
@@ -18,7 +18,7 @@ export default async function cpp_deploy(octokit, ref) {
       octokit,
       "Geode-solutions",
       "OpenGeode-Geosciences",
-      ref
+      ref,
     );
   });
   const og_geosciencesio = Promise.all([og, og_io, og_geosciences]).then(() => {
@@ -26,7 +26,7 @@ export default async function cpp_deploy(octokit, ref) {
       octokit,
       "Geode-solutions",
       "OpenGeode-GeosciencesIO",
-      ref
+      ref,
     );
   });
   const og_inspector = og_geosciencesio.then(() => {
@@ -34,7 +34,7 @@ export default async function cpp_deploy(octokit, ref) {
       octokit,
       "Geode-solutions",
       "OpenGeode-Inspector",
-      ref
+      ref,
     );
   });
   const g_common = og.then(() => {
@@ -42,7 +42,7 @@ export default async function cpp_deploy(octokit, ref) {
       octokit,
       "Geode-solutions",
       "Geode-Common_private",
-      ref
+      ref,
     );
   });
   const g_viewables = Promise.all([og_geosciencesio, g_common]).then(() => {
@@ -50,7 +50,7 @@ export default async function cpp_deploy(octokit, ref) {
       octokit,
       "Geode-solutions",
       "Geode-Viewables_private",
-      ref
+      ref,
     );
   });
   const g_conversion = g_common.then(() => {
@@ -58,7 +58,7 @@ export default async function cpp_deploy(octokit, ref) {
       octokit,
       "Geode-solutions",
       "Geode-Conversion_private",
-      ref
+      ref,
     );
   });
   const g_background = g_common.then(() => {
@@ -66,7 +66,7 @@ export default async function cpp_deploy(octokit, ref) {
       octokit,
       "Geode-solutions",
       "Geode-Background_private",
-      ref
+      ref,
     );
   });
   const g_numerics = g_common.then(() => {
@@ -74,7 +74,7 @@ export default async function cpp_deploy(octokit, ref) {
       octokit,
       "Geode-solutions",
       "Geode-Numerics_private",
-      ref
+      ref,
     );
   });
   const g_simplex = Promise.all([
@@ -87,7 +87,7 @@ export default async function cpp_deploy(octokit, ref) {
       octokit,
       "Geode-solutions",
       "Geode-Simplex_private",
-      ref
+      ref,
     );
   });
   const g_hybrid = g_simplex.then(() => {
@@ -95,7 +95,7 @@ export default async function cpp_deploy(octokit, ref) {
       octokit,
       "Geode-solutions",
       "Geode-Hybrid_private",
-      ref
+      ref,
     );
   });
   const g_hybrid_geosciences = Promise.all([
@@ -108,7 +108,7 @@ export default async function cpp_deploy(octokit, ref) {
       octokit,
       "Geode-solutions",
       "Geode-Hybrid_Geosciences_private",
-      ref
+      ref,
     );
   });
   const g_explicit = Promise.all([
@@ -120,18 +120,28 @@ export default async function cpp_deploy(octokit, ref) {
       octokit,
       "Geode-solutions",
       "Geode-Explicit_private",
-      ref
+      ref,
     );
   });
+  const g_explicit_geosciences = Promise.all([og_geosciences, g_explicit]).then(
+    () => {
+      return deploy_repository(
+        octokit,
+        "Geode-solutions",
+        "Geode-Explicit_Geosciences_private",
+        ref,
+      );
+    },
+  );
   const g_implicit = Promise.all([g_explicit, g_numerics, g_simplex]).then(
     () => {
       return deploy_repository(
         octokit,
         "Geode-solutions",
         "Geode-Implicit_private",
-        ref
+        ref,
       );
-    }
+    },
   );
   const g_feflow = Promise.all([g_explicit, g_implicit, g_simplex]).then(() => {
     return deploy_repository(octokit, "Geode-solutions", "Geode-DHI", ref);
@@ -149,8 +159,9 @@ export default async function cpp_deploy(octokit, ref) {
     g_implicit,
     g_hybrid,
     g_hybrid_geosciences,
+    g_explicit_geosciences,
     g_feflow,
     g_slb,
-    g_fracsima
+    g_fracsima,
   ]);
 }

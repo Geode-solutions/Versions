@@ -156,6 +156,7 @@ jobs:
         if: matrix.config.config == 'browser'
         uses: Geode-solutions/actions/test/browser@master
         with:
+          name: ${{ matrix.config.repo }}
           branch: ${{ inputs.branch }}
           token: ${{ secrets.TOKEN }}
           tarballs: ${{ steps.tarballs.outputs.tarballs }}
@@ -166,6 +167,7 @@ jobs:
         if: matrix.config.config == 'desktop'
         uses: Geode-solutions/actions/test/desktop@master
         with:
+          name: ${{ matrix.config.repo }}
           branch: ${{ inputs.branch }}
           token: ${{ secrets.TOKEN }}
           tarballs: ${{ steps.tarballs.outputs.tarballs }}

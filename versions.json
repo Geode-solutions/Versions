@@ -2,7 +2,7 @@
   {
     "repo": "OpenGeode",
     "python": "opengeode-core",
-    "version": "16.2.0"
+    "version": "16.2.1"
   },
   {
     "repo": "OpenGeode-IO",
@@ -12,7 +12,7 @@
   {
     "repo": "OpenGeode-Geosciences",
     "python": "opengeode-geosciences",
-    "version": "9.5.10"
+    "version": "9.5.11"
   },
   {
     "repo": "OpenGeode-GeosciencesIO",
@@ -32,37 +32,37 @@
   {
     "repo": "Geode-Common_private",
     "python": "geode-common",
-    "version": "33.19.1"
+    "version": "33.20.0"
   },
   {
     "repo": "Geode-Conversion_private",
     "python": "geode-conversion",
-    "version": "6.5.17"
+    "version": "6.5.18"
   },
   {
     "repo": "Geode-Numerics_private",
     "python": "geode-numerics",
-    "version": "6.4.14"
+    "version": "6.4.15"
   },
   {
     "repo": "Geode-Background_private",
     "python": "geode-background",
-    "version": "9.10.4"
+    "version": "9.11.0"
   },
   {
     "repo": "Geode-Explicit_private",
     "python": "geode-explicit",
-    "version": "6.7.8"
+    "version": "7.0.1"
   },
   {
     "repo": "Geode-Explicit_Geosciences_private",
     "python": "geode-explicit_geosciences",
-    "version": "0.0.0"
+    "version": "1.0.0"
   },
   {
     "repo": "Geode-Implicit_private",
     "python": "geode-implicit",
-    "version": "4.6.0"
+    "version": "4.6.2"
   },
   {
     "repo": "Geode-Simplex_private",
@@ -72,28 +72,28 @@
   {
     "repo": "Geode-Hybrid_private",
     "python": "geode-hybrid",
-    "version": "3.4.4"
+    "version": "3.4.5"
   },
   {
     "repo": "Geode-Hybrid_Geosciences_private",
     "python": "geode-hybrid_geosciences",
-    "version": "1.11.8"
+    "version": "1.11.9"
   },
   {
     "repo": "Geode-Viewables_private",
     "python": "geode-viewables",
-    "version": "3.3.5"
+    "version": "3.3.6"
   },
   {
     "repo": "Geode-DHI",
-    "version": "7.2.0"
+    "version": "7.3.0"
   },
   {
     "repo": "Geode-SLB",
-    "version": "0.3.3"
+    "version": "0.3.4"
   },
   {
     "repo": "Geode-Fracsima",
-    "version": "1.1.2"
+    "version": "1.2.0"
   }
 ]

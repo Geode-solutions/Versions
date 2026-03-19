@@ -94,8 +94,30 @@ jobs:
           name: wheels-${{ runner.os }}
           path: .
 
+  pyinstallers:
+    needs: [validate-js-PRs, validate-py-PRs, base]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: Geode-solutions/actions/get-release@master
+        id: repos
+        with:
+          repository: ${{ needs.validate-py-PRs.outputs.repos }}
+          file: "pyinstaller-${{ runner.os }}.zip"
+          token: ${{ secrets.TOKEN }}
+          branch: ${{ inputs.branch }}
+          base: ${{ needs.base.outputs.base }}
+      - name: Save data to file
+        run: echo "${{ steps.repos.outputs.path }}" > repos_path.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pyinstallers-${{ runner.os }}
+          path: .
+
   test-js:
-    needs: [validate-js-PRs, tarballs, wheels, base]
+    needs: [validate-js-PRs, tarballs, pyinstallers, base]
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -122,13 +144,13 @@ jobs:
         shell: bash
       - uses: actions/download-artifact@v5
         with:
-          name: wheels-${{ runner.os }}
-      - name: Get wheels
-        id: wheels
+          name: pyinstallers-${{ runner.os }}
+      - name: Get pyinstallers
+        id: pyinstallers
         run: |
-          wheels=$(cat repos_path.txt)
-          echo "$wheels"
-          echo "wheels=$wheels" >> $GITHUB_OUTPUT
+          pyinstallers=$(cat repos_path.txt)
+          echo "$pyinstallers"
+          echo "pyinstallers=$pyinstallers" >> $GITHUB_OUTPUT
         shell: bash
       - name: Get license
         uses: Geode-solutions/actions/install/license@master
@@ -149,8 +171,7 @@ jobs:
           branch: ${{ inputs.branch }}
           token: ${{ secrets.TOKEN }}
           tarballs: ${{ steps.tarballs.outputs.tarballs }}
-          wheels: ${{ steps.wheels.outputs.wheels }}
-          microservices: ${{ matrix.config.microservices }}
+          pyinstallers: ${{ steps.pyinstallers.outputs.pyinstallers }}
           use_registry: false
       - name: Test Browser
         if: matrix.config.config == 'browser'
@@ -160,8 +181,7 @@ jobs:
           branch: ${{ inputs.branch }}
           token: ${{ secrets.TOKEN }}
           tarballs: ${{ steps.tarballs.outputs.tarballs }}
-          wheels: ${{ steps.wheels.outputs.wheels }}
-          microservices: ${{ matrix.config.microservices }}
+          pyinstallers: ${{ steps.pyinstallers.outputs.pyinstallers }}
           use_registry: false
       - name: Test Desktop
         if: matrix.config.config == 'desktop'
@@ -171,8 +191,7 @@ jobs:
           branch: ${{ inputs.branch }}
           token: ${{ secrets.TOKEN }}
           tarballs: ${{ steps.tarballs.outputs.tarballs }}
-          wheels: ${{ steps.wheels.outputs.wheels }}
-          microservices: ${{ matrix.config.microservices }}
+          pyinstallers: ${{ steps.pyinstallers.outputs.pyinstallers }}
           AZURE_KEY_VAULT_URI: ${{ secrets.AZURE_KEY_VAULT_URI }}
           AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}

@@ -113,6 +113,7 @@ jobs:
         run: |
           echo "${{ steps.repos.outputs.path }}" > repos_path.txt
           zip pyinstallers.zip *
+        shell: bash
       - uses: actions/upload-artifact@v4
         with:
           name: pyinstallers-${{ runner.os }}

@@ -110,11 +110,13 @@ jobs:
           branch: ${{ inputs.branch }}
           base: ${{ needs.base.outputs.base }}
       - name: Save data to file
-        run: echo "${{ steps.repos.outputs.path }}" > repos_path.txt
+        run: |
+          echo "${{ steps.repos.outputs.path }}" > repos_path.txt
+          zip pyinstallers.zip *
       - uses: actions/upload-artifact@v4
         with:
           name: pyinstallers-${{ runner.os }}
-          path: .
+          path: pyinstallers.zip
 
   test-js:
     needs: [validate-js-PRs, tarballs, pyinstallers, base]
@@ -148,6 +150,9 @@ jobs:
       - name: Get pyinstallers
         id: pyinstallers
         run: |
+          ls
+          unzip pyinstallers.zip
+          ls -l
           pyinstallers=$(cat repos_path.txt)
           echo "$pyinstallers"
           echo "pyinstallers=$pyinstallers" >> $GITHUB_OUTPUT

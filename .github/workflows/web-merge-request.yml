@@ -109,10 +109,6 @@ jobs:
           token: ${{ secrets.TOKEN }}
           branch: ${{ inputs.branch }}
           base: ${{ needs.base.outputs.base }}
-      - name: Save data to file
-        run: |
-          echo "${{ steps.repos.outputs.path }}" > repos_path.txt
-        shell: bash
       - name: Archive pyinstaller
         uses: thedoctor0/zip-release@0.7.5
         with:

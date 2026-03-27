@@ -7,7 +7,7 @@
   {
     "repo": "OpenGeodeWeb-Back",
     "python": "opengeodeweb-back",
-    "version": "6.4.0"
+    "version": "6.5.0"
   },
   {
     "repo": "OpenGeodeWeb-Viewer",
@@ -16,12 +16,12 @@
   },
   {
     "repo": "OpenGeodeWeb-Front",
-    "version": "10.8.0"
+    "version": "10.9.0"
   },
   {
     "repo": "Vease-Modeling-Back",
     "python": "vease-modeling-back",
-    "version": "1.4.0"
+    "version": "1.5.0"
   },
   {
     "repo": "Vease-Modeling",

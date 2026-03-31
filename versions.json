@@ -2,7 +2,7 @@
   {
     "repo": "OpenGeode",
     "python": "opengeode-core",
-    "version": "16.3.2"
+    "version": "16.3.3"
   },
   {
     "repo": "OpenGeode-IO",
@@ -32,7 +32,7 @@
   {
     "repo": "Geode-Common_private",
     "python": "geode-common",
-    "version": "33.20.0"
+    "version": "33.21.1"
   },
   {
     "repo": "Geode-Conversion_private",
@@ -42,12 +42,12 @@
   {
     "repo": "Geode-Background_private",
     "python": "geode-background",
-    "version": "9.11.0"
+    "version": "9.11.1"
   },
   {
     "repo": "Geode-Explicit_private",
     "python": "geode-explicit",
-    "version": "7.0.3"
+    "version": "7.0.4"
   },
   {
     "repo": "Geode-Explicit_Geosciences_private",
@@ -57,17 +57,17 @@
   {
     "repo": "Geode-Implicit_private",
     "python": "geode-implicit",
-    "version": "4.7.1"
+    "version": "4.7.3"
   },
   {
     "repo": "Geode-Simplex_private",
     "python": "geode-simplex",
-    "version": "11.1.1"
+    "version": "11.1.2"
   },
   {
     "repo": "Geode-Hybrid_private",
     "python": "geode-hybrid",
-    "version": "3.4.5"
+    "version": "3.4.6"
   },
   {
     "repo": "Geode-Hybrid_Geosciences_private",
@@ -81,14 +81,14 @@
   },
   {
     "repo": "Geode-DHI",
-    "version": "7.4.2"
+    "version": "7.4.3"
   },
   {
     "repo": "Geode-SLB",
-    "version": "0.3.4"
+    "version": "0.3.5"
   },
   {
     "repo": "Geode-Fracsima",
-    "version": "1.3.0"
+    "version": "1.3.1"
   }
 ]

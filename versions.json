@@ -37,7 +37,7 @@
   {
     "repo": "Geode-Conversion_private",
     "python": "geode-conversion",
-    "version": "6.5.18"
+    "version": "6.5.19"
   },
   {
     "repo": "Geode-Background_private",
@@ -57,7 +57,7 @@
   {
     "repo": "Geode-Implicit_private",
     "python": "geode-implicit",
-    "version": "4.7.3"
+    "version": "4.7.4"
   },
   {
     "repo": "Geode-Simplex_private",
@@ -81,7 +81,7 @@
   },
   {
     "repo": "Geode-DHI",
-    "version": "7.4.3"
+    "version": "7.4.4"
   },
   {
     "repo": "Geode-SLB",

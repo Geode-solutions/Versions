@@ -134,7 +134,7 @@ jobs:
           token: ${{ secrets.TOKEN }}
           branch: ${{ inputs.branch }}
           base: ${{ needs.base.outputs.base }}
-      - uses: actions/download-artifact@v5
+      - uses: actions/download-artifact@v8
         with:
           name: tarballs-${{ runner.os }}
       - name: Get tarballs
@@ -144,7 +144,7 @@ jobs:
           echo "$tarballs"
           echo "tarballs=$tarballs" >> $GITHUB_OUTPUT
         shell: bash
-      - uses: actions/download-artifact@v5
+      - uses: actions/download-artifact@v8
         with:
           name: pyinstallers-${{ runner.os }}
       - name: Get pyinstallers
@@ -229,7 +229,7 @@ jobs:
           token: ${{ secrets.TOKEN }}
           branch: ${{ inputs.branch }}
           base: ${{ needs.base.outputs.base }}
-      - uses: actions/download-artifact@v5
+      - uses: actions/download-artifact@v8
         with:
           name: wheels-${{ runner.os }}
       - name: Get wheels

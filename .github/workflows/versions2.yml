@@ -47,7 +47,7 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.TOKEN }}
-      - uses: actions/github-script@v7
+      - uses: actions/github-script@v8
         id: update
         with:
           github-token: ${{ secrets.TOKEN }}
@@ -111,7 +111,7 @@ jobs:
           git config user.name $GITHUB_ACTOR
           git merge -X theirs origin/master -m "Merge with master"
           git push origin next
-      - uses: actions/github-script@v7
+      - uses: actions/github-script@v8
         with:
           github-token: ${{ secrets.TOKEN }}
           script: |

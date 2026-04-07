@@ -30,7 +30,7 @@ jobs:
       repos: ${{ steps.check.outputs.repos }}
       repos_array: ${{ steps.check.outputs.repos_array }}
     steps:
-      - uses: actions/github-script@v7
+      - uses: actions/github-script@v8
         id: check
         with:
           github-token: ${{ secrets.TOKEN }}
@@ -159,7 +159,7 @@ jobs:
         with:
           pattern: "*${{ inputs.workflow }}-config"
       - name: Save data to file
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         id: result
         with:
           script: |

@@ -79,7 +79,7 @@ jobs:
               console.log('The file has been saved!');
               core.setOutput('ecosystem', ecosystem)
             })
-      - uses: stefanzweifel/git-auto-commit-action@v5
+      - uses: stefanzweifel/git-auto-commit-action@v7
         id: commit
         with:
           commit_message: Apply version changes

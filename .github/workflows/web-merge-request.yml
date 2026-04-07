@@ -67,7 +67,7 @@ jobs:
           base: ${{ needs.base.outputs.base }}
       - name: Save data to file
         run: echo "${{ steps.repos.outputs.path }}" > repos_path.txt
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: tarballs-${{ runner.os }}
           path: .
@@ -89,7 +89,7 @@ jobs:
           base: ${{ needs.base.outputs.base }}
       - name: Save data to file
         run: echo "${{ steps.repos.outputs.path }}" > repos_path.txt
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: wheels-${{ runner.os }}
           path: .
@@ -113,7 +113,7 @@ jobs:
         uses: thedoctor0/zip-release@0.7.5
         with:
           filename: pyinstallers.zip
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: pyinstallers-${{ runner.os }}
           path: pyinstallers.zip

@@ -35,7 +35,7 @@ jobs:
           token: ${{ secrets.TOKEN }}
           branch: ${{ inputs.branch }}
           base: ${{ needs.validate-PRs.outputs.base }}
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: linux
           path: .
@@ -103,7 +103,7 @@ jobs:
           token: ${{ secrets.TOKEN }}
           branch: ${{ inputs.branch }}
           base: ${{ needs.validate-PRs.outputs.base }}
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: windows
           path: .

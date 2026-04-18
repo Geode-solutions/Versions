@@ -47,7 +47,7 @@
   {
     "repo": "Geode-Explicit_private",
     "python": "geode-explicit",
-    "version": "7.0.7"
+    "version": "7.0.8"
   },
   {
     "repo": "Geode-Explicit_Geosciences_private",
@@ -81,7 +81,7 @@
   },
   {
     "repo": "Geode-DHI",
-    "version": "7.4.7"
+    "version": "7.4.8"
   },
   {
     "repo": "Geode-SLB",

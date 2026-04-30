@@ -16,7 +16,7 @@
   },
   {
     "repo": "OpenGeodeWeb-Front",
-    "version": "10.14.1"
+    "version": "10.15.0"
   },
   {
     "repo": "Vease-Modeling-Back",
@@ -39,7 +39,7 @@
   },
   {
     "repo": "Vease",
-    "version": "1.25.0"
+    "version": "1.26.0"
   },
   {
     "repo": "PEGGHy-Back",
@@ -53,6 +53,6 @@
   },
   {
     "repo": "PEGGHy",
-    "version": "1.4.1"
+    "version": "1.4.2"
   }
 ]

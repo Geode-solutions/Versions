@@ -2,7 +2,7 @@
   {
     "repo": "OpenGeodeWeb-Microservice",
     "python": "opengeodeweb-microservice",
-    "version": "1.1.2"
+    "version": "1.1.3"
   },
   {
     "repo": "OpenGeodeWeb-Back",
@@ -12,11 +12,11 @@
   {
     "repo": "OpenGeodeWeb-Viewer",
     "python": "opengeodeweb-viewer",
-    "version": "1.17.0"
+    "version": "1.17.1"
   },
   {
     "repo": "OpenGeodeWeb-Front",
-    "version": "10.15.0"
+    "version": "10.16.0"
   },
   {
     "repo": "Vease-Modeling-Back",
@@ -39,7 +39,7 @@
   },
   {
     "repo": "Vease",
-    "version": "1.26.0"
+    "version": "1.26.1"
   },
   {
     "repo": "PEGGHy-Back",

@@ -127,7 +127,7 @@ jobs:
           echo "bin=$bin_path" >> $env:GITHUB_OUTPUT
           $share_path = $old_path.replace(";", "\share;").replace("\","/") + "/share"
           echo "share=$share_path" >> $env:GITHUB_OUTPUT
-      - uses: TheMrMilchmann/setup-msvc-dev@v3
+      - uses: TheMrMilchmann/setup-msvc-dev@v4
         with:
           arch: x64
       - name: Compile & Test

@@ -30,7 +30,7 @@
   {
     "repo": "Vease-Back",
     "python": "vease-back",
-    "version": "1.9.4"
+    "version": "1.9.5"
   },
   {
     "repo": "Vease-Viewer",
@@ -39,7 +39,7 @@
   },
   {
     "repo": "Vease",
-    "version": "1.28.1"
+    "version": "1.28.2"
   },
   {
     "repo": "PEGGHy-Back",

@@ -7,7 +7,7 @@
   {
     "repo": "OpenGeode-IO",
     "python": "opengeode-io",
-    "version": "7.6.3"
+    "version": "7.6.4"
   },
   {
     "repo": "OpenGeode-Geosciences",
@@ -72,7 +72,7 @@
   {
     "repo": "Geode-Hybrid_Geosciences_private",
     "python": "geode-hybrid_geosciences",
-    "version": "1.13.1"
+    "version": "1.13.2"
   },
   {
     "repo": "Geode-Viewables_private",
@@ -81,7 +81,7 @@
   },
   {
     "repo": "Geode-DHI",
-    "version": "7.5.5"
+    "version": "7.5.6"
   },
   {
     "repo": "Geode-SLB",

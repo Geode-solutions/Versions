@@ -91,7 +91,7 @@ jobs:
 
   windows:
     needs: validate-PRs
-    runs-on: windows-latest
+    runs-on: windows-2022
     outputs:
       path: ${{ steps.repos.outputs.path }}
     steps:
@@ -110,7 +110,7 @@ jobs:
 
   windows-test:
     needs: [validate-PRs, windows]
-    runs-on: windows-latest
+    runs-on: windows-2022
     strategy:
       matrix:
         repo: ${{ fromJSON(needs.validate-PRs.outputs.repos_array) }}

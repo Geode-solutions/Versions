@@ -203,6 +203,15 @@ jobs:
           AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
           AZURE_CERT_NAME: ${{ secrets.AZURE_CERT_NAME }}
           use_registry: false
+      - name: Test Extension
+        if: matrix.config.config == 'extension'
+        uses: Geode-solutions/actions/test/extension@master
+        with:
+          branch: ${{ inputs.branch }}
+          token: ${{ secrets.TOKEN }}
+          tarballs: ${{ steps.tarballs.outputs.tarballs }}
+          pyinstallers: ${{ steps.pyinstallers.outputs.pyinstallers }}
+          use_registry: false
       - name: Post to a Slack channel
         if: failure()
         id: slack

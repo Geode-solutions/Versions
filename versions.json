@@ -2,7 +2,7 @@
   {
     "repo": "OpenGeode",
     "python": "opengeode-core",
-    "version": "17.3.0"
+    "version": "17.3.1"
   },
   {
     "repo": "OpenGeode-IO",
@@ -27,12 +27,12 @@
   {
     "repo": "OpenGeode-Stochastic",
     "python": "opengeode-stochastic",
-    "version": "1.20.0"
+    "version": "1.21.0"
   },
   {
     "repo": "Geode-Common_private",
     "python": "geode-common",
-    "version": "33.23.0"
+    "version": "33.23.1"
   },
   {
     "repo": "Geode-Conversion_private",
@@ -62,7 +62,7 @@
   {
     "repo": "Geode-Simplex_private",
     "python": "geode-simplex",
-    "version": "11.3.0"
+    "version": "11.3.1"
   },
   {
     "repo": "Geode-Hybrid_private",
@@ -81,7 +81,7 @@
   },
   {
     "repo": "Geode-DHI",
-    "version": "7.7.0"
+    "version": "7.7.1"
   },
   {
     "repo": "Geode-SLB",

@@ -2,7 +2,7 @@
   {
     "repo": "OpenGeode",
     "python": "opengeode-core",
-    "version": "17.3.2"
+    "version": "17.3.3"
   },
   {
     "repo": "OpenGeode-IO",
@@ -22,7 +22,7 @@
   {
     "repo": "OpenGeode-Inspector",
     "python": "opengeode-inspector",
-    "version": "6.11.0"
+    "version": "6.11.1"
   },
   {
     "repo": "OpenGeode-Stochastic",
@@ -62,7 +62,7 @@
   {
     "repo": "Geode-Simplex_private",
     "python": "geode-simplex",
-    "version": "11.3.2"
+    "version": "11.3.3"
   },
   {
     "repo": "Geode-Hybrid_private",

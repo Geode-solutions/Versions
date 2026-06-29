@@ -25,6 +25,11 @@
     "version": "6.11.2"
   },
   {
+    "repo": "OpenGeode-Inspector_Geosciences",
+    "python": "opengeode-inspector_geosciences",
+    "version": "0.0.0"
+  },
+  {
     "repo": "OpenGeode-Stochastic",
     "python": "opengeode-stochastic",
     "version": "1.21.0"

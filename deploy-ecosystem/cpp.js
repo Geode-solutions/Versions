@@ -17,6 +17,9 @@ export default async function cpp_deploy(octokit, ref) {
   const og_inspector = og_geosciencesio.then(() => {
     return deploy_repository(octokit, "Geode-solutions", "OpenGeode-Inspector", ref);
   });
+  const og_inspector_geosciences = og_inspector.then(() => {
+    return deploy_repository(octokit, "Geode-solutions", "OpenGeode-Inspector_Geosciences", ref);
+  });
   const g_common = og.then(() => {
     return deploy_repository(octokit, "Geode-solutions", "Geode-Common_private", ref);
   });
@@ -63,6 +66,7 @@ export default async function cpp_deploy(octokit, ref) {
   });
 
   await Promise.all([
+    og_inspector_geosciences,
     og_stochastic,
     g_viewables,
     g_implicit,

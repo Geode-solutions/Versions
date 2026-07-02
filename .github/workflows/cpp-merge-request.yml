@@ -66,6 +66,8 @@ jobs:
           base: ${{ needs.validate-PRs.outputs.base }}
       - name: Compile
         run: |
+          pwd
+          ls
           gh auth setup-git
           gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
           mkdir -p build

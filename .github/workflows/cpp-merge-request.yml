@@ -57,8 +57,6 @@ jobs:
         run: |
           new_path=$(echo "${{ needs.linux.outputs.path }}" | sed 's/\;/\/lib\:/g')
           echo "LD_LIBRARY_PATH=$new_path" >> $GITHUB_ENV
-          mkdir ${{ matrix.repo }}
-          cd ${{ matrix.repo }}
       - name: Clone repository
         uses: Geode-solutions/actions/install/checkout@master
         with:
@@ -66,6 +64,7 @@ jobs:
           token: ${{ secrets.TOKEN }}
           branch: ${{ inputs.branch }}
           base: ${{ needs.validate-PRs.outputs.base }}
+          path: ${{ matrix.repo }}
       - name: Compile
         run: |
           pwd
@@ -74,7 +73,7 @@ jobs:
           gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
           mkdir -p build
           cd build
-          cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="${{ needs.linux.outputs.path }}" ../tests
+          cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="${{ needs.linux.outputs.path }}" ../${{ matrix.repo }}/tests
           cmake --build .
           ctest --output-on-failure --no-tests=error -j 2 -LE unstable
         env:

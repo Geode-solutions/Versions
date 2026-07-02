@@ -67,8 +67,6 @@ jobs:
           path: ${{ matrix.repo }}
       - name: Compile
         run: |
-          pwd
-          ls
           gh auth setup-git
           gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
           mkdir -p build
@@ -138,13 +136,14 @@ jobs:
           token: ${{ secrets.TOKEN }}
           branch: ${{ inputs.branch }}
           base: ${{ needs.validate-PRs.outputs.base }}
+          path: ${{ matrix.repo }}
       - name: Compile & Test
         run: |
           gh auth setup-git
           gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
           mkdir -p build
           cd build
-          cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="${{ needs.windows.outputs.path }}" ../tests
+          cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="${{ needs.windows.outputs.path }}" ../${{ matrix.repo }}/tests
           IFS=";" read -a paths <<< "${{ steps.libraries.outputs.bin }}"
           for path in "${paths[@]}"
           do

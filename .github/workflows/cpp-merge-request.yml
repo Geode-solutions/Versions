@@ -57,6 +57,8 @@ jobs:
         run: |
           new_path=$(echo "${{ needs.linux.outputs.path }}" | sed 's/\;/\/lib\:/g')
           echo "LD_LIBRARY_PATH=$new_path" >> $GITHUB_ENV
+          mkdir ${{ matrix.repo }}
+          cd ${{ matrix.repo }}
       - name: Clone repository
         uses: Geode-solutions/actions/install/checkout@master
         with:

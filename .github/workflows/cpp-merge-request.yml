@@ -60,7 +60,7 @@ jobs:
       - name: Clone repository
         uses: Geode-solutions/actions/install/checkout@master
         with:
-          repository: ${{ matrix.repo }}
+          repo: ${{ matrix.repo }}
           token: ${{ secrets.TOKEN }}
           branch: ${{ inputs.branch }}
           base: ${{ needs.validate-PRs.outputs.base }}
@@ -131,7 +131,7 @@ jobs:
       - name: Clone repository
         uses: Geode-solutions/actions/install/checkout@master
         with:
-          repository: ${{ matrix.repo }}
+          repo: ${{ matrix.repo }}
           token: ${{ secrets.TOKEN }}
           branch: ${{ inputs.branch }}
           base: ${{ needs.validate-PRs.outputs.base }}

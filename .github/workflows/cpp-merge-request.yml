@@ -57,19 +57,17 @@ jobs:
         run: |
           new_path=$(echo "${{ needs.linux.outputs.path }}" | sed 's/\;/\/lib\:/g')
           echo "LD_LIBRARY_PATH=$new_path" >> $GITHUB_ENV
+      - name: Clone repository
+        uses: Geode-solutions/actions/install/checkout@master
+        with:
+          repository: ${{ matrix.repo }}
+          token: ${{ secrets.TOKEN }}
+          branch: ${{ inputs.branch }}
+          base: ${{ needs.validate-PRs.outputs.base }}
       - name: Compile
         run: |
           gh auth setup-git
           gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
-          gh repo clone Geode-solutions/${{ matrix.repo }}
-          cd ${{ matrix.repo }}
-          if gh api repos/Geode-solutions/${{ matrix.repo }}/branches/${{ inputs.branch }} --silent; then
-            echo "found branch ${{ inputs.branch }}"
-            git checkout origin/${{ inputs.branch }}
-          else
-            echo "branch not found, checking base branch"
-            git checkout origin/${{ needs.validate-PRs.outputs.base }}
-          fi
           mkdir -p build
           cd build
           cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="${{ needs.linux.outputs.path }}" ../tests
@@ -130,18 +128,17 @@ jobs:
       - uses: TheMrMilchmann/setup-msvc-dev@v4
         with:
           arch: x64
+      - name: Clone repository
+        uses: Geode-solutions/actions/install/checkout@master
+        with:
+          repository: ${{ matrix.repo }}
+          token: ${{ secrets.TOKEN }}
+          branch: ${{ inputs.branch }}
+          base: ${{ needs.validate-PRs.outputs.base }}
       - name: Compile & Test
         run: |
           gh auth setup-git
           gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
-          gh repo clone Geode-solutions/${{ matrix.repo }}
-          cd ${{ matrix.repo }}
-          if git ls-remote --exit-code --heads origin ${{ inputs.branch }}; then
-            echo "found branch ${{ inputs.branch }}"
-            git checkout origin/${{ inputs.branch }}
-          else
-            git checkout origin/${{ needs.validate-PRs.outputs.base }}
-          fi
           mkdir -p build
           cd build
           cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="${{ needs.windows.outputs.path }}" ../tests

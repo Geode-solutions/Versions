@@ -73,7 +73,7 @@ jobs:
           cd build
           cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="${{ needs.linux.outputs.path }}" ../${{ matrix.repo }}/tests
           cmake --build .
-          ctest --output-on-failure --no-tests=error -j 2 -LE unstable
+          ctest --output-on-failure --no-tests=error -j 2 -L essential
         env:
           GEODE_LICENSE_LOCATION: ${{ github.workspace }}/geode.lic
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
@@ -160,7 +160,7 @@ jobs:
             fi
           done
           cmake --build .
-          ctest --output-on-failure --no-tests=error -j 2 -LE unstable
+          ctest --output-on-failure --no-tests=error -j 2 -L essential
         env:
           GEODE_LICENSE_LOCATION: ${{ github.workspace }}/geode.lic
           GITHUB_TOKEN: ${{ secrets.TOKEN }}

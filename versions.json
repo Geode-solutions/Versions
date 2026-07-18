@@ -37,7 +37,7 @@
   {
     "repo": "Geode-Common_private",
     "python": "geode-common",
-    "version": "33.25.2"
+    "version": "33.25.3"
   },
   {
     "repo": "Geode-Conversion_private",
@@ -86,7 +86,7 @@
   },
   {
     "repo": "Geode-DHI",
-    "version": "7.9.1"
+    "version": "7.9.2"
   },
   {
     "repo": "Geode-SLB",

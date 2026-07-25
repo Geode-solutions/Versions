@@ -12,7 +12,7 @@
   {
     "repo": "OpenGeode-Geosciences",
     "python": "opengeode-geosciences",
-    "version": "9.6.0"
+    "version": "9.6.1"
   },
   {
     "repo": "OpenGeode-GeosciencesIO",
@@ -42,7 +42,7 @@
   {
     "repo": "Geode-Conversion_private",
     "python": "geode-conversion",
-    "version": "6.6.5"
+    "version": "6.6.6"
   },
   {
     "repo": "Geode-Background_private",
@@ -86,7 +86,7 @@
   },
   {
     "repo": "Geode-DHI",
-    "version": "7.11.0"
+    "version": "7.11.1"
   },
   {
     "repo": "Geode-SLB",

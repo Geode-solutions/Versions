@@ -67,9 +67,10 @@ jobs:
                 repo 
               })
               console.log(releases.data);
+              const versionRegex = /^v\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?$/;
               const latest = releases.data.find(
-                (r) => r.name.startsWith("v")
-              ).tag_name.substring(1)
+                (r) => versionRegex.test(r.name)
+              )?.tag_name.substring(1)
               const version = latest.split('.')
               if( python !== undefined ) {
                 pip_requirements +=python + "==" + version[0] + '.*,>=' + latest + '\n'

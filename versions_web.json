@@ -12,11 +12,11 @@
   {
     "repo": "OpenGeodeWeb-Viewer",
     "python": "opengeodeweb-viewer",
-    "version": "1.25.0"
+    "version": "1.25.1"
   },
   {
     "repo": "OpenGeodeWeb-Front",
-    "version": "10.30.1"
+    "version": "10.30.2"
   },
   {
     "repo": "Vease-Modeling-Back",
@@ -25,7 +25,7 @@
   },
   {
     "repo": "Vease-Modeling",
-    "version": "1.9.1"
+    "version": "1.9.2"
   },
   {
     "repo": "Vease-Back",
@@ -35,11 +35,11 @@
   {
     "repo": "Vease-Viewer",
     "python": "vease-viewer",
-    "version": "2.10.0"
+    "version": "2.10.1"
   },
   {
     "repo": "Vease",
-    "version": "1.42.0"
+    "version": "1.43.0"
   },
   {
     "repo": "PEGGHy-Back",

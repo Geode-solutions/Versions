@@ -2,7 +2,7 @@
   {
     "repo": "OpenGeode",
     "python": "opengeode-core",
-    "version": "18.1.4"
+    "version": "18.1.5"
   },
   {
     "repo": "OpenGeode-IO",
@@ -86,7 +86,7 @@
   },
   {
     "repo": "Geode-DHI",
-    "version": "7.15.5"
+    "version": "7.15.6"
   },
   {
     "repo": "Geode-SLB",

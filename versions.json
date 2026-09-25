@@ -37,12 +37,12 @@
   {
     "repo": "Geode-Common_private",
     "python": "geode-common",
-    "version": "33.26.4"
+    "version": "33.26.5"
   },
   {
     "repo": "Geode-Conversion_private",
     "python": "geode-conversion",
-    "version": "6.7.4"
+    "version": "6.7.5"
   },
   {
     "repo": "Geode-Background_private",
@@ -67,7 +67,7 @@
   {
     "repo": "Geode-Simplex_private",
     "python": "geode-simplex",
-    "version": "11.7.5"
+    "version": "11.7.6"
   },
   {
     "repo": "Geode-Hybrid_private",

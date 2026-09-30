@@ -1,6 +1,8 @@
 import deploy_repository from "./utils.js";
 
 export default async function web_deploy(octokit, ref) {
+  const cloud_api = deploy_repository(octokit, "Geode-solutions", "Cloud-API", ref);
+  const ogw_router = deploy_repository(octokit, "Geode-solutions", "OpenGeodeWeb-Router", ref);
   const ogw_microservice = deploy_repository(
     octokit,
     "Geode-solutions",
@@ -28,16 +30,16 @@ export default async function web_deploy(octokit, ref) {
   const pegghy_viewer = ogw_viewer.then(() => {
     return deploy_repository(octokit, "Geode-solutions", "PEGGHy-Viewer", ref);
   });
-  const ogw_front = Promise.all([ogw_back, ogw_viewer]).then(() => {
+  const ogw_front = Promise.all([ogw_back, ogw_viewer, cloud_api]).then(() => {
     return deploy_repository(octokit, "Geode-solutions", "OpenGeodeWeb-Front", ref);
   });
-  const vease = Promise.all([vease_back, vease_viewer, ogw_front]).then(() => {
+  const vease = Promise.all([vease_back, vease_viewer, ogw_front, ogw_router]).then(() => {
     return deploy_repository(octokit, "Geode-solutions", "Vease", ref);
   });
   const vease_modeling = Promise.all([vease_modeling_back, vease]).then(() => {
     return deploy_repository(octokit, "Geode-solutions", "Vease-Modeling", ref);
   });
-  const pegghy = Promise.all([pegghy_back, pegghy_viewer, ogw_front]).then(() => {
+  const pegghy = Promise.all([pegghy_back, pegghy_viewer, ogw_front, ogw_router]).then(() => {
     return deploy_repository(octokit, "Geode-solutions", "PEGGHy", ref);
   });
   await Promise.all([vease, pegghy, vease_modeling]);

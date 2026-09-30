@@ -1,5 +1,13 @@
 [
   {
+    "repo": "Cloud-API",
+    "version": "0.0.0"
+  },
+  {
+    "repo": "OpenGeodeWeb-Router",
+    "version": "0.0.0"
+  },
+  {
     "repo": "OpenGeodeWeb-Microservice",
     "python": "opengeodeweb-microservice",
     "version": "1.2.2"

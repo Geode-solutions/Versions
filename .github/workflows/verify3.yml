@@ -49,9 +49,11 @@ jobs:
               repos.push(repo)
               console.log('Looking for repository:', repo);
               // The API sometimes answers from a stale index (old runs only),
-              // so query several times and keep the newest run seen
+              // so query until the newest run seen is less than 24h old
+              const maxAge = 24 * 60 * 60 * 1000
+              const isRecent = (r) => Date.now() - new Date(r.created_at) < maxAge
               let run = undefined
-              for (let attempt = 0; attempt < 3; attempt++) {
+              for (let attempt = 0; attempt < 6 && !(run && isRecent(run)); attempt++) {
                 if (attempt > 0) {
                   await new Promise((resolve) => setTimeout(resolve, 5000))
                 }
@@ -70,8 +72,8 @@ jobs:
                 }
                 console.log('Attempt', attempt, 'total_count', wf.data.total_count, 'latest', run?.html_url, run?.created_at);
               }
-              if (!run) {
-                core.setFailed('No completed run found for ' + repo);
+              if (!run || !isRecent(run)) {
+                core.setFailed('No completed run in the last 24h for ' + repo + ' (latest: ' + run?.html_url + ' ' + run?.created_at + ')');
                 return;
               }
               console.log(run.html_url, run.event, run.created_at);

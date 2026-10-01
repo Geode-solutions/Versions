@@ -48,18 +48,32 @@ jobs:
               const {repo, python} = info
               repos.push(repo)
               console.log('Looking for repository:', repo);
-              const wf = await github.rest.actions.listWorkflowRuns({
-                owner: 'Geode-solutions', 
-                repo,
-                branch: '${{ inputs.branch }}',
-                workflow_id: '${{ inputs.workflow }}',
-                status: 'completed',
-                per_page: 20
-              })
-              // The API order is not reliable: it sometimes returns an old run first
-              const run = wf.data.workflow_runs.reduce((latest, r) =>
-                new Date(r.created_at) > new Date(latest.created_at) ? r : latest
-              );
+              // The API sometimes answers from a stale index (old runs only),
+              // so query several times and keep the newest run seen
+              let run = undefined
+              for (let attempt = 0; attempt < 3; attempt++) {
+                if (attempt > 0) {
+                  await new Promise((resolve) => setTimeout(resolve, 5000))
+                }
+                const wf = await github.rest.actions.listWorkflowRuns({
+                  owner: 'Geode-solutions', 
+                  repo,
+                  branch: '${{ inputs.branch }}',
+                  workflow_id: '${{ inputs.workflow }}',
+                  status: 'completed',
+                  per_page: 20
+                })
+                for (const r of wf.data.workflow_runs) {
+                  if (!run || new Date(r.created_at) > new Date(run.created_at)) {
+                    run = r
+                  }
+                }
+                console.log('Attempt', attempt, 'total_count', wf.data.total_count, 'latest', run?.html_url, run?.created_at);
+              }
+              if (!run) {
+                core.setFailed('No completed run found for ' + repo);
+                return;
+              }
               console.log(run.html_url, run.event, run.created_at);
               const conclusion = run.conclusion;
               console.log(conclusion);

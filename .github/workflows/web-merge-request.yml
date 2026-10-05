@@ -118,12 +118,28 @@ jobs:
           name: pyinstallers-${{ runner.os }}
           path: pyinstallers.zip
 
+  # Browser and desktop tests run in Playwright shards (test-js-e2e), the other configs once (test-js)
+  split-js-configs:
+    needs: validate-js-PRs
+    runs-on: ubuntu-latest
+    outputs:
+      e2e: ${{ steps.split.outputs.e2e }}
+      others: ${{ steps.split.outputs.others }}
+    steps:
+      - name: Split configs
+        id: split
+        run: |
+          echo "e2e=$(echo "$CONFIGS" | jq -c '[.[] | select(.config == "browser" or .config == "desktop")]')" >> "$GITHUB_OUTPUT"
+          echo "others=$(echo "$CONFIGS" | jq -c '[.[] | select(.config != "browser" and .config != "desktop")]')" >> "$GITHUB_OUTPUT"
+        env:
+          CONFIGS: ${{ needs.validate-js-PRs.outputs.repo_configs }}
+
   test-js:
-    needs: [validate-js-PRs, tarballs, pyinstallers, base]
+    needs: [split-js-configs, tarballs, pyinstallers, base]
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        config: ${{ fromJSON(needs.validate-js-PRs.outputs.repo_configs) }}
+        config: ${{ fromJSON(needs.split-js-configs.outputs.others) }}
         os: [ubuntu-latest, windows-2022]
       fail-fast: false
     steps:
@@ -178,31 +194,6 @@ jobs:
           tarballs: ${{ steps.tarballs.outputs.tarballs }}
           pyinstallers: ${{ steps.pyinstallers.outputs.pyinstallers }}
           use_registry: false
-      - name: Test Browser
-        if: matrix.config.config == 'browser'
-        uses: Geode-solutions/actions/test/browser@master
-        with:
-          name: ${{ matrix.config.repo }}
-          branch: ${{ inputs.branch }}
-          token: ${{ secrets.TOKEN }}
-          tarballs: ${{ steps.tarballs.outputs.tarballs }}
-          pyinstallers: ${{ steps.pyinstallers.outputs.pyinstallers }}
-          use_registry: false
-      - name: Test Desktop
-        if: matrix.config.config == 'desktop'
-        uses: Geode-solutions/actions/test/desktop@master
-        with:
-          name: ${{ matrix.config.repo }}
-          branch: ${{ inputs.branch }}
-          token: ${{ secrets.TOKEN }}
-          tarballs: ${{ steps.tarballs.outputs.tarballs }}
-          pyinstallers: ${{ steps.pyinstallers.outputs.pyinstallers }}
-          AZURE_KEY_VAULT_URI: ${{ secrets.AZURE_KEY_VAULT_URI }}
-          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-          AZURE_CERT_NAME: ${{ secrets.AZURE_CERT_NAME }}
-          use_registry: false
       - name: Test Extension
         if: matrix.config.config == 'extension'
         uses: Geode-solutions/actions/test/extension@master
@@ -219,6 +210,89 @@ jobs:
         with:
           channel-id: C0598GTCLGH
           slack-message: "${{ inputs.branch }}: Javascript merge request failed for ${{ matrix.config.repo }} on ${{ runner.os }}\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
+  test-js-e2e:
+    needs: [split-js-configs, tarballs, pyinstallers, base]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        config: ${{ fromJSON(needs.split-js-configs.outputs.e2e) }}
+        os: [ubuntu-latest, windows-2022]
+        shard: [1, 2, 3]
+      fail-fast: false
+    steps:
+      - name: Clone repository
+        uses: Geode-solutions/actions/install/checkout@master
+        with:
+          repo: "Geode-solutions/${{ matrix.config.repo }}"
+          token: ${{ secrets.TOKEN }}
+          branch: ${{ inputs.branch }}
+          base: ${{ needs.base.outputs.base }}
+      - uses: actions/download-artifact@v8
+        with:
+          name: tarballs-${{ runner.os }}
+      - name: Get tarballs
+        id: tarballs
+        run: |
+          tarballs=$(cat repos_path.txt)
+          echo "$tarballs"
+          echo "tarballs=$tarballs" >> $GITHUB_OUTPUT
+        shell: bash
+      - uses: actions/download-artifact@v8
+        with:
+          name: pyinstallers-${{ runner.os }}
+      - name: Get pyinstallers
+        id: pyinstallers
+        run: |
+          ls
+          unzip pyinstallers.zip
+          ls -l
+          pyinstallers=$(cat repos_path.txt)
+          echo "$pyinstallers"
+          echo "pyinstallers=$pyinstallers" >> $GITHUB_OUTPUT
+        shell: bash
+      - name: Get license
+        uses: Geode-solutions/actions/install/license@master
+        with:
+          token: ${{ secrets.TOKEN }}
+      - name: Test Browser
+        if: matrix.config.config == 'browser'
+        uses: Geode-solutions/actions/test/browser@master
+        with:
+          name: ${{ matrix.config.repo }}
+          branch: ${{ inputs.branch }}
+          token: ${{ secrets.TOKEN }}
+          tarballs: ${{ steps.tarballs.outputs.tarballs }}
+          pyinstallers: ${{ steps.pyinstallers.outputs.pyinstallers }}
+          use_registry: false
+          shard_index: ${{ matrix.shard }}
+          shard_total: 3
+      - name: Test Desktop
+        if: matrix.config.config == 'desktop'
+        uses: Geode-solutions/actions/test/desktop@master
+        with:
+          name: ${{ matrix.config.repo }}
+          branch: ${{ inputs.branch }}
+          token: ${{ secrets.TOKEN }}
+          tarballs: ${{ steps.tarballs.outputs.tarballs }}
+          pyinstallers: ${{ steps.pyinstallers.outputs.pyinstallers }}
+          AZURE_KEY_VAULT_URI: ${{ secrets.AZURE_KEY_VAULT_URI }}
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          AZURE_CERT_NAME: ${{ secrets.AZURE_CERT_NAME }}
+          use_registry: false
+          shard_index: ${{ matrix.shard }}
+          shard_total: 3
+      - name: Post to a Slack channel
+        if: failure()
+        id: slack
+        uses: slackapi/slack-github-action@v1
+        with:
+          channel-id: C0598GTCLGH
+          slack-message: "${{ inputs.branch }}: Javascript merge request failed for ${{ matrix.config.repo }} ${{ matrix.config.config }} on ${{ runner.os }} (shard ${{ matrix.shard }}/3)\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
@@ -278,7 +352,7 @@ jobs:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
   merge-PRs:
-    needs: [validate-js-PRs, validate-py-PRs, test-js, test-py]
+    needs: [validate-js-PRs, validate-py-PRs, test-js, test-js-e2e, test-py]
     uses: Geode-solutions/Versions/.github/workflows/merge-pr.yml@master
     with:
       branch: ${{ inputs.branch }}

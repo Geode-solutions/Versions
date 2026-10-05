@@ -118,7 +118,7 @@ jobs:
           name: pyinstallers-${{ runner.os }}
           path: pyinstallers.zip
 
-  # Browser and desktop tests run in Playwright shards (test-js-e2e), the other configs once (test-js)
+  # Browser, desktop and extension tests run in Playwright shards (test-js-e2e), the other configs once (test-js)
   split-js-configs:
     needs: validate-js-PRs
     runs-on: ubuntu-latest
@@ -129,8 +129,8 @@ jobs:
       - name: Split configs
         id: split
         run: |
-          echo "e2e=$(echo "$CONFIGS" | jq -c '[.[] | select(.config == "browser" or .config == "desktop")]')" >> "$GITHUB_OUTPUT"
-          echo "others=$(echo "$CONFIGS" | jq -c '[.[] | select(.config != "browser" and .config != "desktop")]')" >> "$GITHUB_OUTPUT"
+          echo "e2e=$(echo "$CONFIGS" | jq -c '[.[] | select(.config == "browser" or .config == "desktop" or .config == "extension")]')" >> "$GITHUB_OUTPUT"
+          echo "others=$(echo "$CONFIGS" | jq -c '[.[] | select(.config != "browser" and .config != "desktop" and .config != "extension")]')" >> "$GITHUB_OUTPUT"
         env:
           CONFIGS: ${{ needs.validate-js-PRs.outputs.repo_configs }}
 
@@ -188,15 +188,6 @@ jobs:
       - name: Test Integration
         if: matrix.config.config == 'integration'
         uses: Geode-solutions/actions/test/integration@master
-        with:
-          branch: ${{ inputs.branch }}
-          token: ${{ secrets.TOKEN }}
-          tarballs: ${{ steps.tarballs.outputs.tarballs }}
-          pyinstallers: ${{ steps.pyinstallers.outputs.pyinstallers }}
-          use_registry: false
-      - name: Test Extension
-        if: matrix.config.config == 'extension'
-        uses: Geode-solutions/actions/test/extension@master
         with:
           branch: ${{ inputs.branch }}
           token: ${{ secrets.TOKEN }}
@@ -283,6 +274,18 @@ jobs:
           AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
           AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
           AZURE_CERT_NAME: ${{ secrets.AZURE_CERT_NAME }}
+          use_registry: false
+          shard_index: ${{ matrix.shard }}
+          shard_total: 3
+      - name: Test Extension
+        if: matrix.config.config == 'extension'
+        uses: Geode-solutions/actions/test/extension@master
+        with:
+          name: ${{ matrix.config.repo }}
+          branch: ${{ inputs.branch }}
+          token: ${{ secrets.TOKEN }}
+          tarballs: ${{ steps.tarballs.outputs.tarballs }}
+          pyinstallers: ${{ steps.pyinstallers.outputs.pyinstallers }}
           use_registry: false
           shard_index: ${{ matrix.shard }}
           shard_total: 3

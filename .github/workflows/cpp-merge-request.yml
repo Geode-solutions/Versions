@@ -70,26 +70,32 @@ jobs:
         repo: ${{ fromJSON(needs.setup.outputs.single) }}
       fail-fast: false
     steps:
-      - uses: actions/download-artifact@v8
-        with:
-          name: linux
+      - parallel:
+          - uses: actions/download-artifact@v8
+            with:
+              name: linux
+          - name: Clone repository
+            uses: Geode-solutions/actions/install/checkout@master
+            with:
+              repo: Geode-solutions/${{ matrix.repo }}
+              token: ${{ secrets.TOKEN }}
+              branch: ${{ inputs.branch }}
+              base: ${{ needs.validate-PRs.outputs.base }}
+              path: ${{ matrix.repo }}
+          - name: License
+            run: |
+              gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
+            env:
+              GITHUB_TOKEN: ${{ secrets.TOKEN }}
+            shell: bash
       - name: Libraries
         id: libraries
         run: |
           new_path=$(echo "${{ needs.linux.outputs.path }}" | sed 's/\;/\/lib\:/g')
           echo "LD_LIBRARY_PATH=$new_path" >> $GITHUB_ENV
-      - name: Clone repository
-        uses: Geode-solutions/actions/install/checkout@master
-        with:
-          repo: Geode-solutions/${{ matrix.repo }}
-          token: ${{ secrets.TOKEN }}
-          branch: ${{ inputs.branch }}
-          base: ${{ needs.validate-PRs.outputs.base }}
-          path: ${{ matrix.repo }}
       - name: Compile
         run: |
           gh auth setup-git
-          gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
           mkdir -p build
           cd build
           cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="${{ needs.linux.outputs.path }}" ../${{ matrix.repo }}/tests
@@ -119,30 +125,31 @@ jobs:
         repo: ${{ fromJSON(needs.setup.outputs.sharded) }}
       fail-fast: false
     steps:
-      - uses: actions/download-artifact@v8
-        with:
-          name: linux
+      - parallel:
+          - uses: actions/download-artifact@v8
+            with:
+              name: linux
+          - name: Clone repository
+            uses: Geode-solutions/actions/install/checkout@master
+            with:
+              repo: Geode-solutions/${{ matrix.repo }}
+              token: ${{ secrets.TOKEN }}
+              branch: ${{ inputs.branch }}
+              base: ${{ needs.validate-PRs.outputs.base }}
+              path: ${{ matrix.repo }}
+          - name: License
+            run: |
+              gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
+            env:
+              GITHUB_TOKEN: ${{ secrets.TOKEN }}
+            shell: bash
       - name: Libraries
         run: |
           new_path=$(echo "${{ needs.linux.outputs.path }}" | sed 's/\;/\/lib\:/g')
           echo "LD_LIBRARY_PATH=$new_path" >> $GITHUB_ENV
-      - name: Clone repository
-        uses: Geode-solutions/actions/install/checkout@master
-        with:
-          repo: Geode-solutions/${{ matrix.repo }}
-          token: ${{ secrets.TOKEN }}
-          branch: ${{ inputs.branch }}
-          base: ${{ needs.validate-PRs.outputs.base }}
-          path: ${{ matrix.repo }}
-      - name: License
-        run: |
-          gh auth setup-git
-          gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-        shell: bash
       - name: Compile
         run: |
+          gh auth setup-git
           mkdir -p build
           cd build
           cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="${{ needs.linux.outputs.path }}" ../${{ matrix.repo }}/tests
@@ -152,6 +159,7 @@ jobs:
           ls -lh tests.tar.zst
         env:
           GEODE_LICENSE_LOCATION: ${{ github.workspace }}/geode.lic
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
         shell: bash
       - uses: actions/upload-artifact@v7
         with:
@@ -181,35 +189,38 @@ jobs:
         shard: ${{ fromJSON(needs.setup.outputs.shards) }}
       fail-fast: false
     steps:
-      - uses: actions/download-artifact@v8
-        with:
-          name: linux
-      - uses: actions/download-artifact@v8
-        with:
-          name: tests-linux-${{ matrix.repo }}
+      - parallel:
+          - uses: actions/download-artifact@v8
+            with:
+              name: linux
+          - uses: actions/download-artifact@v8
+            with:
+              name: tests-linux-${{ matrix.repo }}
+          - name: Clone repository
+            uses: Geode-solutions/actions/install/checkout@master
+            with:
+              repo: Geode-solutions/${{ matrix.repo }}
+              token: ${{ secrets.TOKEN }}
+              branch: ${{ inputs.branch }}
+              base: ${{ needs.validate-PRs.outputs.base }}
+              path: ${{ matrix.repo }}
+          - name: License
+            run: |
+              gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
+            env:
+              GITHUB_TOKEN: ${{ secrets.TOKEN }}
+            shell: bash
       - name: Libraries
         run: |
           new_path=$(echo "${{ needs.linux.outputs.path }}" | sed 's/\;/\/lib\:/g')
           echo "LD_LIBRARY_PATH=$new_path" >> $GITHUB_ENV
-      - name: Clone repository
-        uses: Geode-solutions/actions/install/checkout@master
-        with:
-          repo: Geode-solutions/${{ matrix.repo }}
-          token: ${{ secrets.TOKEN }}
-          branch: ${{ inputs.branch }}
-          base: ${{ needs.validate-PRs.outputs.base }}
-          path: ${{ matrix.repo }}
-      - name: License
-        run: |
-          gh auth setup-git
-          gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-        shell: bash
       - name: Unpack tests
         run: |
+          gh auth setup-git
           tar -I zstd -xf tests.tar.zst
           rm tests.tar.zst
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
         shell: bash
       - name: Test
         uses: Geode-solutions/actions/test/ctest-shard@master
@@ -257,9 +268,27 @@ jobs:
         repo: ${{ fromJSON(needs.setup.outputs.single) }}
       fail-fast: false
     steps:
-      - uses: actions/download-artifact@v8
-        with:
-          name: windows
+      - parallel:
+          - uses: actions/download-artifact@v8
+            with:
+              name: windows
+          - uses: TheMrMilchmann/setup-msvc-dev@v4
+            with:
+              arch: x64
+          - name: Clone repository
+            uses: Geode-solutions/actions/install/checkout@master
+            with:
+              repo: Geode-solutions/${{ matrix.repo }}
+              token: ${{ secrets.TOKEN }}
+              branch: ${{ inputs.branch }}
+              base: ${{ needs.validate-PRs.outputs.base }}
+              path: ${{ matrix.repo }}
+          - name: License
+            run: |
+              gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
+            env:
+              GITHUB_TOKEN: ${{ secrets.TOKEN }}
+            shell: bash
       - name: Libraries
         id: libraries
         run: |
@@ -268,21 +297,9 @@ jobs:
           echo "bin=$bin_path" >> $env:GITHUB_OUTPUT
           $share_path = $old_path.replace(";", "\share;").replace("\","/") + "/share"
           echo "share=$share_path" >> $env:GITHUB_OUTPUT
-      - uses: TheMrMilchmann/setup-msvc-dev@v4
-        with:
-          arch: x64
-      - name: Clone repository
-        uses: Geode-solutions/actions/install/checkout@master
-        with:
-          repo: Geode-solutions/${{ matrix.repo }}
-          token: ${{ secrets.TOKEN }}
-          branch: ${{ inputs.branch }}
-          base: ${{ needs.validate-PRs.outputs.base }}
-          path: ${{ matrix.repo }}
       - name: Compile & Test
         run: |
           gh auth setup-git
-          gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
           mkdir -p build
           cd build
           cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="${{ needs.windows.outputs.path }}" ../${{ matrix.repo }}/tests
@@ -326,9 +343,27 @@ jobs:
         repo: ${{ fromJSON(needs.setup.outputs.sharded) }}
       fail-fast: false
     steps:
-      - uses: actions/download-artifact@v8
-        with:
-          name: windows
+      - parallel:
+          - uses: actions/download-artifact@v8
+            with:
+              name: windows
+          - uses: TheMrMilchmann/setup-msvc-dev@v4
+            with:
+              arch: x64
+          - name: Clone repository
+            uses: Geode-solutions/actions/install/checkout@master
+            with:
+              repo: Geode-solutions/${{ matrix.repo }}
+              token: ${{ secrets.TOKEN }}
+              branch: ${{ inputs.branch }}
+              base: ${{ needs.validate-PRs.outputs.base }}
+              path: ${{ matrix.repo }}
+          - name: License
+            run: |
+              gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
+            env:
+              GITHUB_TOKEN: ${{ secrets.TOKEN }}
+            shell: bash
       - name: Libraries
         id: libraries
         run: |
@@ -337,26 +372,9 @@ jobs:
           echo "bin=$bin_path" >> $env:GITHUB_OUTPUT
           $share_path = $old_path.replace(";", "\share;").replace("\","/") + "/share"
           echo "share=$share_path" >> $env:GITHUB_OUTPUT
-      - uses: TheMrMilchmann/setup-msvc-dev@v4
-        with:
-          arch: x64
-      - name: Clone repository
-        uses: Geode-solutions/actions/install/checkout@master
-        with:
-          repo: Geode-solutions/${{ matrix.repo }}
-          token: ${{ secrets.TOKEN }}
-          branch: ${{ inputs.branch }}
-          base: ${{ needs.validate-PRs.outputs.base }}
-          path: ${{ matrix.repo }}
-      - name: License
-        run: |
-          gh auth setup-git
-          gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-        shell: bash
       - name: Compile
         run: |
+          gh auth setup-git
           mkdir -p build
           cd build
           cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="${{ needs.windows.outputs.path }}" ../${{ matrix.repo }}/tests
@@ -378,6 +396,7 @@ jobs:
           cmake --build . -t essential
         env:
           GEODE_LICENSE_LOCATION: ${{ github.workspace }}/geode.lic
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
         shell: bash
       - uses: actions/upload-artifact@v7
         with:
@@ -411,22 +430,27 @@ jobs:
         shard: ${{ fromJSON(needs.setup.outputs.shards) }}
       fail-fast: false
     steps:
-      - uses: actions/download-artifact@v8
-        with:
-          name: tests-windows-${{ matrix.repo }}
-          path: build
-      - name: Clone repository
-        uses: Geode-solutions/actions/install/checkout@master
-        with:
-          repo: Geode-solutions/${{ matrix.repo }}
-          token: ${{ secrets.TOKEN }}
-          branch: ${{ inputs.branch }}
-          base: ${{ needs.validate-PRs.outputs.base }}
-          path: ${{ matrix.repo }}
-      - name: License
-        run: |
-          gh auth setup-git
-          gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
+      - parallel:
+          - uses: actions/download-artifact@v8
+            with:
+              name: tests-windows-${{ matrix.repo }}
+              path: build
+          - name: Clone repository
+            uses: Geode-solutions/actions/install/checkout@master
+            with:
+              repo: Geode-solutions/${{ matrix.repo }}
+              token: ${{ secrets.TOKEN }}
+              branch: ${{ inputs.branch }}
+              base: ${{ needs.validate-PRs.outputs.base }}
+              path: ${{ matrix.repo }}
+          - name: License
+            run: |
+              gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
+            env:
+              GITHUB_TOKEN: ${{ secrets.TOKEN }}
+            shell: bash
+      - name: Git authentication
+        run: gh auth setup-git
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         shell: bash

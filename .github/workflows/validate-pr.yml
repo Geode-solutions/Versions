@@ -37,53 +37,56 @@ jobs:
           result-encoding: string
           script: |
             const repos = "${{ inputs.repos }}"
+            const branch = "${{ inputs.branch }}"
             const owner = 'Geode-solutions'
-            let result = ""
-            let array_repos = []
-            for(const repo of repos.split(';')) {
-              console.log(repo)
-              array_repos.push(repo)
+            const array_repos = repos.split(';')
+            // Repositories are checked concurrently, then reported in order
+            const validations = await Promise.all(array_repos.map(async (repo) => {
+              const messages = []
               const prs = await github.rest.pulls.list({
                 owner,
                 repo,
-                state: 'open'
+                state: 'open',
+                head: `${owner}:${branch}`
               })
-              const branch_pr = prs.data.find(pr => pr.head.ref == "${{ inputs.branch }}")
+              const branch_pr = prs.data.find(pr => pr.head.ref == branch)
               if (!branch_pr) {
-                continue
+                return { repo, messages }
               }
-              console.log(branch_pr)
               const pull_number = branch_pr.number
-              core.setOutput("base", branch_pr.base.ref)
-              const checks = await github.rest.checks.listForRef({
-                owner,
-                repo,
-                ref: "${{ inputs.branch }}"
-              })
-              const check_run = checks.data.check_runs.find(check => check.name == "test / deploy-repository / notify / notify")
-              console.log(check_run)
+              // C++ PRs end with a gate job joining tests and deploy, JS and Python PRs with the deploy notification
+              const [gate, notify, pr, reviews] = await Promise.all([
+                github.rest.checks.listForRef({
+                  owner,
+                  repo,
+                  ref: branch,
+                  check_name: "test / gate"
+                }),
+                github.rest.checks.listForRef({
+                  owner,
+                  repo,
+                  ref: branch,
+                  check_name: "test / deploy-repository / notify / notify"
+                }),
+                github.rest.pulls.get({
+                  owner,
+                  repo,
+                  pull_number
+                }),
+                github.rest.pulls.listReviews({
+                  owner,
+                  repo,
+                  pull_number
+                })
+              ])
+              // The gate check only appears once the tests are done: C++ never falls back to the notification
+              const check_run = "${{ inputs.workflow }}" == "cpp" ? gate.data.check_runs[0] : notify.data.check_runs[0]
               if (!check_run || check_run.status != 'completed' || check_run.conclusion != 'success') {
-                const message = 'PR check not completed for ' + repo
-                core.setFailed(message)
-                result += message + '\n'
+                messages.push('PR check not completed for ' + repo)
               }
-              const pr = await github.rest.pulls.get({
-                owner,
-                repo,
-                pull_number
-              })
-              console.log(pr.data)
               if (!pr.data.mergeable) {
-                const message = 'PR is not mergeable for ' + repo
-                core.setFailed(message)
-                result += message + '\n'
+                messages.push('PR is not mergeable for ' + repo)
               }
-              const reviews = await github.rest.pulls.listReviews({
-                owner,
-                repo,
-                pull_number
-              });
-              console.log(reviews.data)
               let changes_requested = []
               let approved = false
               for (const review of reviews.data) {
@@ -96,13 +99,23 @@ jobs:
                 }
               }
               if (changes_requested.length) {
-                console.log(changes_requested)
-                const message = 'PR request changes for ' + repo
-                core.setFailed(message)
-                result += message + '\n'
+                console.log(repo, changes_requested)
+                messages.push('PR request changes for ' + repo)
               }
               if (!approved) {
-                const message = 'PR not approved for ' + repo
+                messages.push('PR not approved for ' + repo)
+              }
+              return { repo, base: branch_pr.base.ref, pull_number, check_run, messages }
+            }))
+            let result = ""
+            for (const validation of validations) {
+              if (validation.pull_number === undefined) {
+                console.log(`${validation.repo}: no open PR`)
+                continue
+              }
+              console.log(`${validation.repo}: PR #${validation.pull_number} into ${validation.base}, check ${validation.check_run?.status} ${validation.check_run?.conclusion}`)
+              core.setOutput("base", validation.base)
+              for (const message of validation.messages) {
                 core.setFailed(message)
                 result += message + '\n'
               }

@@ -21,50 +21,67 @@ jobs:
             const repos = "${{ inputs.repos }}"
             const owner = 'Geode-solutions'
             const branchName = "${{ inputs.branch }}"
-            const testReleasePattern = `${branchName}-tag`
-            for(const repo of repos.split(';')) {
-              console.log(repo)
+            const testTag = `${branchName}-tag`
+            // Repositories are independent: merge them concurrently, each one in order
+            const repoList = repos.split(';')
+            const results = await Promise.allSettled(repoList.map(async (repo) => {
               const prs = await github.rest.pulls.list({
                 owner,
                 repo,
-                state: 'open'
+                state: 'open',
+                head: `${owner}:${branchName}`
               })
-              const branch_pr = prs.data.find(pr => pr.head.ref == "${{ inputs.branch }}")
+              const branch_pr = prs.data.find(pr => pr.head.ref == branchName)
               if (!branch_pr) {
-                continue
+                console.log(`${repo}: no open PR`)
+                return
               }
               const pull_number = branch_pr.number
-              console.log(`Merging PR #${pull_number}, for branch ${branch_pr}, in repo ${repo}`)
+              console.log(`${repo}: merging PR #${pull_number}`)
               await github.rest.pulls.merge({
                 owner,
                 repo,
                 pull_number
               })
-              console.log(`Deleting branch in ${repo}...`)
+              console.log(`${repo}: deleting branch`)
               await github.rest.git.deleteRef({
                 owner,
                 repo,
-                ref: `heads/${{ inputs.branch }}`
-              });
-              console.log(`Deleting test releases in ${repo}...`)
-              const releases = await github.paginate(github.rest.repos.listReleases, {
-              owner,
-              repo
+                ref: `heads/${branchName}`
               })
-              for (const release of releases) {
-                if (release.tag_name === testReleasePattern) {
-                  console.log(`Deleting release: ${release.name} (ID: ${release.id})`)
-                  await github.rest.repos.deleteRelease({
-                    owner,
-                    repo,
-                    release_id: release.id
-                  })
-                  console.log(`Deleting tag: ${release.tag_name}`)
-                  await github.rest.git.deleteRef({
-                    owner,
-                    repo,
-                    ref: `tags/${release.tag_name}`
-                  })
+              let release
+              try {
+                release = await github.rest.repos.getReleaseByTag({
+                  owner,
+                  repo,
+                  tag: testTag
+                })
+              } catch (error) {
+                if (error.status !== 404) {
+                  throw error
                 }
+                console.log(`${repo}: no test release`)
+                return
               }
+              console.log(`${repo}: deleting release ${release.data.name} (ID: ${release.data.id})`)
+              await github.rest.repos.deleteRelease({
+                owner,
+                repo,
+                release_id: release.data.id
+              })
+              console.log(`${repo}: deleting tag ${testTag}`)
+              await github.rest.git.deleteRef({
+                owner,
+                repo,
+                ref: `tags/${testTag}`
+              })
+            }))
+            const failures = results
+              .map((result, i) => ({ repo: repoList[i], result }))
+              .filter(({ result }) => result.status === 'rejected')
+            for (const { repo, result } of failures) {
+              console.log(`${repo}: ${result.reason.message}`)
+            }
+            if (failures.length) {
+              core.setFailed(`Merge failed for ${failures.map(f => f.repo).join(', ')}`)
             }

@@ -1,25 +1,30 @@
-async function wait_for_run_completed(octokit, owner, repo, run_id, timeout) {
-  let status = "";
-  let conclusion = "";
-  while (status !== "completed") {
-    console.log(`Retrying ${run_id} in ${timeout}s`);
-    await new Promise((resolve) => setTimeout(resolve, timeout * 1000));
+const sleep = (seconds) => new Promise((resolve) => setTimeout(resolve, seconds * 1000));
+
+// Polling delays: each one is paid at every level of the dependency graph
+const RUN_STATUS_INTERVAL = 15;
+const RUN_DISCOVERY_INTERVAL = 3;
+const RUN_DISCOVERY_RETRIES = 60;
+
+async function wait_for_run_completed(octokit, owner, repo, run_id) {
+  while (true) {
     const response = await octokit.actions.getWorkflowRun({
       owner,
       repo,
       run_id,
     });
-    const data = response.data;
-    status = data.status;
-    conclusion = data.conclusion;
-    console.log(`Status ${run_id}: ${status} - ${conclusion}`);
+    const { status, conclusion } = response.data;
+    console.log(`Status ${repo} ${run_id}: ${status} - ${conclusion}`);
+    if (status === "completed") {
+      return conclusion;
+    }
+    await sleep(RUN_STATUS_INTERVAL);
   }
-  return conclusion;
 }
 
 async function launch_workflow(octokit, owner, repo, workflow_id, ref) {
   try {
-    let trigger_time = Date.now();
+    // created_at has a one second resolution
+    const trigger_time = Math.floor(Date.now() / 1000) * 1000;
     console.log(`Dispatch ${repo}::${workflow_id}`);
     await octokit.actions.createWorkflowDispatch({
       owner,
@@ -28,8 +33,8 @@ async function launch_workflow(octokit, owner, repo, workflow_id, ref) {
       ref,
     });
     let run_id = 0;
-    for (let retry = 0; retry < 20; retry++) {
-      await new Promise((resolve) => setTimeout(resolve, 10 * 1000));
+    for (let retry = 0; retry < RUN_DISCOVERY_RETRIES; retry++) {
+      await sleep(RUN_DISCOVERY_INTERVAL);
       const response = await octokit.actions.listWorkflowRuns({
         owner,
         repo,
@@ -67,8 +72,7 @@ export default async function deploy_repository(octokit, owner, repo, ref) {
     octokit,
     owner,
     repo,
-    prepare_id,
-    40
+    prepare_id
   );
   if (prepare_conclusion !== "success") {
     throw new Error(`${repo} failed to prepare deploy`);
@@ -84,8 +88,7 @@ export default async function deploy_repository(octokit, owner, repo, ref) {
     octokit,
     owner,
     repo,
-    deploy_id,
-    60
+    deploy_id
   );
   if (deploy_conclusion !== "success") {
     throw new Error(`${repo} failed to deploy`);

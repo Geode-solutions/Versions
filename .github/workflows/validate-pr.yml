@@ -54,19 +54,12 @@ jobs:
                 return { repo, messages }
               }
               const pull_number = branch_pr.number
-              // C++ PRs end with a gate job joining tests and deploy, JS and Python PRs with the deploy notification
-              const [gate, notify, pr, reviews] = await Promise.all([
-                github.rest.checks.listForRef({
+              const [runs, pr, reviews] = await Promise.all([
+                github.rest.actions.listWorkflowRunsForRepo({
                   owner,
                   repo,
-                  ref: branch,
-                  check_name: "test / gate"
-                }),
-                github.rest.checks.listForRef({
-                  owner,
-                  repo,
-                  ref: branch,
-                  check_name: "test / deploy-repository / notify / notify"
+                  head_sha: branch_pr.head.sha,
+                  per_page: 100
                 }),
                 github.rest.pulls.get({
                   owner,
@@ -79,10 +72,25 @@ jobs:
                   pull_number
                 })
               ])
-              // The gate check only appears once the tests are done: C++ never falls back to the notification
-              const check_run = "${{ inputs.workflow }}" == "cpp" ? gate.data.check_runs[0] : notify.data.check_runs[0]
-              if (!check_run || check_run.status != 'completed' || check_run.conclusion != 'success') {
-                messages.push('PR check not completed for ' + repo)
+              // Everything must be green: the latest run of every workflow triggered on the PR head commit
+              const latest_runs = new Map()
+              for (const run of runs.data.workflow_runs) {
+                const key = `${run.workflow_id}-${run.event}`
+                const previous = latest_runs.get(key)
+                if (!previous || run.created_at > previous.created_at) {
+                  latest_runs.set(key, run)
+                }
+              }
+              const workflow_runs = [...latest_runs.values()]
+              if (!workflow_runs.some(run => run.event == 'pull_request')) {
+                messages.push('PR checks not started for ' + repo)
+              }
+              for (const run of workflow_runs) {
+                if (run.status != 'completed') {
+                  messages.push(`PR check "${run.name}" (${run.event}) not completed for ${repo}`)
+                } else if (!['success', 'skipped', 'neutral'].includes(run.conclusion)) {
+                  messages.push(`PR check "${run.name}" (${run.event}) ${run.conclusion} for ${repo}`)
+                }
               }
               if (!pr.data.mergeable) {
                 messages.push('PR is not mergeable for ' + repo)
@@ -105,7 +113,7 @@ jobs:
               if (!approved) {
                 messages.push('PR not approved for ' + repo)
               }
-              return { repo, base: branch_pr.base.ref, pull_number, check_run, messages }
+              return { repo, base: branch_pr.base.ref, pull_number, workflow_runs, messages }
             }))
             let result = ""
             for (const validation of validations) {
@@ -113,7 +121,8 @@ jobs:
                 console.log(`${validation.repo}: no open PR`)
                 continue
               }
-              console.log(`${validation.repo}: PR #${validation.pull_number} into ${validation.base}, check ${validation.check_run?.status} ${validation.check_run?.conclusion}`)
+              const run_states = validation.workflow_runs.map(run => `${run.name} (${run.event}): ${run.conclusion ?? run.status}`)
+              console.log(`${validation.repo}: PR #${validation.pull_number} into ${validation.base}, ${run_states.join(', ')}`)
               core.setOutput("base", validation.base)
               for (const message of validation.messages) {
                 core.setFailed(message)

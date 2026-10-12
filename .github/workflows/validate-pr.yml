@@ -59,6 +59,7 @@ jobs:
                   owner,
                   repo,
                   head_sha: branch_pr.head.sha,
+                  event: 'pull_request',
                   per_page: 100
                 }),
                 github.rest.pulls.get({
@@ -72,24 +73,23 @@ jobs:
                   pull_number
                 })
               ])
-              // Everything must be green: the latest run of every workflow triggered on the PR head commit
+              // Everything must be green: the latest pull_request run of every workflow on the PR head commit
               const latest_runs = new Map()
               for (const run of runs.data.workflow_runs) {
-                const key = `${run.workflow_id}-${run.event}`
-                const previous = latest_runs.get(key)
+                const previous = latest_runs.get(run.workflow_id)
                 if (!previous || run.created_at > previous.created_at) {
-                  latest_runs.set(key, run)
+                  latest_runs.set(run.workflow_id, run)
                 }
               }
               const workflow_runs = [...latest_runs.values()]
-              if (!workflow_runs.some(run => run.event == 'pull_request')) {
+              if (!workflow_runs.length) {
                 messages.push('PR checks not started for ' + repo)
               }
               for (const run of workflow_runs) {
                 if (run.status != 'completed') {
-                  messages.push(`PR check "${run.name}" (${run.event}) not completed for ${repo}`)
+                  messages.push(`PR check "${run.name}" not completed for ${repo}`)
                 } else if (!['success', 'skipped', 'neutral'].includes(run.conclusion)) {
-                  messages.push(`PR check "${run.name}" (${run.event}) ${run.conclusion} for ${repo}`)
+                  messages.push(`PR check "${run.name}" ${run.conclusion} for ${repo}`)
                 }
               }
               if (!pr.data.mergeable) {
@@ -121,7 +121,7 @@ jobs:
                 console.log(`${validation.repo}: no open PR`)
                 continue
               }
-              const run_states = validation.workflow_runs.map(run => `${run.name} (${run.event}): ${run.conclusion ?? run.status}`)
+              const run_states = validation.workflow_runs.map(run => `${run.name}: ${run.conclusion ?? run.status}`)
               console.log(`${validation.repo}: PR #${validation.pull_number} into ${validation.base}, ${run_states.join(', ')}`)
               core.setOutput("base", validation.base)
               for (const message of validation.messages) {

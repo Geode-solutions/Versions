@@ -112,14 +112,18 @@ jobs:
       - name: Save data to file
         run: echo "${{ steps.repos.outputs.path }}" > pyinstallers_path.txt
         shell: bash
-      - name: Archive pyinstaller
-        uses: thedoctor0/zip-release@0.7.5
-        with:
-          filename: pyinstallers.zip
+      # Multithreaded zstd instead of zip, tar keeps executable bits.
+      # Written outside the workspace, otherwise tar fails because the archived directory changes while it is read
+      - name: Archive pyinstallers
+        run: |
+          tar -cf - . | zstd -T0 -q -o "$RUNNER_TEMP/pyinstallers.tar.zst"
+        shell: bash
       - uses: actions/upload-artifact@v7
         with:
           name: pyinstallers-${{ runner.os }}
-          path: pyinstallers.zip
+          path: ${{ runner.temp }}/pyinstallers.tar.zst
+          retention-days: 1
+          compression-level: 0
 
   # Browser, desktop and extension tests run in Playwright shards (test-js-e2e), the other configs once (test-js)
   split-js-configs:
@@ -170,7 +174,8 @@ jobs:
         id: pyinstallers
         run: |
           ls
-          unzip pyinstallers.zip
+          tar --use-compress-program "zstd -d" -xf pyinstallers.tar.zst
+          rm pyinstallers.tar.zst
           ls -l
           pyinstallers=$(cat pyinstallers_path.txt)
           echo "$pyinstallers"
@@ -241,7 +246,8 @@ jobs:
         id: pyinstallers
         run: |
           ls
-          unzip pyinstallers.zip
+          tar --use-compress-program "zstd -d" -xf pyinstallers.tar.zst
+          rm pyinstallers.tar.zst
           ls -l
           pyinstallers=$(cat pyinstallers_path.txt)
           echo "$pyinstallers"

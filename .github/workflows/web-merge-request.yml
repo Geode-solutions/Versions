@@ -109,6 +109,9 @@ jobs:
           token: ${{ secrets.TOKEN }}
           branch: ${{ inputs.branch }}
           base: ${{ needs.base.outputs.base }}
+      - name: Save data to file
+        run: echo "${{ steps.repos.outputs.path }}" > pyinstallers_path.txt
+        shell: bash
       - name: Archive pyinstaller
         uses: thedoctor0/zip-release@0.7.5
         with:
@@ -169,7 +172,7 @@ jobs:
           ls
           unzip pyinstallers.zip
           ls -l
-          pyinstallers=$(cat repos_path.txt)
+          pyinstallers=$(cat pyinstallers_path.txt)
           echo "$pyinstallers"
           echo "pyinstallers=$pyinstallers" >> $GITHUB_OUTPUT
         shell: bash
@@ -240,7 +243,7 @@ jobs:
           ls
           unzip pyinstallers.zip
           ls -l
-          pyinstallers=$(cat repos_path.txt)
+          pyinstallers=$(cat pyinstallers_path.txt)
           echo "$pyinstallers"
           echo "pyinstallers=$pyinstallers" >> $GITHUB_OUTPUT
         shell: bash

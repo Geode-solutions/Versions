@@ -24,6 +24,17 @@ jobs:
             const testTag = `${branchName}-tag`
             // Repositories are independent: merge them concurrently, each one in order
             const repoList = repos.split(';')
+            // Head branches may already be removed by the repository "auto-delete head branches" setting
+            const deleteRefIfExists = async (repo, ref) => {
+              try {
+                await github.rest.git.deleteRef({ owner, repo, ref })
+              } catch (error) {
+                if (error.status !== 422 && error.status !== 404) {
+                  throw error
+                }
+                console.log(`${repo}: ${ref} already deleted`)
+              }
+            }
             const results = await Promise.allSettled(repoList.map(async (repo) => {
               const prs = await github.rest.pulls.list({
                 owner,
@@ -38,17 +49,22 @@ jobs:
               }
               const pull_number = branch_pr.number
               console.log(`${repo}: merging PR #${pull_number}`)
-              await github.rest.pulls.merge({
-                owner,
-                repo,
-                pull_number
-              })
+              try {
+                await github.rest.pulls.merge({
+                  owner,
+                  repo,
+                  pull_number
+                })
+              } catch (error) {
+                // The merge API can fail (e.g. HTTP 500) although the PR got merged
+                const pr = await github.rest.pulls.get({ owner, repo, pull_number })
+                if (!pr.data.merged) {
+                  throw error
+                }
+                console.log(`${repo}: merge reported "${error.message}" but PR #${pull_number} is merged`)
+              }
               console.log(`${repo}: deleting branch`)
-              await github.rest.git.deleteRef({
-                owner,
-                repo,
-                ref: `heads/${branchName}`
-              })
+              await deleteRefIfExists(repo, `heads/${branchName}`)
               let release
               try {
                 release = await github.rest.repos.getReleaseByTag({
@@ -70,11 +86,7 @@ jobs:
                 release_id: release.data.id
               })
               console.log(`${repo}: deleting tag ${testTag}`)
-              await github.rest.git.deleteRef({
-                owner,
-                repo,
-                ref: `tags/${testTag}`
-              })
+              await deleteRefIfExists(repo, `tags/${testTag}`)
             }))
             const failures = results
               .map((result, i) => ({ repo: repoList[i], result }))

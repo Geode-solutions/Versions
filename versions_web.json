@@ -5,7 +5,7 @@
   },
   {
     "repo": "OpenGeodeWeb-Router",
-    "version": "1.0.0"
+    "version": "1.0.1"
   },
   {
     "repo": "OpenGeodeWeb-Microservice",
@@ -15,7 +15,7 @@
   {
     "repo": "OpenGeodeWeb-Back",
     "python": "opengeodeweb-back",
-    "version": "6.15.1"
+    "version": "6.15.2"
   },
   {
     "repo": "OpenGeodeWeb-Viewer",
@@ -38,7 +38,7 @@
   {
     "repo": "Vease-Back",
     "python": "vease-back",
-    "version": "1.15.1"
+    "version": "1.15.2"
   },
   {
     "repo": "Vease-Viewer",
@@ -47,7 +47,7 @@
   },
   {
     "repo": "Vease",
-    "version": "1.53.3"
+    "version": "1.53.4"
   },
   {
     "repo": "PEGGHy-Back",

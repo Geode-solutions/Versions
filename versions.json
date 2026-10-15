@@ -2,98 +2,98 @@
   {
     "repo": "OpenGeode",
     "python": "opengeode-core",
-    "version": "18.5.1"
+    "version": "19.0.0"
   },
   {
     "repo": "OpenGeode-IO",
     "python": "opengeode-io",
-    "version": "7.11.0"
+    "version": "7.11.1"
   },
   {
     "repo": "OpenGeode-Geosciences",
     "python": "opengeode-geosciences",
-    "version": "9.8.2"
+    "version": "9.8.3"
   },
   {
     "repo": "OpenGeode-GeosciencesIO",
     "python": "opengeode-geosciencesio",
-    "version": "5.12.0"
+    "version": "5.13.0"
   },
   {
     "repo": "OpenGeode-Inspector",
     "python": "opengeode-inspector",
-    "version": "6.12.2"
+    "version": "6.12.3"
   },
   {
     "repo": "OpenGeode-Inspector_Geosciences",
     "python": "opengeode-inspector_geosciences",
-    "version": "1.2.1"
+    "version": "1.2.3"
   },
   {
     "repo": "OpenGeode-Stochastic",
     "python": "opengeode-stochastic",
-    "version": "2.0.0"
+    "version": "2.0.1"
   },
   {
     "repo": "Geode-Common_private",
     "python": "geode-common",
-    "version": "33.26.9"
+    "version": "33.26.10"
   },
   {
     "repo": "Geode-Conversion_private",
     "python": "geode-conversion",
-    "version": "6.7.9"
+    "version": "6.7.10"
   },
   {
     "repo": "Geode-Background_private",
     "python": "geode-background",
-    "version": "9.14.5"
+    "version": "9.14.6"
   },
   {
     "repo": "Geode-Explicit_private",
     "python": "geode-explicit",
-    "version": "7.5.4"
+    "version": "7.5.5"
   },
   {
     "repo": "Geode-Explicit_Geosciences_private",
     "python": "geode-explicit_geosciences",
-    "version": "1.1.5"
+    "version": "1.1.6"
   },
   {
     "repo": "Geode-Implicit_private",
     "python": "geode-implicit",
-    "version": "5.4.7"
+    "version": "5.4.8"
   },
   {
     "repo": "Geode-Simplex_private",
     "python": "geode-simplex",
-    "version": "11.7.10"
+    "version": "11.7.11"
   },
   {
     "repo": "Geode-Hybrid_private",
     "python": "geode-hybrid",
-    "version": "3.7.4"
+    "version": "3.7.5"
   },
   {
     "repo": "Geode-Hybrid_Geosciences_private",
     "python": "geode-hybrid_geosciences",
-    "version": "1.19.8"
+    "version": "1.19.9"
   },
   {
     "repo": "Geode-Viewables_private",
     "python": "geode-viewables",
-    "version": "3.5.3"
+    "version": "3.5.4"
   },
   {
     "repo": "Geode-DHI",
-    "version": "7.15.19"
+    "version": "7.15.20"
   },
   {
     "repo": "Geode-SLB",
-    "version": "0.5.5"
+    "version": "0.5.6"
   },
   {
     "repo": "Geode-Fracsima",
-    "version": "1.6.3"
+    "version": "1.6.4"
   }
 ]

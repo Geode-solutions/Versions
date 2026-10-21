@@ -28,6 +28,19 @@ async function has_infra_failure(octokit, owner, repo, run_id) {
   );
 }
 
+// Prepare deploy only goes past its semantic-release dry run when a new release
+// is due: when all other jobs were skipped, Deploy would not release either
+async function has_new_release(octokit, owner, repo, run_id) {
+  const jobs = await octokit.paginate(octokit.actions.listJobsForWorkflowRun, {
+    owner,
+    repo,
+    run_id,
+    filter: "latest",
+    per_page: 100,
+  });
+  return jobs.some((job) => !job.name.endsWith("semantic-release") && job.conclusion !== "skipped");
+}
+
 async function wait_for_run_success(octokit, owner, repo, run_id) {
   for (let attempt = 0; ; attempt++) {
     const conclusion = await wait_for_run_completed(octokit, owner, repo, run_id);
@@ -106,6 +119,10 @@ export default async function deploy_repository(octokit, owner, repo, ref) {
   const prepare_id = await launch_workflow(octokit, owner, repo, "prepare_deploy.yml", ref);
   if (!(await wait_for_run_success(octokit, owner, repo, prepare_id))) {
     throw new Error(`${repo} failed to prepare deploy`);
+  }
+  if (!(await has_new_release(octokit, owner, repo, prepare_id))) {
+    console.log(`Skip ${repo}::deploy.yml: no new release`);
+    return;
   }
   const deploy_id = await launch_workflow(octokit, owner, repo, "deploy.yml", ref);
   if (!(await wait_for_run_success(octokit, owner, repo, deploy_id))) {

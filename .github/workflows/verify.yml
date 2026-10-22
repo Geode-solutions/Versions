@@ -35,6 +35,10 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.TOKEN }}
+      # Release candidates (next) only publish wheels for this Python version
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.14"
       - uses: actions/github-script@v8
         id: check
         with:

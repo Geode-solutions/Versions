@@ -40,6 +40,23 @@ jobs:
             const branch = "${{ inputs.branch }}"
             const owner = 'Geode-solutions'
             const array_repos = repos.split(';')
+            // GitHub sometimes transiently answers this query with an empty list
+            const list_pr_runs = async (repo, head_sha) => {
+              for (let attempt = 1; ; attempt++) {
+                const runs = await github.rest.actions.listWorkflowRunsForRepo({
+                  owner,
+                  repo,
+                  head_sha,
+                  event: 'pull_request',
+                  per_page: 100
+                })
+                if (runs.data.workflow_runs.length || attempt >= 5) {
+                  return runs
+                }
+                console.log(`No PR run found for ${repo}, retrying... (${attempt}/5)`)
+                await new Promise(resolve => setTimeout(resolve, 2000 * attempt))
+              }
+            }
             // Repositories are checked concurrently, then reported in order
             const validations = await Promise.all(array_repos.map(async (repo) => {
               const messages = []
@@ -55,13 +72,7 @@ jobs:
               }
               const pull_number = branch_pr.number
               const [runs, pr, reviews] = await Promise.all([
-                github.rest.actions.listWorkflowRunsForRepo({
-                  owner,
-                  repo,
-                  head_sha: branch_pr.head.sha,
-                  event: 'pull_request',
-                  per_page: 100
-                }),
+                list_pr_runs(repo, branch_pr.head.sha),
                 github.rest.pulls.get({
                   owner,
                   repo,

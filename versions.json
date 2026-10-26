@@ -2,22 +2,22 @@
   {
     "repo": "OpenGeode",
     "python": "opengeode-core",
-    "version": "19.1.0"
+    "version": "19.2.0"
   },
   {
     "repo": "OpenGeode-IO",
     "python": "opengeode-io",
-    "version": "7.12.0"
+    "version": "7.12.1"
   },
   {
     "repo": "OpenGeode-Geosciences",
     "python": "opengeode-geosciences",
-    "version": "9.9.0"
+    "version": "9.10.0"
   },
   {
     "repo": "OpenGeode-GeosciencesIO",
     "python": "opengeode-geosciencesio",
-    "version": "5.14.1"
+    "version": "5.15.0"
   },
   {
     "repo": "OpenGeode-Inspector",

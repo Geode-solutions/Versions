@@ -1,0 +1,21 @@
+name: Delete package artifacts
+
+# Deletes the linux, windows and tests-* artifacts uploaded by the C++ ecosystem check before it stopped
+# uploading them: anyone signed in can download artifacts from a public repository
+on:
+  workflow_dispatch:
+
+permissions:
+  actions: write
+
+jobs:
+  delete:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          gh api --paginate "repos/${{ github.repository }}/actions/artifacts?per_page=100" \
+            --jq '.artifacts[] | select(.name=="linux" or .name=="windows" or (.name|startswith("tests-"))) | .id' > ids.txt
+          echo "Deleting $(wc -l < ids.txt) artifacts"
+          xargs -r -I{} gh api -X DELETE "repos/${{ github.repository }}/actions/artifacts/{}" < ids.txt
+        env:
+          GH_TOKEN: ${{ github.token }}

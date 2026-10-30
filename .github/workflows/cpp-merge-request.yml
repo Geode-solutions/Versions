@@ -12,7 +12,8 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  # Repositories with long tests: built once, then tested in SHARDS parallel jobs
+  # Repositories with long tests: tested in SHARDS parallel jobs, each one builds the tests
+  # (test executables are never shared through artifacts: anyone signed in can download them from a public repository)
   SHARDED_REPOS: '["Geode-DHI"]'
   SHARDS: 3
 
@@ -40,12 +41,13 @@ jobs:
           echo "sharded=$(jq -cn --argjson repos "$repos" --argjson sharded "$SHARDED_REPOS" '[$repos[] | select(. as $r | $sharded | index($r))]')" >> $GITHUB_OUTPUT
           echo "shards=$(jq -cn --argjson shards $SHARDS '[range(1; $shards + 1)]')" >> $GITHUB_OUTPUT
 
+  # Private packages never go through artifacts: anyone signed in can download them from a public repository.
+  # These jobs only select the releases, each test job downloads them with the selection (no extra API query)
   linux:
     needs: validate-PRs
     runs-on: ubuntu-latest
-    container: ghcr.io/geode-solutions/ubuntu:master
     outputs:
-      path: ${{ steps.repos.outputs.path }}
+      selection: ${{ steps.repos.outputs.selection }}
     steps:
       - uses: Geode-solutions/actions/get-release@master
         id: repos
@@ -55,10 +57,7 @@ jobs:
           token: ${{ secrets.TOKEN }}
           branch: ${{ inputs.branch }}
           base: ${{ needs.validate-PRs.outputs.base }}
-      - uses: actions/upload-artifact@v7
-        with:
-          name: linux
-          path: .
+          download: "false"
 
   linux-test:
     needs: [validate-PRs, setup, linux]
@@ -70,10 +69,14 @@ jobs:
         repo: ${{ fromJSON(needs.setup.outputs.single) }}
       fail-fast: false
     steps:
+      - uses: Geode-solutions/actions/get-release@master
+        id: repos
+        with:
+          repository: ${{ needs.validate-PRs.outputs.repos }}
+          file: "-ubuntu-private.tar.gz"
+          token: ${{ secrets.TOKEN }}
+          selection: ${{ needs.linux.outputs.selection }}
       - parallel:
-          - uses: actions/download-artifact@v8
-            with:
-              name: linux
           - name: Clone repository
             uses: Geode-solutions/actions/install/checkout@master
             with:
@@ -91,14 +94,14 @@ jobs:
       - name: Libraries
         id: libraries
         run: |
-          new_path=$(echo "${{ needs.linux.outputs.path }}" | sed 's/\;/\/lib\:/g')
+          new_path=$(echo "${{ steps.repos.outputs.path }}" | sed 's/\;/\/lib\:/g')
           echo "LD_LIBRARY_PATH=$new_path" >> $GITHUB_ENV
       - name: Compile
         run: |
           gh auth setup-git
           mkdir -p build
           cd build
-          cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="${{ needs.linux.outputs.path }}" ../${{ matrix.repo }}/tests
+          cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="${{ steps.repos.outputs.path }}" ../${{ matrix.repo }}/tests
           cmake --build . -t essential
           ctest --output-on-failure --stop-on-failure --no-tests=error -j $(nproc) -L essential
         env:
@@ -115,71 +118,8 @@ jobs:
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
-  linux-build:
-    needs: [validate-PRs, setup, linux]
-    if: needs.setup.outputs.sharded != '[]'
-    runs-on: ubuntu-latest
-    container: ghcr.io/geode-solutions/ubuntu:master
-    strategy:
-      matrix:
-        repo: ${{ fromJSON(needs.setup.outputs.sharded) }}
-      fail-fast: false
-    steps:
-      - parallel:
-          - uses: actions/download-artifact@v8
-            with:
-              name: linux
-          - name: Clone repository
-            uses: Geode-solutions/actions/install/checkout@master
-            with:
-              repo: Geode-solutions/${{ matrix.repo }}
-              token: ${{ secrets.TOKEN }}
-              branch: ${{ inputs.branch }}
-              base: ${{ needs.validate-PRs.outputs.base }}
-              path: ${{ matrix.repo }}
-          - name: License
-            run: |
-              gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
-            env:
-              GITHUB_TOKEN: ${{ secrets.TOKEN }}
-            shell: bash
-      - name: Libraries
-        run: |
-          new_path=$(echo "${{ needs.linux.outputs.path }}" | sed 's/\;/\/lib\:/g')
-          echo "LD_LIBRARY_PATH=$new_path" >> $GITHUB_ENV
-      - name: Compile
-        run: |
-          gh auth setup-git
-          mkdir -p build
-          cd build
-          cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="${{ needs.linux.outputs.path }}" ../${{ matrix.repo }}/tests
-          cmake --build . -t essential
-          cd ..
-          tar --exclude='*.o' --exclude='CMakeFiles' -I 'zstd -T0' -cf tests.tar.zst build
-          ls -lh tests.tar.zst
-        env:
-          GEODE_LICENSE_LOCATION: ${{ github.workspace }}/geode.lic
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-        shell: bash
-      - uses: actions/upload-artifact@v7
-        with:
-          name: tests-linux-${{ matrix.repo }}
-          path: tests.tar.zst
-          retention-days: 1
-          compression-level: 0
-          overwrite: true
-      - name: Post to a Slack channel
-        if: failure()
-        id: slack
-        uses: slackapi/slack-github-action@v1
-        with:
-          channel-id: C0598GTCLGH
-          slack-message: "${{ inputs.branch }}: C++ merge request failed for ${{ matrix.repo }} on Linux\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-
   linux-shard:
-    needs: [validate-PRs, setup, linux, linux-build]
+    needs: [validate-PRs, setup, linux]
     if: needs.setup.outputs.sharded != '[]'
     runs-on: ubuntu-latest
     container: ghcr.io/geode-solutions/ubuntu:master
@@ -189,13 +129,14 @@ jobs:
         shard: ${{ fromJSON(needs.setup.outputs.shards) }}
       fail-fast: false
     steps:
+      - uses: Geode-solutions/actions/get-release@master
+        id: repos
+        with:
+          repository: ${{ needs.validate-PRs.outputs.repos }}
+          file: "-ubuntu-private.tar.gz"
+          token: ${{ secrets.TOKEN }}
+          selection: ${{ needs.linux.outputs.selection }}
       - parallel:
-          - uses: actions/download-artifact@v8
-            with:
-              name: linux
-          - uses: actions/download-artifact@v8
-            with:
-              name: tests-linux-${{ matrix.repo }}
           - name: Clone repository
             uses: Geode-solutions/actions/install/checkout@master
             with:
@@ -212,14 +153,17 @@ jobs:
             shell: bash
       - name: Libraries
         run: |
-          new_path=$(echo "${{ needs.linux.outputs.path }}" | sed 's/\;/\/lib\:/g')
+          new_path=$(echo "${{ steps.repos.outputs.path }}" | sed 's/\;/\/lib\:/g')
           echo "LD_LIBRARY_PATH=$new_path" >> $GITHUB_ENV
-      - name: Unpack tests
+      - name: Compile
         run: |
           gh auth setup-git
-          tar -I zstd -xf tests.tar.zst
-          rm tests.tar.zst
+          mkdir -p build
+          cd build
+          cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="${{ steps.repos.outputs.path }}" ../${{ matrix.repo }}/tests
+          cmake --build . -t essential
         env:
+          GEODE_LICENSE_LOCATION: ${{ github.workspace }}/geode.lic
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         shell: bash
       - name: Test
@@ -242,9 +186,9 @@ jobs:
 
   windows:
     needs: validate-PRs
-    runs-on: windows-2022
+    runs-on: ubuntu-latest
     outputs:
-      path: ${{ steps.repos.outputs.path }}
+      selection: ${{ steps.repos.outputs.selection }}
     steps:
       - uses: Geode-solutions/actions/get-release@master
         id: repos
@@ -254,10 +198,7 @@ jobs:
           token: ${{ secrets.TOKEN }}
           branch: ${{ inputs.branch }}
           base: ${{ needs.validate-PRs.outputs.base }}
-      - uses: actions/upload-artifact@v7
-        with:
-          name: windows
-          path: .
+          download: "false"
 
   windows-test:
     needs: [validate-PRs, setup, windows]
@@ -268,10 +209,14 @@ jobs:
         repo: ${{ fromJSON(needs.setup.outputs.single) }}
       fail-fast: false
     steps:
+      - uses: Geode-solutions/actions/get-release@master
+        id: repos
+        with:
+          repository: ${{ needs.validate-PRs.outputs.repos }}
+          file: "-win64-private.zip"
+          token: ${{ secrets.TOKEN }}
+          selection: ${{ needs.windows.outputs.selection }}
       - parallel:
-          - uses: actions/download-artifact@v8
-            with:
-              name: windows
           - uses: TheMrMilchmann/setup-msvc-dev@v4
             with:
               arch: x64
@@ -292,7 +237,7 @@ jobs:
       - name: Libraries
         id: libraries
         run: |
-          $old_path = "${{ needs.windows.outputs.path }}"
+          $old_path = "${{ steps.repos.outputs.path }}"
           $bin_path = $old_path.replace(";", "\bin;").replace("\","/") + "/bin"
           echo "bin=$bin_path" >> $env:GITHUB_OUTPUT
           $share_path = $old_path.replace(";", "\share;").replace("\","/") + "/share"
@@ -302,7 +247,7 @@ jobs:
           gh auth setup-git
           mkdir -p build
           cd build
-          cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="${{ needs.windows.outputs.path }}" ../${{ matrix.repo }}/tests
+          cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="${{ steps.repos.outputs.path }}" ../${{ matrix.repo }}/tests
           IFS=";" read -a paths <<< "${{ steps.libraries.outputs.bin }}"
           for path in "${paths[@]}"
           do
@@ -334,19 +279,24 @@ jobs:
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
-  windows-build:
+  windows-shard:
     needs: [validate-PRs, setup, windows]
     if: needs.setup.outputs.sharded != '[]'
     runs-on: windows-2022
     strategy:
       matrix:
         repo: ${{ fromJSON(needs.setup.outputs.sharded) }}
+        shard: ${{ fromJSON(needs.setup.outputs.shards) }}
       fail-fast: false
     steps:
+      - uses: Geode-solutions/actions/get-release@master
+        id: repos
+        with:
+          repository: ${{ needs.validate-PRs.outputs.repos }}
+          file: "-win64-private.zip"
+          token: ${{ secrets.TOKEN }}
+          selection: ${{ needs.windows.outputs.selection }}
       - parallel:
-          - uses: actions/download-artifact@v8
-            with:
-              name: windows
           - uses: TheMrMilchmann/setup-msvc-dev@v4
             with:
               arch: x64
@@ -367,7 +317,7 @@ jobs:
       - name: Libraries
         id: libraries
         run: |
-          $old_path = "${{ needs.windows.outputs.path }}"
+          $old_path = "${{ steps.repos.outputs.path }}"
           $bin_path = $old_path.replace(";", "\bin;").replace("\","/") + "/bin"
           echo "bin=$bin_path" >> $env:GITHUB_OUTPUT
           $share_path = $old_path.replace(";", "\share;").replace("\","/") + "/share"
@@ -377,7 +327,7 @@ jobs:
           gh auth setup-git
           mkdir -p build
           cd build
-          cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="${{ needs.windows.outputs.path }}" ../${{ matrix.repo }}/tests
+          cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="${{ steps.repos.outputs.path }}" ../${{ matrix.repo }}/tests
           IFS=";" read -a paths <<< "${{ steps.libraries.outputs.bin }}"
           for path in "${paths[@]}"
           do
@@ -396,62 +346,6 @@ jobs:
           cmake --build . -t essential
         env:
           GEODE_LICENSE_LOCATION: ${{ github.workspace }}/geode.lic
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-        shell: bash
-      - uses: actions/upload-artifact@v7
-        with:
-          name: tests-windows-${{ matrix.repo }}
-          path: |
-            build
-            !build/**/CMakeFiles
-            !build/**/*.obj
-            !build/**/*.ilk
-            !build/**/*.lib
-            !build/**/.ninja_*
-          retention-days: 1
-          overwrite: true
-      - name: Post to a Slack channel
-        if: failure()
-        id: slack
-        uses: slackapi/slack-github-action@v1
-        with:
-          channel-id: C0598GTCLGH
-          slack-message: "${{ inputs.branch }}: C++ merge request failed for ${{ matrix.repo }} on Windows\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-
-  windows-shard:
-    needs: [validate-PRs, setup, windows-build]
-    if: needs.setup.outputs.sharded != '[]'
-    runs-on: windows-2022
-    strategy:
-      matrix:
-        repo: ${{ fromJSON(needs.setup.outputs.sharded) }}
-        shard: ${{ fromJSON(needs.setup.outputs.shards) }}
-      fail-fast: false
-    steps:
-      - parallel:
-          - uses: actions/download-artifact@v8
-            with:
-              name: tests-windows-${{ matrix.repo }}
-              path: build
-          - name: Clone repository
-            uses: Geode-solutions/actions/install/checkout@master
-            with:
-              repo: Geode-solutions/${{ matrix.repo }}
-              token: ${{ secrets.TOKEN }}
-              branch: ${{ inputs.branch }}
-              base: ${{ needs.validate-PRs.outputs.base }}
-              path: ${{ matrix.repo }}
-          - name: License
-            run: |
-              gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
-            env:
-              GITHUB_TOKEN: ${{ secrets.TOKEN }}
-            shell: bash
-      - name: Git authentication
-        run: gh auth setup-git
-        env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         shell: bash
       - name: Test

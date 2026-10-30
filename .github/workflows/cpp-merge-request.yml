@@ -49,12 +49,19 @@ jobs:
     outputs:
       selection: ${{ steps.repos.outputs.selection }}
     steps:
+      - name: Token
+        uses: Geode-solutions/actions/install/token@master
+        id: token
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          token: ${{ secrets.TOKEN }}
       - uses: Geode-solutions/actions/get-release@master
         id: repos
         with:
           repository: ${{ needs.validate-PRs.outputs.repos }}
           file: "-ubuntu-private.tar.gz"
-          token: ${{ secrets.TOKEN }}
+          token: ${{ steps.token.outputs.token }}
           branch: ${{ inputs.branch }}
           base: ${{ needs.validate-PRs.outputs.base }}
           download: "false"
@@ -69,19 +76,26 @@ jobs:
         repo: ${{ fromJSON(needs.setup.outputs.single) }}
       fail-fast: false
     steps:
+      - name: Token
+        uses: Geode-solutions/actions/install/token@master
+        id: token
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          token: ${{ secrets.TOKEN }}
       - uses: Geode-solutions/actions/get-release@master
         id: repos
         with:
           repository: ${{ needs.validate-PRs.outputs.repos }}
           file: "-ubuntu-private.tar.gz"
-          token: ${{ secrets.TOKEN }}
+          token: ${{ steps.token.outputs.token }}
           selection: ${{ needs.linux.outputs.selection }}
       - parallel:
           - name: Clone repository
             uses: Geode-solutions/actions/install/checkout@master
             with:
               repo: Geode-solutions/${{ matrix.repo }}
-              token: ${{ secrets.TOKEN }}
+              token: ${{ steps.token.outputs.token }}
               branch: ${{ inputs.branch }}
               base: ${{ needs.validate-PRs.outputs.base }}
               path: ${{ matrix.repo }}
@@ -89,7 +103,7 @@ jobs:
             run: |
               gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
             env:
-              GITHUB_TOKEN: ${{ secrets.TOKEN }}
+              GITHUB_TOKEN: ${{ steps.token.outputs.token }}
             shell: bash
       - name: Libraries
         id: libraries
@@ -106,7 +120,7 @@ jobs:
           ctest --output-on-failure --stop-on-failure --no-tests=error -j $(nproc) -L essential
         env:
           GEODE_LICENSE_LOCATION: ${{ github.workspace }}/geode.lic
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_TOKEN: ${{ steps.token.outputs.token }}
         shell: bash
       - name: Post to a Slack channel
         if: failure()
@@ -129,19 +143,26 @@ jobs:
         shard: ${{ fromJSON(needs.setup.outputs.shards) }}
       fail-fast: false
     steps:
+      - name: Token
+        uses: Geode-solutions/actions/install/token@master
+        id: token
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          token: ${{ secrets.TOKEN }}
       - uses: Geode-solutions/actions/get-release@master
         id: repos
         with:
           repository: ${{ needs.validate-PRs.outputs.repos }}
           file: "-ubuntu-private.tar.gz"
-          token: ${{ secrets.TOKEN }}
+          token: ${{ steps.token.outputs.token }}
           selection: ${{ needs.linux.outputs.selection }}
       - parallel:
           - name: Clone repository
             uses: Geode-solutions/actions/install/checkout@master
             with:
               repo: Geode-solutions/${{ matrix.repo }}
-              token: ${{ secrets.TOKEN }}
+              token: ${{ steps.token.outputs.token }}
               branch: ${{ inputs.branch }}
               base: ${{ needs.validate-PRs.outputs.base }}
               path: ${{ matrix.repo }}
@@ -149,7 +170,7 @@ jobs:
             run: |
               gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
             env:
-              GITHUB_TOKEN: ${{ secrets.TOKEN }}
+              GITHUB_TOKEN: ${{ steps.token.outputs.token }}
             shell: bash
       - name: Libraries
         run: |
@@ -164,7 +185,7 @@ jobs:
           cmake --build . -t essential
         env:
           GEODE_LICENSE_LOCATION: ${{ github.workspace }}/geode.lic
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_TOKEN: ${{ steps.token.outputs.token }}
         shell: bash
       - name: Test
         uses: Geode-solutions/actions/test/ctest-shard@master
@@ -190,12 +211,19 @@ jobs:
     outputs:
       selection: ${{ steps.repos.outputs.selection }}
     steps:
+      - name: Token
+        uses: Geode-solutions/actions/install/token@master
+        id: token
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          token: ${{ secrets.TOKEN }}
       - uses: Geode-solutions/actions/get-release@master
         id: repos
         with:
           repository: ${{ needs.validate-PRs.outputs.repos }}
           file: "-win64-private.zip"
-          token: ${{ secrets.TOKEN }}
+          token: ${{ steps.token.outputs.token }}
           branch: ${{ inputs.branch }}
           base: ${{ needs.validate-PRs.outputs.base }}
           download: "false"
@@ -209,12 +237,19 @@ jobs:
         repo: ${{ fromJSON(needs.setup.outputs.single) }}
       fail-fast: false
     steps:
+      - name: Token
+        uses: Geode-solutions/actions/install/token@master
+        id: token
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          token: ${{ secrets.TOKEN }}
       - uses: Geode-solutions/actions/get-release@master
         id: repos
         with:
           repository: ${{ needs.validate-PRs.outputs.repos }}
           file: "-win64-private.zip"
-          token: ${{ secrets.TOKEN }}
+          token: ${{ steps.token.outputs.token }}
           selection: ${{ needs.windows.outputs.selection }}
       - parallel:
           - uses: TheMrMilchmann/setup-msvc-dev@v4
@@ -224,7 +259,7 @@ jobs:
             uses: Geode-solutions/actions/install/checkout@master
             with:
               repo: Geode-solutions/${{ matrix.repo }}
-              token: ${{ secrets.TOKEN }}
+              token: ${{ steps.token.outputs.token }}
               branch: ${{ inputs.branch }}
               base: ${{ needs.validate-PRs.outputs.base }}
               path: ${{ matrix.repo }}
@@ -232,7 +267,7 @@ jobs:
             run: |
               gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
             env:
-              GITHUB_TOKEN: ${{ secrets.TOKEN }}
+              GITHUB_TOKEN: ${{ steps.token.outputs.token }}
             shell: bash
       - name: Libraries
         id: libraries
@@ -267,7 +302,7 @@ jobs:
           ctest --output-on-failure --stop-on-failure --no-tests=error -j $(nproc) -L essential
         env:
           GEODE_LICENSE_LOCATION: ${{ github.workspace }}/geode.lic
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_TOKEN: ${{ steps.token.outputs.token }}
         shell: bash
       - name: Post to a Slack channel
         if: failure()
@@ -289,12 +324,19 @@ jobs:
         shard: ${{ fromJSON(needs.setup.outputs.shards) }}
       fail-fast: false
     steps:
+      - name: Token
+        uses: Geode-solutions/actions/install/token@master
+        id: token
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          token: ${{ secrets.TOKEN }}
       - uses: Geode-solutions/actions/get-release@master
         id: repos
         with:
           repository: ${{ needs.validate-PRs.outputs.repos }}
           file: "-win64-private.zip"
-          token: ${{ secrets.TOKEN }}
+          token: ${{ steps.token.outputs.token }}
           selection: ${{ needs.windows.outputs.selection }}
       - parallel:
           - uses: TheMrMilchmann/setup-msvc-dev@v4
@@ -304,7 +346,7 @@ jobs:
             uses: Geode-solutions/actions/install/checkout@master
             with:
               repo: Geode-solutions/${{ matrix.repo }}
-              token: ${{ secrets.TOKEN }}
+              token: ${{ steps.token.outputs.token }}
               branch: ${{ inputs.branch }}
               base: ${{ needs.validate-PRs.outputs.base }}
               path: ${{ matrix.repo }}
@@ -312,7 +354,7 @@ jobs:
             run: |
               gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
             env:
-              GITHUB_TOKEN: ${{ secrets.TOKEN }}
+              GITHUB_TOKEN: ${{ steps.token.outputs.token }}
             shell: bash
       - name: Libraries
         id: libraries
@@ -346,7 +388,7 @@ jobs:
           cmake --build . -t essential
         env:
           GEODE_LICENSE_LOCATION: ${{ github.workspace }}/geode.lic
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_TOKEN: ${{ steps.token.outputs.token }}
         shell: bash
       - name: Test
         uses: Geode-solutions/actions/test/ctest-shard@master

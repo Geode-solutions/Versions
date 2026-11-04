@@ -35,8 +35,10 @@ jobs:
         with:
           github-token: ${{ secrets.TOKEN }}
           result-encoding: string
+          # Retry transient GitHub API failures (5xx, network errors)
+          retries: 3
           script: |
-            const repos = "${{ inputs.repos }}"
+            const repos ="${{ inputs.repos }}"
             const branch = "${{ inputs.branch }}"
             const owner = 'Geode-solutions'
             const array_repos = repos.split(';')

@@ -1,4 +1,5 @@
 name: Ecosystem branch check (C++)
+run-name: Ecosystem branch check (C++) - ${{ inputs.branch }}
 
 on:
   workflow_dispatch:

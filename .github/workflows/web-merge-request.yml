@@ -1,4 +1,5 @@
 name: Ecosystem branch check (Web)
+run-name: Ecosystem branch check (Web) - ${{ inputs.branch }}
 
 on:
   workflow_dispatch:

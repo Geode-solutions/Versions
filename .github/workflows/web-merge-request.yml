@@ -143,6 +143,7 @@ jobs:
           CONFIGS: ${{ needs.validate-js-PRs.outputs.repo_configs }}
 
   test-js:
+    name: JS ${{ matrix.config.repo }} ${{ matrix.config.config }} ${{ matrix.os }}
     needs: [split-js-configs, tarballs, pyinstallers, base]
     runs-on: ${{ matrix.os }}
     strategy:
@@ -205,15 +206,15 @@ jobs:
           use_registry: false
       - name: Post to a Slack channel
         if: failure()
-        id: slack
-        uses: slackapi/slack-github-action@v1
+        uses: Geode-solutions/actions/slack/merge-request@master
         with:
-          channel-id: C0598GTCLGH
-          slack-message: "${{ inputs.branch }}: Javascript merge request failed for ${{ matrix.config.repo }} on ${{ runner.os }}\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          slack-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          branch: ${{ inputs.branch }}
+          title: Web merge request
+          current: JS ${{ matrix.config.repo }} ${{ matrix.config.config }} ${{ matrix.os }}
 
   test-js-e2e:
+    name: JS ${{ matrix.config.repo }} ${{ matrix.config.config }} ${{ matrix.os }} shard ${{ matrix.shard }}/3
     needs: [split-js-configs, tarballs, pyinstallers, base]
     runs-on: ${{ matrix.os }}
     strategy:
@@ -301,15 +302,15 @@ jobs:
           shard_total: 3
       - name: Post to a Slack channel
         if: failure()
-        id: slack
-        uses: slackapi/slack-github-action@v1
+        uses: Geode-solutions/actions/slack/merge-request@master
         with:
-          channel-id: C0598GTCLGH
-          slack-message: "${{ inputs.branch }}: Javascript merge request failed for ${{ matrix.config.repo }} ${{ matrix.config.config }} on ${{ runner.os }} (shard ${{ matrix.shard }}/3)\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          slack-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          branch: ${{ inputs.branch }}
+          title: Web merge request
+          current: JS ${{ matrix.config.repo }} ${{ matrix.config.config }} ${{ matrix.os }} shard ${{ matrix.shard }}/3
 
   test-py:
+    name: Python ${{ matrix.config.repo }} ${{ matrix.config.config }} ${{ matrix.os }}
     needs: [validate-py-PRs, wheels, base]
     runs-on: ${{ matrix.os }}
     strategy:
@@ -356,13 +357,25 @@ jobs:
           license_token: ${{ secrets.TOKEN }}
       - name: Post to a Slack channel
         if: failure()
-        id: slack
-        uses: slackapi/slack-github-action@v1
+        uses: Geode-solutions/actions/slack/merge-request@master
         with:
-          channel-id: C0598GTCLGH
-          slack-message: "${{ inputs.branch }}: Python merge request failed for ${{ matrix.config.repo }} on ${{ runner.os }}\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          slack-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          branch: ${{ inputs.branch }}
+          title: Web merge request
+          current: Python ${{ matrix.config.repo }} ${{ matrix.config.config }} ${{ matrix.os }}
+
+  # Rebuilds the Slack message from the final run state: concurrent failing jobs may have overwritten each other
+  slack:
+    needs: [test-js, test-js-e2e, test-py]
+    if: failure() && contains(needs.*.result, 'failure')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: Geode-solutions/actions/slack/merge-request@master
+        with:
+          slack-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          branch: ${{ inputs.branch }}
+          title: Web merge request
+          final: "true"
 
   merge-PRs:
     needs: [validate-js-PRs, validate-py-PRs, test-js, test-js-e2e, test-py]

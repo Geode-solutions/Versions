@@ -47,6 +47,7 @@ jobs:
           download: "false"
 
   linux-test:
+    name: Linux ${{ matrix.repo }}
     needs: [validate-PRs, linux]
     runs-on: ubuntu-latest
     container: ghcr.io/geode-solutions/ubuntu:master
@@ -103,13 +104,12 @@ jobs:
         shell: bash
       - name: Post to a Slack channel
         if: failure()
-        id: slack
-        uses: slackapi/slack-github-action@v1
+        uses: Geode-solutions/actions/slack/merge-request@master
         with:
-          channel-id: C0598GTCLGH
-          slack-message: "${{ inputs.branch }}: C++ merge request failed for ${{ matrix.repo }} on Linux\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          slack-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          branch: ${{ inputs.branch }}
+          title: C++ merge request
+          current: Linux ${{ matrix.repo }}
 
   windows:
     needs: validate-PRs
@@ -135,6 +135,7 @@ jobs:
           download: "false"
 
   windows-test:
+    name: Windows ${{ matrix.repo }}
     needs: [validate-PRs, windows]
     runs-on: windows-2022
     strategy:
@@ -211,13 +212,25 @@ jobs:
         shell: bash
       - name: Post to a Slack channel
         if: failure()
-        id: slack
-        uses: slackapi/slack-github-action@v1
+        uses: Geode-solutions/actions/slack/merge-request@master
         with:
-          channel-id: C0598GTCLGH
-          slack-message: "${{ inputs.branch }}: C++ merge request failed for ${{ matrix.repo }} on Windows\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          slack-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          branch: ${{ inputs.branch }}
+          title: C++ merge request
+          current: Windows ${{ matrix.repo }}
+
+  # Rebuilds the Slack message from the final run state: concurrent failing jobs may have overwritten each other
+  slack:
+    needs: [linux-test, windows-test]
+    if: failure() && contains(needs.*.result, 'failure')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: Geode-solutions/actions/slack/merge-request@master
+        with:
+          slack-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          branch: ${{ inputs.branch }}
+          title: C++ merge request
+          final: "true"
 
   merge-PRs:
     needs: [validate-PRs, linux-test, windows-test]

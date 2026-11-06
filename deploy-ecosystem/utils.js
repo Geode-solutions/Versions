@@ -5,6 +5,8 @@ const RUN_STATUS_INTERVAL = 15;
 const RUN_DISCOVERY_INTERVAL = 3;
 const RUN_DISCOVERY_RETRIES = 60;
 const RUN_INFRA_RETRIES = 2;
+const DISPATCH_RETRIES = 3;
+const DISPATCH_CHECK_RETRIES = 10;
 
 // A job failing in "Set up job" (or before any step) is a GitHub infrastructure
 // error, e.g. a transient codeload failure while downloading an action
@@ -76,34 +78,76 @@ async function wait_for_run_completed(octokit, owner, repo, run_id) {
   }
 }
 
+async function find_run(octokit, owner, repo, workflow_id, trigger_time, retries) {
+  for (let retry = 0; retry < retries; retry++) {
+    await sleep(RUN_DISCOVERY_INTERVAL);
+    const response = await octokit.actions.listWorkflowRuns({
+      owner,
+      repo,
+      workflow_id,
+      event: "workflow_dispatch",
+    });
+    const runs = response.data.workflow_runs.filter(
+      (run) => new Date(run.created_at) >= trigger_time,
+    );
+    if (runs.length != 0) {
+      return runs[0].id;
+    }
+    console.log(`${repo}::${workflow_id} retry ${retry}`);
+  }
+  return 0;
+}
+
+// GitHub API transiently answers 5xx to a dispatch that may still have created
+// the run: only dispatch again when no run shows up
+async function dispatch_workflow(octokit, owner, repo, workflow_id, ref, trigger_time) {
+  for (let attempt = 1; ; attempt++) {
+    console.log(`Dispatch ${repo}::${workflow_id}`);
+    try {
+      await octokit.actions.createWorkflowDispatch({
+        owner,
+        repo,
+        workflow_id,
+        ref,
+      });
+      return 0;
+    } catch (error) {
+      const transient = !error.status || error.status >= 500 || error.status === 429;
+      if (!transient || attempt >= DISPATCH_RETRIES) {
+        throw error;
+      }
+      console.log(
+        `${repo}::${workflow_id} dispatch failed (${error.status || error.message}), checking for a run... (${attempt}/${DISPATCH_RETRIES})`,
+      );
+      const run_id = await find_run(
+        octokit,
+        owner,
+        repo,
+        workflow_id,
+        trigger_time,
+        DISPATCH_CHECK_RETRIES,
+      );
+      if (run_id != 0) {
+        return run_id;
+      }
+    }
+  }
+}
+
 async function launch_workflow(octokit, owner, repo, workflow_id, ref) {
   try {
     // created_at has a one second resolution
     const trigger_time = Math.floor(Date.now() / 1000) * 1000;
-    console.log(`Dispatch ${repo}::${workflow_id}`);
-    await octokit.actions.createWorkflowDispatch({
-      owner,
-      repo,
-      workflow_id,
-      ref,
-    });
-    let run_id = 0;
-    for (let retry = 0; retry < RUN_DISCOVERY_RETRIES; retry++) {
-      await sleep(RUN_DISCOVERY_INTERVAL);
-      const response = await octokit.actions.listWorkflowRuns({
+    let run_id = await dispatch_workflow(octokit, owner, repo, workflow_id, ref, trigger_time);
+    if (run_id == 0) {
+      run_id = await find_run(
+        octokit,
         owner,
         repo,
         workflow_id,
-        event: "workflow_dispatch",
-      });
-      const runs = response.data.workflow_runs.filter(
-        (run) => new Date(run.created_at) >= trigger_time,
+        trigger_time,
+        RUN_DISCOVERY_RETRIES,
       );
-      if (runs.length != 0) {
-        run_id = runs[0].id;
-        break;
-      }
-      console.log(`${repo}::${workflow_id} retry ${retry}`);
     }
     if (run_id == 0) {
       throw new Error(`${repo}::${workflow_id} run not found`);

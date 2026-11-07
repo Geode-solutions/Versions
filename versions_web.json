@@ -1,7 +1,7 @@
 [
   {
     "repo": "Cloud-API",
-    "version": "1.0.1"
+    "version": "1.1.0"
   },
   {
     "repo": "OpenGeodeWeb-Router",
@@ -15,44 +15,44 @@
   {
     "repo": "OpenGeodeWeb-Back",
     "python": "opengeodeweb-back",
-    "version": "6.16.1"
+    "version": "6.17.0"
   },
   {
     "repo": "OpenGeodeWeb-Viewer",
     "python": "opengeodeweb-viewer",
-    "version": "1.36.1"
+    "version": "1.37.0"
   },
   {
     "repo": "OpenGeodeWeb-Front",
-    "version": "10.43.2"
+    "version": "10.44.0"
   },
   {
     "repo": "Vease-Modeling-Back",
     "python": "vease-modeling-back",
-    "version": "1.10.5"
+    "version": "1.10.6"
   },
   {
     "repo": "Vease-Modeling",
-    "version": "1.14.2"
+    "version": "1.15.0"
   },
   {
     "repo": "Vease-Back",
     "python": "vease-back",
-    "version": "1.16.1"
+    "version": "1.17.0"
   },
   {
     "repo": "Vease-Viewer",
     "python": "vease-viewer",
-    "version": "2.20.0"
+    "version": "2.21.0"
   },
   {
     "repo": "Vease",
-    "version": "1.58.1"
+    "version": "1.59.0"
   },
   {
     "repo": "PEGGHy-Back",
     "python": "pegghy-back",
-    "version": "1.2.16"
+    "version": "1.2.17"
   },
   {
     "repo": "PEGGHy-Viewer",
@@ -61,6 +61,6 @@
   },
   {
     "repo": "PEGGHy",
-    "version": "1.9.0"
+    "version": "1.10.0"
   }
 ]

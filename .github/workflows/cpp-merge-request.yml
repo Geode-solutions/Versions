@@ -103,7 +103,7 @@ jobs:
           cmake --build . -t essential
           ctest --output-on-failure --stop-on-failure --no-tests=error -j $(nproc) -L essential
         env:
-          GEODE_LICENSE_LOCATION: ${{ github.workspace }}/geode.lic
+          GEODE_LICENSE_FILE: ${{ github.workspace }}/geode.lic
           GITHUB_TOKEN: ${{ steps.token.outputs.token }}
         shell: bash
       - name: Post to a Slack channel
@@ -215,7 +215,7 @@ jobs:
           cmake --build . -t essential
           ctest --output-on-failure --stop-on-failure --no-tests=error -j $(nproc) -L essential
         env:
-          GEODE_LICENSE_LOCATION: ${{ github.workspace }}/geode.lic
+          GEODE_LICENSE_FILE: ${{ github.workspace }}/geode.lic
           GITHUB_TOKEN: ${{ steps.token.outputs.token }}
         shell: bash
       - name: Post to a Slack channel

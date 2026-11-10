@@ -81,9 +81,13 @@ jobs:
               path: ${{ matrix.repo }}
           - name: License
             run: |
-              gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
+              if [ -z "$LICENSE" ]; then
+                echo "::error::The GEODE_CI_LICENSE secret is empty or not defined"
+                exit 1
+              fi
+              printf '%s\n' "$LICENSE" > geode.lic
             env:
-              GITHUB_TOKEN: ${{ steps.token.outputs.token }}
+              LICENSE: ${{ secrets.GEODE_CI_LICENSE }}
             shell: bash
       - name: Libraries
         id: libraries
@@ -171,9 +175,13 @@ jobs:
               path: ${{ matrix.repo }}
           - name: License
             run: |
-              gh api https://api.github.com/repos/Geode-solutions/open-license-manager/contents/projects/geode/geode.lic -H "Accept: application/vnd.github.raw" > geode.lic
+              if [ -z "$LICENSE" ]; then
+                echo "::error::The GEODE_CI_LICENSE secret is empty or not defined"
+                exit 1
+              fi
+              printf '%s\n' "$LICENSE" > geode.lic
             env:
-              GITHUB_TOKEN: ${{ steps.token.outputs.token }}
+              LICENSE: ${{ secrets.GEODE_CI_LICENSE }}
             shell: bash
       - name: Libraries
         id: libraries

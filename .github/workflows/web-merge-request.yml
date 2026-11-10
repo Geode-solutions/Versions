@@ -186,7 +186,7 @@ jobs:
       - name: Get license
         uses: Geode-solutions/actions/install/license@master
         with:
-          token: ${{ secrets.TOKEN }}
+          license: ${{ secrets.GEODE_CI_LICENSE }}
       - name: Test Node
         if: matrix.config.config == 'node'
         uses: Geode-solutions/actions/test/node@master
@@ -258,7 +258,7 @@ jobs:
       - name: Get license
         uses: Geode-solutions/actions/install/license@master
         with:
-          token: ${{ secrets.TOKEN }}
+          license: ${{ secrets.GEODE_CI_LICENSE }}
       - name: Test Browser
         if: matrix.config.config == 'browser'
         uses: Geode-solutions/actions/test/browser@master
@@ -339,7 +339,7 @@ jobs:
       - name: Get license
         uses: Geode-solutions/actions/install/license@master
         with:
-          token: ${{ secrets.TOKEN }}
+          license: ${{ secrets.GEODE_CI_LICENSE }}
       - name: Test Python
         if: matrix.config.config == 'python'
         uses: Geode-solutions/actions/test/python@master
@@ -354,7 +354,7 @@ jobs:
         id: docker
         with:
           tag: test
-          license_token: ${{ secrets.TOKEN }}
+          license: ${{ secrets.GEODE_CI_LICENSE }}
       - name: Post to a Slack channel
         if: failure()
         uses: Geode-solutions/actions/slack/merge-request@master

@@ -70,25 +70,14 @@ jobs:
           file: "-ubuntu-private.tar.gz"
           token: ${{ steps.token.outputs.token }}
           selection: ${{ needs.linux.outputs.selection }}
-      - parallel:
-          - name: Clone repository
-            uses: Geode-solutions/actions/install/checkout@master
-            with:
-              repo: Geode-solutions/${{ matrix.repo }}
-              token: ${{ steps.token.outputs.token }}
-              branch: ${{ inputs.branch }}
-              base: ${{ needs.validate-PRs.outputs.base }}
-              path: ${{ matrix.repo }}
-          - name: License
-            run: |
-              if [ -z "$LICENSE" ]; then
-                echo "::error::The GEODE_CI_LICENSE secret is empty or not defined"
-                exit 1
-              fi
-              printf '%s\n' "$LICENSE" > geode.lic
-            env:
-              LICENSE: ${{ secrets.GEODE_CI_LICENSE }}
-            shell: bash
+      - name: Clone repository
+        uses: Geode-solutions/actions/install/checkout@master
+        with:
+          repo: Geode-solutions/${{ matrix.repo }}
+          token: ${{ steps.token.outputs.token }}
+          branch: ${{ inputs.branch }}
+          base: ${{ needs.validate-PRs.outputs.base }}
+          path: ${{ matrix.repo }}
       - name: Libraries
         id: libraries
         run: |
@@ -103,7 +92,7 @@ jobs:
           cmake --build . -t essential
           ctest --output-on-failure --stop-on-failure --no-tests=error -j $(nproc) -L essential
         env:
-          GEODE_LICENSE_FILE: ${{ github.workspace }}/geode.lic
+          GEODE_LICENSE_DATA: ${{ secrets.GEODE_CI_LICENSE }}
           GITHUB_TOKEN: ${{ steps.token.outputs.token }}
         shell: bash
       - name: Post to a Slack channel
@@ -173,16 +162,6 @@ jobs:
               branch: ${{ inputs.branch }}
               base: ${{ needs.validate-PRs.outputs.base }}
               path: ${{ matrix.repo }}
-          - name: License
-            run: |
-              if [ -z "$LICENSE" ]; then
-                echo "::error::The GEODE_CI_LICENSE secret is empty or not defined"
-                exit 1
-              fi
-              printf '%s\n' "$LICENSE" > geode.lic
-            env:
-              LICENSE: ${{ secrets.GEODE_CI_LICENSE }}
-            shell: bash
       - name: Libraries
         id: libraries
         run: |
@@ -215,7 +194,7 @@ jobs:
           cmake --build . -t essential
           ctest --output-on-failure --stop-on-failure --no-tests=error -j $(nproc) -L essential
         env:
-          GEODE_LICENSE_FILE: ${{ github.workspace }}/geode.lic
+          GEODE_LICENSE_DATA: ${{ secrets.GEODE_CI_LICENSE }}
           GITHUB_TOKEN: ${{ steps.token.outputs.token }}
         shell: bash
       - name: Post to a Slack channel

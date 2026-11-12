@@ -345,6 +345,7 @@ jobs:
         with:
           tag: test
           license: ${{ secrets.GEODE_CI_LICENSE }}
+          token: ${{ secrets.TOKEN }}
       - name: Post to a Slack channel
         if: failure()
         uses: Geode-solutions/actions/slack/merge-request@master

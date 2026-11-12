@@ -24,7 +24,7 @@ on:
 
 jobs:
   validate-PRs:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       base: ${{ steps.check.outputs.base }}
       repos: ${{ steps.check.outputs.repos }}
@@ -186,7 +186,7 @@ jobs:
       (inputs.workflow == 'py' || inputs.workflow == 'js') && 
       (needs.get-py-configs.result == 'success' || needs.get-py-configs.result == 'skipped') && 
       (needs.get-js-configs.result == 'success' || needs.get-js-configs.result == 'skipped')
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       repo_configs: ${{ steps.result.outputs.repo_configs }}
     steps:

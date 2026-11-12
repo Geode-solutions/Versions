@@ -31,7 +31,7 @@ jobs:
 
   base:
     needs: [validate-js-PRs, validate-py-PRs]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       base: ${{ steps.base.outputs.base }}
     steps:
@@ -56,7 +56,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-2022]
+        os: [ubuntu-24.04, windows-2022]
     steps:
       - uses: Geode-solutions/actions/get-release@master
         id: repos
@@ -78,7 +78,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-2022]
+        os: [ubuntu-24.04, windows-2022]
     steps:
       - uses: Geode-solutions/actions/get-release@master
         id: repos
@@ -100,7 +100,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-2022]
+        os: [ubuntu-24.04, windows-2022]
     steps:
       - uses: Geode-solutions/actions/get-release@master
         id: repos
@@ -129,7 +129,7 @@ jobs:
   # Browser, desktop and extension tests run in Playwright shards (test-js-e2e), the other configs once (test-js)
   split-js-configs:
     needs: validate-js-PRs
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       e2e: ${{ steps.split.outputs.e2e }}
       others: ${{ steps.split.outputs.others }}
@@ -149,7 +149,7 @@ jobs:
     strategy:
       matrix:
         config: ${{ fromJSON(needs.split-js-configs.outputs.others) }}
-        os: [ubuntu-latest, windows-2022]
+        os: [ubuntu-24.04, windows-2022]
       fail-fast: false
     steps:
       - name: Clone repository
@@ -216,7 +216,7 @@ jobs:
     strategy:
       matrix:
         config: ${{ fromJSON(needs.split-js-configs.outputs.e2e) }}
-        os: [ubuntu-latest, windows-2022]
+        os: [ubuntu-24.04, windows-2022]
         shard: [1, 2, 3]
       fail-fast: false
     steps:
@@ -309,7 +309,7 @@ jobs:
     strategy:
       matrix:
         config: ${{ fromJSON(needs.validate-py-PRs.outputs.repo_configs) }}
-        os: [ubuntu-latest, windows-2022]
+        os: [ubuntu-24.04, windows-2022]
       fail-fast: false
     steps:
       - name: Clone repository
@@ -359,7 +359,7 @@ jobs:
   slack:
     needs: [test-js, test-js-e2e, test-py]
     if: failure() && contains(needs.*.result, 'failure')
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: Geode-solutions/actions/slack/merge-request@master
         with:
@@ -377,7 +377,7 @@ jobs:
     secrets: inherit
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: [merge-PRs, base]
     steps:
       - uses: actions/github-script@v8

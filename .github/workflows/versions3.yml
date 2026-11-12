@@ -11,7 +11,7 @@ jobs:
     secrets: inherit
 
   merge-master:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: check-next
     strategy:
       matrix:
@@ -35,7 +35,7 @@ jobs:
           fi
 
   deploy-master:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: merge-master
     steps:
       - uses: Geode-solutions/Versions/deploy-ecosystem@master
@@ -94,7 +94,7 @@ jobs:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
   merge-next:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: [check-next, deploy-master]
     strategy:
       matrix:

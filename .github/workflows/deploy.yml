@@ -20,7 +20,7 @@ concurrency:
 
 jobs:
   deploy-ecosystem:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: Geode-solutions/Versions/deploy-ecosystem@master
         with:

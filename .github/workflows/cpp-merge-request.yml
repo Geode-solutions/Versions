@@ -25,7 +25,7 @@ jobs:
   # These jobs only select the releases, each test job downloads them with the selection (no extra API query)
   linux:
     needs: validate-PRs
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       selection: ${{ steps.repos.outputs.selection }}
     steps:
@@ -49,7 +49,7 @@ jobs:
   linux-test:
     name: Linux ${{ matrix.repo }}
     needs: [validate-PRs, linux]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     container: ghcr.io/geode-solutions/ubuntu:master
     strategy:
       matrix:
@@ -106,7 +106,7 @@ jobs:
 
   windows:
     needs: validate-PRs
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       selection: ${{ steps.repos.outputs.selection }}
     steps:
@@ -210,7 +210,7 @@ jobs:
   slack:
     needs: [linux-test, windows-test]
     if: failure() && contains(needs.*.result, 'failure')
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: Geode-solutions/actions/slack/merge-request@master
         with:
@@ -229,7 +229,7 @@ jobs:
     secrets: inherit
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: [merge-PRs, validate-PRs]
     steps:
       - uses: actions/github-script@v8

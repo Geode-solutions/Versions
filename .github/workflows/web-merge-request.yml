@@ -183,10 +183,6 @@ jobs:
           echo "$pyinstallers"
           echo "pyinstallers=$pyinstallers" >> $GITHUB_OUTPUT
         shell: bash
-      - name: Get license
-        uses: Geode-solutions/actions/install/license@master
-        with:
-          token: ${{ secrets.TOKEN }}
       - name: Test Node
         if: matrix.config.config == 'node'
         uses: Geode-solutions/actions/test/node@master
@@ -255,10 +251,6 @@ jobs:
           echo "$pyinstallers"
           echo "pyinstallers=$pyinstallers" >> $GITHUB_OUTPUT
         shell: bash
-      - name: Get license
-        uses: Geode-solutions/actions/install/license@master
-        with:
-          token: ${{ secrets.TOKEN }}
       - name: Test Browser
         if: matrix.config.config == 'browser'
         uses: Geode-solutions/actions/test/browser@master
@@ -298,6 +290,7 @@ jobs:
           tarballs: ${{ steps.tarballs.outputs.tarballs }}
           pyinstallers: ${{ steps.pyinstallers.outputs.pyinstallers }}
           use_registry: false
+          license: ${{ secrets.GEODE_CI_LICENSE }}
           shard_index: ${{ matrix.shard }}
           shard_total: 3
       - name: Post to a Slack channel
@@ -336,10 +329,6 @@ jobs:
           echo "$wheels"
           echo "wheels=$wheels" >> $GITHUB_OUTPUT
         shell: bash
-      - name: Get license
-        uses: Geode-solutions/actions/install/license@master
-        with:
-          token: ${{ secrets.TOKEN }}
       - name: Test Python
         if: matrix.config.config == 'python'
         uses: Geode-solutions/actions/test/python@master
@@ -348,13 +337,14 @@ jobs:
           branch: ${{ inputs.branch }}
           wheels: ${{ steps.wheels.outputs.wheels }}
           use_registry: false
+          license: ${{ secrets.GEODE_CI_LICENSE }}
       - name: Build docker
         if: matrix.config.config == 'docker' && runner.os != 'Windows'
         uses: Geode-solutions/actions/build/docker@master
         id: docker
         with:
           tag: test
-          license_token: ${{ secrets.TOKEN }}
+          license: ${{ secrets.GEODE_CI_LICENSE }}
       - name: Post to a Slack channel
         if: failure()
         uses: Geode-solutions/actions/slack/merge-request@master

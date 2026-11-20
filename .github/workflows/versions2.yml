@@ -93,6 +93,36 @@ jobs:
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
+  # The master tests are skipped when the nightly tested the same sources: check that the final
+  # wheels published on PyPI install together (public repository: free)
+  check-wheels:
+    runs-on: ubuntu-24.04
+    needs: deploy-master
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: master
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.14"
+      - name: Published wheels
+        run: |
+          jq -r '.[] | select(.python) | "\(.python)==\(.version)"' versions.json > master.txt
+          cat master.txt
+          for attempt in 1 2 3; do
+            pip install -r master.txt && exit 0
+            sleep 120
+          done
+          exit 1
+      - name: Post to a Slack channel
+        if: failure()
+        uses: slackapi/slack-github-action@v1
+        with:
+          channel-id: C0598GTCLGH
+          slack-message: "The master wheels do not install: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
   merge-next:
     runs-on: ubuntu-24.04
     needs: [check-next, deploy-master]

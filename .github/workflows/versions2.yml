@@ -109,8 +109,11 @@ jobs:
         run: |
           jq -r '.[] | select(.python) | "\(.python)==\(.version)"' versions.json > master.txt
           cat master.txt
-          for attempt in 1 2 3; do
-            pip install -r master.txt && exit 0
+          # PyPI's CDN can serve a stale index for several minutes after an upload:
+          # retry for ~20 minutes, bypassing pip's own HTTP cache so each attempt sees a fresh index
+          for attempt in $(seq 1 10); do
+            pip install --no-cache-dir -r master.txt && exit 0
+            echo "::warning::Attempt $attempt failed, retrying in 2 minutes"
             sleep 120
           done
           exit 1

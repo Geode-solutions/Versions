@@ -80,10 +80,11 @@ jobs:
                   repo,
                   pull_number
                 }),
-                github.rest.pulls.listReviews({
+                github.paginate(github.rest.pulls.listReviews, {
                   owner,
                   repo,
-                  pull_number
+                  pull_number,
+                  per_page: 100
                 })
               ])
               // Everything must be green: the latest pull_request run of every workflow on the PR head commit
@@ -110,7 +111,7 @@ jobs:
               }
               let changes_requested = []
               let approved = false
-              for (const review of reviews.data) {
+              for (const review of reviews) {
                 if (review.state == 'APPROVED') {
                   approved = true
                   changes_requested = changes_requested.filter(r => r != review.user.login)

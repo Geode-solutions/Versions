@@ -272,11 +272,6 @@ jobs:
           token: ${{ secrets.TOKEN }}
           tarballs: ${{ steps.tarballs.outputs.tarballs }}
           pyinstallers: ${{ steps.pyinstallers.outputs.pyinstallers }}
-          AZURE_KEY_VAULT_URI: ${{ secrets.AZURE_KEY_VAULT_URI }}
-          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-          AZURE_CERT_NAME: ${{ secrets.AZURE_CERT_NAME }}
           use_registry: false
           shard_index: ${{ matrix.shard }}
           shard_total: 3

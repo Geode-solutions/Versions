@@ -1,0 +1,44 @@
+# Temporary: checks Azure Artifact Signing on this branch, removed before merging
+name: Test artifact signing
+
+on:
+  push:
+    branches:
+      - fix/artifact-signing
+
+jobs:
+  sign:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: Geode-solutions/actions
+          ref: fix/artifact-signing
+      - uses: TheMrMilchmann/setup-msvc-dev@v4
+        with:
+          arch: x64
+      - name: Build test binaries
+        run: |
+          New-Item -ItemType Directory -Force pkg/inst/bin | Out-Null
+          Set-Content m.c "int main(void){return 0;}"
+          cl /nologo m.c /Fe:pkg/inst/bin/test.exe
+          Copy-Item pkg/inst/bin/test.exe pkg/inst/bin/test.dll
+          Copy-Item pkg/inst/bin/test.exe pkg/inst/bin/test.pyd
+          Copy-Item pkg/inst/bin/test.exe .github/test-artifact-signing/app.node
+      - name: Azure Artifact Signing
+        uses: Geode-solutions/actions/install/azure-sign@fix/artifact-signing
+        with:
+          force: true
+      - name: Sign like CPack
+        run: cmake -DCPACK_TEMPORARY_INSTALL_DIRECTORY="${{ github.workspace }}/pkg/inst" -P code_sign.cmake
+      - name: Sign like electron-builder
+        working-directory: .github/test-artifact-signing
+        run: |
+          node -e "import('./custom_sign.mjs').then((m) => m.default({ path: 'app.node' }))"
+      - name: Verify
+        run: |
+          $signtool = (Get-ChildItem "${env:ProgramFiles(x86)}\Windows Kits\10\bin\*\x64\signtool.exe" | Select-Object -Last 1).FullName
+          foreach ($file in "pkg/inst/bin/test.exe", "pkg/inst/bin/test.dll", "pkg/inst/bin/test.pyd", ".github/test-artifact-signing/app.node") {
+            & $signtool verify /pa /v $file
+            if ($LASTEXITCODE -ne 0) { exit 1 }
+          }

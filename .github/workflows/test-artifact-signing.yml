@@ -6,6 +6,10 @@ on:
     branches:
       - fix/artifact-signing
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   sign:
     runs-on: windows-2022
